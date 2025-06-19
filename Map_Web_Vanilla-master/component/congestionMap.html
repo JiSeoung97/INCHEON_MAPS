@@ -1,0 +1,211 @@
+<template id="congestionMap">
+  <style>
+    /* ───────────────────────────────── */
+    /* 1) 호스트(캔버스 전체 크기) */
+    :host {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      height: 300px;
+      overflow: visible;
+    }
+
+    /* ───────────────────────────────── */
+    /* 2) 반투명 맵 이미지 */
+    .mapImg {
+      position: relative;
+      bottom: auto;
+      width: 100%;
+      overflow: visible;
+      object-fit: cover;
+      pointer-events: none;
+    }
+
+    /* ───────────────────────────────── */
+    /* 3) 버블 컨테이너 기본 위치 */
+    .bubble-container {
+      position: absolute;
+      /* 좌표는 HTML 클래스(gate1~6) 별로 정의 */
+      transform: translate(-50%, -50%);
+      z-index: 2000;
+    }
+
+    /* Gate별 위치 & 배지 색상 */
+    .bubble-container.gate1 { top: 80%; left: 90%}
+    .bubble-container.gate2 { top: 52%; left: 80%}
+    .bubble-container.gate3 { top: 25%; left: 70%}
+    .bubble-container.gate4 { top: 25%; left: 30%}
+    .bubble-container.gate5 { top: 52%; left: 20%}
+    .bubble-container.gate6 { top: 80%; left: 10%}
+    /* ───────────────────────────────── */
+    /* 4) 버블 그룹: 고정 크기 */
+    .bubble-group {
+      display: inline-flex;
+      border-radius: 10px;
+      
+      background: #fff;
+      overflow: hidden;
+
+      /* 고정 크기 지정 */
+      width: 103px;
+      height: 36px;
+      box-sizing: border-box;
+
+    }
+
+    .bubble-group1 {
+      display: inline-flex;
+      border-radius: 10px;
+      
+      background: #fff;
+      overflow: hidden;
+
+      /* 고정 크기 지정 */
+      width: 65px;
+      height: 50px;
+      box-sizing: border-box;
+    }
+    
+    .tags {
+        display: flex;
+        width: 100%;
+        height: 100%;
+    }
+    .tag .dir {
+        margin-right: 6px;
+        font-weight: bold;
+        font-size: 10px;
+        color: #333;
+        flex-shrink: 0;
+        padding-left: 6px;
+    }
+    .tags .tag {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      box-sizing: border-box;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 15px;
+    }
+    .notag {
+      display: flex;              /* ❶ */
+      justify-content: center;    /* 수평 중앙 */
+      align-items: center;        /* 수직 중앙 */
+      width: 100%;
+      height: 100%;
+      font-size: 15px;
+      color: #999;
+      border: 1.5px solid #999999;
+      border-radius: 10px;
+    }
+
+    /* ───────────────────────────────── */
+    /* 6) 상태별 텍스트 색상 */
+    
+    .tag .status.medium     { color: #00C73C;}
+    .tag .status.low     { color: #32A1FF ;}
+    .tag .status.high    { color: #FF823F;}
+    .tag .status.veryhigh { color: #FF5959;}
+
+    /* ───────────────────────────────── */
+    /* 7) 배지(번호 원형) */
+    .num {
+      display: inline-flex;
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 24px;
+      height: 24px;
+      line-height: 24px;
+      border-radius: 50%;
+      background: var(--badge-color, #999);
+      color: #fff;
+      font-size: 14px;
+      justify-content: center;
+      align-items: center;
+      border: 2px solid #fff;
+      box-sizing: border-box;
+      z-index: 2000;
+    }
+  </style>
+
+  <!-- 실제 DOM 구조 -->
+  <img class="mapImg" src="images/map.png" alt="공항 지도" />
+
+  <div class="bubble-container gate1">
+    <div class="bubble-group1">
+      <div class="tags">
+        <div class="notag">
+          <span class="status no-service">미운영</span>
+        </div>
+      </div>
+    </div>
+    <span class="num">1</span>
+  </div>
+
+  <!-- Gate 2 ~ Gate 5 (서편+동편) -->
+  <div class="bubble-container gate2">
+    <div class="bubble-group">
+      <div class="tags">
+        <div class="tag">
+        </div>
+        <div class="tag">
+        </div>
+      </div>
+    </div>
+    <span class="num">2</span>
+  </div>
+
+  <div class="bubble-container gate3">
+    <div class="bubble-group">
+      <div class="tags">
+        <div class="tag">
+        </div>
+        <div class="tag">
+        </div>
+      </div>
+    </div>
+    <span class="num">3</span>
+  </div>
+
+  <div class="bubble-container gate4">
+    <div class="bubble-group">
+      <div class="tags">
+        <div class="tag">
+        </div>
+        <div class="tag">
+        </div>
+      </div>
+    </div>
+    <span class="num">4</span>
+  </div>
+
+  <div class="bubble-container gate5">
+    <div class="bubble-group">
+      <div class="tags">
+        <div class="tag">
+        </div>
+        <div class="tag">
+        </div>
+      </div>
+    </div>
+    <span class="num">5</span>
+  </div>
+
+  <div class="bubble-container gate6">
+    <div class="bubble-group1">
+      <div class="tags">
+        <div class="notag">
+          <span class="status no-service">미운영</span>
+        </div>
+      </div>
+    </div>
+    <span class="num">6</span>
+  </div>
+</template>

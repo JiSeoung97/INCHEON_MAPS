@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Map-WEB</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script
+      type="text/javascript"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=6nv3jwasxn"
+    ></script>
+  </head>
+  <body>
+    <div class="container">
+      <div id="map"></div>
+      <table id="menu">
+        <tr>
+          <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
+          <th class="menuBtn" data-idx="1">약도 보기</th>
+        </tr>
+      </table>
+      <div class="tabs">
+        <table>
+          <tr>
+            <th>• 제1여객터미널 혼잡도 
+              <span id="info">?</span>
+            </th>
+            <th>
+              <p id="nTime"></p>
+            </th>
+          </tr>
+        </table>
+        
+      </div>
+      <div id="controls">
+        <table id="contents">
+          <tr class="gate2">
+            <th>2출국장</th>
+            <th class="eastWest"></th>
+            <th class="eastWest"></th>
+          </tr>
+          <tr class="gate3">
+            <th>3출국장</th>
+            <th class="eastWest"></th>
+            <th class="eastWest"></th>
+          </tr>
+          <tr class="gate4">
+            
+            <th>4출국장</th>
+            <th class="eastWest"></th>
+            <th class="eastWest"></th>
+          </tr>
+          <tr class="gate5">
+            <th>5출국장</th>
+            <th class="eastWest"></th>
+            <th class="eastWest"></th>
+          </tr>
+        </table>
+      </div>
+      <button class = "gateCongestion" id="toggleCongestion">혼잡도</button>
+      <button id="requestLocation">내 위치 찾기</button>
+    </div>
+    <div id="adModal" class="modal-overlay">
+      <div class="modal-content">
+        <p id="modalClose"><img src="./images/x.png"></p>
+        <div id="modal-contents">
+        <div id="imgBox">
+          <img id="modelImg" src="./images/modal_img.jpg">
+        </div>
+        <div id="modalText">
+          <p>출국 전 든든한 한끼 어떠신가요?</p>
+          <h3>인천공항 맛집 BEST 10!</h3>
+          <button id="reco">인천공항 맛집 보러가기</button>
+        </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <script src="data/mock-data.js"></script>
+    <script src="js/dataService.js"></script>
+    <script src="js/mapService.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/congestionService.js" defer></script>
+    <script>
+      // 페이지 로드 완료 후 실행
+      window.addEventListener("load", function () {
+        console.log("페이지 로드 완료");
+
+        // 지도 컨테이너 확인
+        var mapDiv = document.getElementById("map");
+        console.log("지도 컨테이너:", mapDiv);
+
+        // 네이버 Maps API 로드 확인
+        if (typeof naver !== "undefined" && naver.maps) {
+          console.log("네이버 Maps API 로드 성공");
+        } else {
+          console.error("네이버 Maps API 로드 실패");
+        }
+      });
+    </script>
+  </body>
+</html>
