@@ -61,25 +61,26 @@
       overflow: hidden;
 
       /* 고정 크기 지정 */
-      width: 65px;
-      height: 50px;
+      width: 52px;
+      height: 36px;
       box-sizing: border-box;
+      transform: translateY(20%);
     }
     
     .tags {
-        display: flex;
+        display: inline-flex;
         width: 100%;
         height: 100%;
     }
     .tag .dir {
-        margin-right: 6px;
         font-weight: bold;
-        font-size: 10px;
+        font-size: 8px;
         color: #333;
         flex-shrink: 0;
-        padding-left: 6px;
+        
     }
     .tags .tag {
+      padding: 5,5px;
       flex: 1;
       display: flex;
       flex-direction: column;
@@ -98,7 +99,7 @@
       align-items: center;        /* 수직 중앙 */
       width: 100%;
       height: 100%;
-      font-size: 15px;
+      font-size: 11.12px;
       color: #999;
       border: 1.5px solid #999999;
       border-radius: 10px;
@@ -106,6 +107,9 @@
 
     /* ───────────────────────────────── */
     /* 6) 상태별 텍스트 색상 */
+    .tag span{
+      font-size: 11.12px;
+    }
     
     .tag .status.medium     { color: #00C73C;}
     .tag .status.low     { color: #32A1FF ;}
@@ -119,9 +123,9 @@
       position: absolute;
       top: -10px;
       left: 50%;
-      transform: translateX(-50%);
-      width: 24px;
-      height: 24px;
+      transform: translate(-50%,50%);
+      width: 19px;
+      height: 19px;
       line-height: 24px;
       border-radius: 50%;
       background: var(--badge-color, #999);
