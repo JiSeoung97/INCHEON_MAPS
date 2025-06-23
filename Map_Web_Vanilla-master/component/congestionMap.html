@@ -1,7 +1,6 @@
 <template id="congestionMap">
   <style>
-    /* ───────────────────────────────── */
-    /* 1) 호스트(캔버스 전체 크기) */
+
     :host {
       position: relative;
       display: inline-block;
@@ -10,8 +9,6 @@
       overflow: visible;
     }
 
-    /* ───────────────────────────────── */
-    /* 2) 반투명 맵 이미지 */
     .mapImg {
       position: relative;
       bottom: auto;
@@ -20,12 +17,8 @@
       object-fit: cover;
       pointer-events: none;
     }
-
-    /* ───────────────────────────────── */
-    /* 3) 버블 컨테이너 기본 위치 */
     .bubble-container {
       position: absolute;
-      /* 좌표는 HTML 클래스(gate1~6) 별로 정의 */
       transform: translate(-50%, -50%);
       z-index: 2000;
     }
@@ -37,17 +30,15 @@
     .bubble-container.gate4 { top: 25%; left: 30%}
     .bubble-container.gate5 { top: 52%; left: 20%}
     .bubble-container.gate6 { top: 80%; left: 10%}
-    /* ───────────────────────────────── */
-    /* 4) 버블 그룹: 고정 크기 */
+
     .bubble-group {
       display: inline-flex;
       border-radius: 10px;
       
       background: #fff;
       overflow: hidden;
-
-      /* 고정 크기 지정 */
-      width: 103px;
+      
+      width: 102px;
       height: 36px;
       box-sizing: border-box;
 
@@ -60,11 +51,11 @@
       background: #fff;
       overflow: hidden;
 
-      /* 고정 크기 지정 */
+
       width: 52px;
       height: 36px;
       box-sizing: border-box;
-      transform: translateY(20%);
+      transform: translateY(15%);
     }
     
     .tags {
@@ -73,15 +64,16 @@
         height: 100%;
     }
     .tag .dir {
-        font-weight: bold;
         font-size: 8px;
         color: #333;
         flex-shrink: 0;
+        padding-top: 3px;
         
     }
     .tags .tag {
-      padding: 5,5px;
+      padding: 5.5px;
       flex: 1;
+      gap:0px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -94,9 +86,9 @@
       font-size: 15px;
     }
     .notag {
-      display: flex;              /* ❶ */
-      justify-content: center;    /* 수평 중앙 */
-      align-items: center;        /* 수직 중앙 */
+      display: flex;              
+      justify-content: center;  
+      align-items: center;        
       width: 100%;
       height: 100%;
       font-size: 11.12px;
@@ -105,8 +97,8 @@
       border-radius: 10px;
     }
 
-    /* ───────────────────────────────── */
-    /* 6) 상태별 텍스트 색상 */
+
+
     .tag span{
       font-size: 11.12px;
     }
@@ -116,14 +108,14 @@
     .tag .status.high    { color: #FF823F;}
     .tag .status.veryhigh { color: #FF5959;}
 
-    /* ───────────────────────────────── */
-    /* 7) 배지(번호 원형) */
+
+
     .num {
       display: inline-flex;
       position: absolute;
       top: -10px;
       left: 50%;
-      transform: translate(-50%,50%);
+      transform: translate(-50%,30%);
       width: 19px;
       height: 19px;
       line-height: 24px;
@@ -139,7 +131,7 @@
     }
   </style>
 
-  <!-- 실제 DOM 구조 -->
+
   <img class="mapImg" src="images/map.png" alt="공항 지도" />
 
   <div class="bubble-container gate1">
@@ -153,7 +145,7 @@
     <span class="num">1</span>
   </div>
 
-  <!-- Gate 2 ~ Gate 5 (서편+동편) -->
+
   <div class="bubble-container gate2">
     <div class="bubble-group">
       <div class="tags">

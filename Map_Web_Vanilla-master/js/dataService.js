@@ -9,31 +9,33 @@ const DataService = (() => {
     const congestionLevels = ["low", "medium", "high","veryhigh"];
 
     data.buildings.forEach((building) => {
-      building.areas.forEach((area) => {
-        const randomLevel =
-          congestionLevels[Math.floor(Math.random() * congestionLevels.length)];
-        area.congestion = randomLevel;
+      building.areas.forEach((area,idx) => {
+        if(idx!==0&&idx!==9){
+          const randomLevel =
+            congestionLevels[Math.floor(Math.random() * congestionLevels.length)];
+            area.congestion = randomLevel;
+          switch (randomLevel) {
+            case "low":
+              area.count = Math.floor(
+                area.capacity * (Math.random() * 0.3)
+              );
+              break;
+            case "medium":
+              area.count = Math.floor(
+                area.capacity * (0.3 + Math.random() * 0.2)
+              );
+              break;
+            case "high":
+              area.count = Math.floor(
+                area.capacity * (0.4 + Math.random() * 0.3)
+              );
+            case "veryhigh":
+              area.count = Math.floor(
+                area.capacity * (0.5 + Math.random() * 0.2)
+              );
+              break;
+          }
 
-        switch (randomLevel) {
-          case "low":
-            area.count = Math.floor(
-              area.capacity * (Math.random() * 0.3)
-            );
-            break;
-          case "medium":
-            area.count = Math.floor(
-              area.capacity * (0.3 + Math.random() * 0.2)
-            );
-            break;
-          case "high":
-            area.count = Math.floor(
-              area.capacity * (0.4 + Math.random() * 0.3)
-            );
-          case "veryhigh":
-            area.count = Math.floor(
-              area.capacity * (0.5 + Math.random() * 0.2)
-            );
-            break;
         }
       });
     });

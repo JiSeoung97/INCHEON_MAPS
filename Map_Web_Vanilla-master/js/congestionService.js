@@ -53,6 +53,8 @@ const CongestionService = (() => {
     // 데이터 가져오기 및 템플릿 복제
     const areas = DataService.getAllAreas();
     const frag = tplContent.cloneNode(true);
+    const notag =frag.querySelectorAll('.notag');
+    areas.splice(0,1);
     const tagDivs = frag.querySelectorAll('.tag');
     const bubble = frag.querySelectorAll('.bubble-container');
     let color;
@@ -69,8 +71,8 @@ const CongestionService = (() => {
       }
       color = formatColors(area.congestion);
       const statusClass = area.congestion;
-      div.innerHTML = '<span class="dir">'+dir+'</span>'
-      +'<span class="status '+statusClass+'">'+statusText+'</span>';
+      div.innerHTML = '<span class="dir">'+dir+'</span>'+
+      '<span class="status '+statusClass+'">'+statusText+'</span>';
         switch(idx){
             case 0:
             case 1:
@@ -148,9 +150,24 @@ const CongestionService = (() => {
             default:
                 console.log('err');
         }
+        
     });
-
-
+    //이벤트리스너
+    tagDivs.forEach((tagDiv, idx) => {
+      tagDiv.addEventListener('click', () => {
+      console.log(`태그 ${idx} 클릭됨`);
+      MapService.moveMap(idx);
+      MapService.openWindowInfo(idx);
+      });
+    });
+    notag.forEach((tagDiv, idx) => {
+      idx = idx +9
+      tagDiv.addEventListener('click', () => {
+      console.log(`태그 ${idx} 클릭됨`);
+      MapService.moveMap(idx);
+      MapService.openWindowInfo(idx);
+      });
+    });
 
     // 템플릿 교체
     // 기존 <template> 태그 대체
@@ -188,7 +205,7 @@ const CongestionService = (() => {
   return {render};
 })();
 
-// DOMContentLoaded에서 render 호출
-window.addEventListener('DOMContentLoaded', () => {
-  CongestionService.render().catch(err => console.error(err));
-});
+// // DOMContentLoaded에서 render 호출
+// window.addEventListener('DOMContentLoaded', () => {
+//   CongestionService.render().catch(err => console.error(err));
+// });

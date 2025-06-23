@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Map-WEB</title>
     <link rel="stylesheet" href="css/style.css" />
+    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script
       type="text/javascript"
@@ -24,10 +25,11 @@
         <table>
           <tr>
             <th>• 제1여객터미널 혼잡도 
-              <span id="info">?</span>
+              <span id="questionMark">?</span>
             </th>
             <th>
-              <p id="nTime"></p>
+              <span id="reqLocation">내 위치 확인</span>
+              <img id="requestLocation" src="./images/user_Location.png">
             </th>
           </tr>
         </table>
@@ -58,11 +60,10 @@
           </tr>
         </table>
       </div>
-      <button class = "gateCongestion" id="toggleCongestion">혼잡도</button>
-      <button id="requestLocation">내 위치 찾기</button>
+      <p id="nTime"></p>
     </div>
     <div id="adModal" class="modal-overlay">
-      <div class="modal-content">
+      <div class="modal-content" >
         <p id="modalClose"><img src="./images/x.png"></p>
         <div id="modal-contents">
         <div id="imgBox">
@@ -70,8 +71,8 @@
         </div>
         <div id="modalText">
           <p>출국 전 든든한 한끼 어떠신가요?</p>
-          <h3>인천공항 맛집 BEST 10!</h3>
-          <button id="reco">인천공항 맛집 보러가기</button>
+          <P>인천공항 맛집 BEST 10!</P>
+          <button id="reco">인천공항 맛집 보러가기 <img id="arrow-right" src="./images/arrow-right.png"> </button>
         </div>
         </div>
       </div>

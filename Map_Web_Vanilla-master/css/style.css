@@ -5,7 +5,7 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Pretendard', sans-serif;
   line-height: 1.6;
   overflow-y: visible;
 }
@@ -53,54 +53,6 @@ header h1 {
   row-gap: 12px;
   width: max-content;
 }
-#controls button:hover {
-  background-color: #45a049;
-}
-
-.log {
-  padding: 15px;
-  background-color: #f5f5f5;
-  border-radius: 5px;
-  margin-bottom: 20px;
-}
-
-.log h2 {
-  margin-bottom: 10px;
-  font-size: 18px;
-}
-
-#log-content {
-  max-height: 200px;
-  overflow-y: auto;
-  padding: 10px;
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-#log-content p {
-  margin-bottom: 5px;
-  font-size: 14px;
-}
-
-/* 로그 스타일 */
-.log-info {
-  color: #333;
-}
-
-.log-error {
-  color: #f44336;
-  font-weight: bold;
-}
-
-.log-warning {
-  color: #ffc107;
-}
-
-.log-success {
-  color: #4caf50;
-}
-
 /* 인포윈도우 스타일 */
 .info-window {
   padding: 10px;
@@ -108,13 +60,28 @@ header h1 {
 }
 
 .info-window h3 {
+  text-align: center;
   margin-bottom: 5px;
 }
 
 .info-window p {
   margin-bottom: 5px;
 }
-
+.info-window.low{
+  border-color: #32A1FF;
+}
+.info-window.medium{
+  border-color: #00C73C;
+}
+.info-window.high{
+  border-color: #FF823F;
+}
+.info-window.veryhigh{
+  border-color: #FF5959;
+}
+.info-window.none {
+  border-color: #999;
+}
 .info-window .status {
   display: inline-block;
   width: 12px;
@@ -137,7 +104,9 @@ header h1 {
 .info-window .status.veryhigh {
   background-color: #FF5959;
 }
-
+.info-window .status.none {
+  background-color: #999;
+}
 .info-window button {
   padding: 5px 10px;
   background-color: #4caf50;
@@ -215,11 +184,14 @@ header h1 {
 
 /* 위치 버튼 강조 */
 #requestLocation {
-  background-color: #3b5998;
+  width: 13px;
+  height: 13px;
+  border-radius: 5px;
+  color: #ffffff;
 }
 
 #requestLocation:hover {
-  background-color: #2d4373;
+  background-color: #8395bb;
 }
 
 
@@ -261,6 +233,7 @@ table{
   width: 100%;
   height: 100%;
   text-align:left;
+  
 }
 
 th{
@@ -281,10 +254,10 @@ div p {
   font-size: 15px;
 }
 
-table th:nth-child(1){
+#contents tr th:nth-child(1){
   width : 30%;
 }
-table th:nth-child(2), table th:nth-child(3){
+#contents tr th:nth-child(2), table th:nth-child(3){
   width : 35%;
 }
 
@@ -321,14 +294,11 @@ table th:nth-child(2), table th:nth-child(3){
 
 .menuBtn:nth-child(1),.menuBtn:nth-child(2){
   width: 50%;
-}
-.menuBtn:nth-child(1){
-  border-bottom: 3px solid #212122;
+  border-bottom: 1px solid #2121221A ;
 }
 
-.menuBtn:nth-child(2){
-  border-bottom: 1px solid #2121221A;
-  
+.menuBtn:nth-child(1){
+  border-bottom: 3px solid #212122;
 }
 
 #controls th{
@@ -347,6 +317,11 @@ table th:nth-child(2), table th:nth-child(3){
   font-size: 13px;
   color: #00000080;
   font-weight: 500;
+  width: 50%;
+}
+.tabs table tr th:last-child{
+  text-align: right;
+  justify-content: center;
 }
 .tabs table tr th p{
   font-size: 13px;
@@ -358,15 +333,14 @@ table th:nth-child(2), table th:nth-child(3){
   background: rgba(0,0,0,0.5);
   display: none;               /* 숨김 상태 */
   align-items: flex-start; justify-content:center;
-  z-index: 1000;
+  z-index: 4000;
   padding-top: 20px;
 }
 .modal-content {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 15px;
   width: 90%; max-width: 480px;
-  min-height: 150px;           /* 필요에 따라 조절 */
-  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+  min-height: 150px;           /* 필요에 따라 조절 */ 
   position: relative;
 }
 #imgBox{
@@ -377,6 +351,8 @@ table th:nth-child(2), table th:nth-child(3){
   justify-content: center;
 }
 #modalClose{
+  padding-top: 5px;
+  padding-right: 5px;
   display: flex;
   justify-content: right;
 }
@@ -386,19 +362,46 @@ table th:nth-child(2), table th:nth-child(3){
 }
 #modalText{
   flex: 1;
+  
 }
-#modalText p{
+#modalText p:nth-child(1){
+  font-size: 12px;
+  text-align: left;
+  font-weight: bold;
+}
+#modalText p:nth-child(2){
+  font-size: 18;
+  font-weight: bold;
   text-align: left;
   font-weight: bold;
 }
 #reco{
-  padding-top: 3px;
-  padding-bottom: 3px;
+  padding-top: 5px;
+  padding-bottom: 5px;
   font-weight: bold;
   font-size: 15px;
   width: 90%;
-  border-radius: 3px;
+  border-radius: 5px;
+  border: 3px;
   border-color: #2595FF;
   color: #ffffff;
   background-color: #2595FF;
+}
+
+#questionMark{
+  display: inline-flex;
+  height: 12px;
+  width: 12px;
+  padding-left: 2.8px;
+  align-items: center;
+  text-align: center;
+  border-radius: 6px;
+  border:0.86px solid #808080 !important;
+  font-size: 10.29px;
+}
+#arrow-right{
+  padding-top: 3px;
+  height: 18px;
+  object-fit: cover;
+
 }

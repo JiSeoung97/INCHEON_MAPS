@@ -5,15 +5,16 @@ $(document).ready(() => {
   MapService.showMarkers();
   MapService.showBScongestion();
   MapService.timereset();
-  setTimeout(()=>{
-    // MapService.modalOpen();
-
-  },5*1000)
+  if(sessionStorage.getItem('render')){
+    MapService.modalOpen();
+  }
+  sessionStorage.setItem('render',true);
+  let btnIdx=0;
   $(".menuBtn").click((e) => {
-    const idx = Number(e.currentTarget.dataset.idx);
-    console.log('idx',idx);
-    MapService.changeMenu(idx);
-    if(idx===0){
+    btnIdx = Number(e.currentTarget.dataset.idx);
+    MapService.changeMenu(btnIdx);
+    console.log(btnIdx)
+    if(btnIdx===0){
       MapService.showBScongestion();
       const moveGate = document.getElementsByClassName('eastWest');
       
@@ -22,30 +23,24 @@ $(document).ready(() => {
         gate.addEventListener('click',()=>{
           MapService.moveMap(index);
           MapService.openWindowInfo(index);
-          
+        
         })
       })
 
     }else{
+      console.log('here');
       CongestionService.render();
     }
   });
-  $("#resetAll").click(() => {
-    location.reload();
-  });
   $("#modalClose").click(() => {
     MapService.modalClose();
-    setTimeout(()=>{
-    MapService.modalOpen();
-
-    },10*1000)
   });
   $("#reco").click(() => {
     console.log('버튼은 눌림')
     window.location.href = 'http://www.naver.com';
   });
   $("#toggleCongestion").click(() => {
-    MapService.toggleCongestion();
+    
     MapService.showBScongestion();
   });
   $("#showMenu").click(() => {
@@ -61,10 +56,41 @@ $(document).ready(() => {
       
     })
   })
-
+ 
 
   $("#requestLocation").click(() => {
+    requestLocationPermission
     MapService.moveToUserLocation();
+    MapService.toggleCongestion();
+    MapService.timereset();
+    if(sessionStorage.getItem('render')){
+    MapService.modalOpen();
+    }
+    
+    
+    MapService.changeMenu(btnIdx);
+    console.log(btnIdx);
+    if(btnIdx===0){
+      console.log('1번 실행됨')
+      MapService.showBScongestion();
+      const moveGate = document.getElementsByClassName('eastWest');
+    
+      Array.from(moveGate).forEach((gate,index)=>{
+        gate.addEventListener('click',()=>{
+          MapService.moveMap(index);
+          MapService.openWindowInfo(index);
+        
+        })
+      })
+    }else{
+      console.log('2번 실행됨')
+      CongestionService.render();
+      const tag = document.getElementsByClassName('tag');
+      const notag = document.getElementsByClassName('notag');
+      console.log(notag);
+      
+      
+    }
   });
 
   const requestLocationPermission = () => {
@@ -96,8 +122,6 @@ $(document).ready(() => {
       Logger.log("이 브라우저에서는 위치 기능을 지원하지 않음.", "error");
     }
   };
-
-  setTimeout(requestLocationPermission, 2000);
 
   Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
   Logger.log(

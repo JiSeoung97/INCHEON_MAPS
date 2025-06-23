@@ -74,12 +74,12 @@ const MapService = (() => {
   let countE = null;
 
   const getDistance = (area) =>{
-  const kiosk = DataService.getCompanyLocation();
-      
+  const savedLocation = JSON.parse(localStorage.getItem('myLocation'));
+
   const lng1 = area.position.lng;
   const lat1 = area.position.lat;
-  const lng2 = kiosk.position.lng;
-  const lat2 = kiosk.position.lat;
+  const lng2 = savedLocation.lng;
+  const lat2 = savedLocation.lat;
       
   const earthR = 6371000; // 지구 반지름
   const degToRad = deg => deg * (Math.PI/180);
@@ -89,12 +89,42 @@ const MapService = (() => {
 
   const a =Math.sin(dLat/2)**2+Math.cos(degToRad(lat1))*Math.cos(degToRad(lat2))*Math.sin(dlng/2)**2
 
-  return Math.round(earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)))
+  return Math.round(earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))).toLocaleString()
 
   }
+  navigator.geolocation.getCurrentPosition(
+  function(position) {
+    const locationData = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude
+    };
+    localStorage.setItem('myLocation', JSON.stringify(locationData));
+    console.log("위치 저장 완료:", locationData);
+  },
+  function(error) {
+    console.error("위치 정보를 가져올 수 없습니다:", error);
+  }
+);
+
+  const limitLocation= (userLocation)=>{
+    const maxLat = 37.496831;
+    const minLat = 37.420388;
+    const maxLng = 126.499959;
+    const minLng = 126.388376;
+    const userLat = userLocation.lat;
+    const userLng = userLocation.lng;
+    return userLat<maxLat && userLat>minLat&& userLng<maxLng&&userLng>minLng
+  }
+
+
+
   const congestionColor = (areaData)=>{
     let gaugeColor;
+    
     switch (areaData.congestion) {
+      case "none":
+        gaugeColor = "#999";
+        break;
       case "low":
         gaugeColor = "#32A1FF";
         break;
@@ -108,7 +138,7 @@ const MapService = (() => {
         gaugeColor = "#FF5959";
         break;
       default:
-        gaugeColor = "#32A1FF";
+        gaugeColor = "#999";
     }
     return gaugeColor
 
@@ -154,7 +184,7 @@ const MapService = (() => {
     const ampm = hour <12 ? '오전':'오후';
     hour = hour%12 ||12;
     const hourStr = String(hour).padStart(2,'0');
-    time.innerHTML=year+'.'+month+'.'+day+' '+ampm+' '+hourStr+'시 '+minutes+'분 '+'<img id="resetAll" src="./images/reset_img.png" alt="resetImg"></p>'; 
+    time.innerHTML='UPDATE : '+year+'.'+month+'.'+day+' '+ampm+' '+hourStr+'시 '+minutes+'분 '; 
 
   }
 
@@ -200,26 +230,31 @@ const MapService = (() => {
   }
 
   const showGateCongestion = (index)=>{
-    const areadata = DataService.getAllAreas();
+    const allAreadata = DataService.getAllAreas();
+    const areadata =[];
+    allAreadata.forEach((area,idx)=>{
+      if(idx!=0||idx!=allAreadata.length){
+        areadata.push(area)
+      }
+    })
     
-    if (index <20){
-      areadata.pop();
-      areadata.pop();
-    }else{
-      let g2area = [];
-      g2area.push(areadata[5])
-      g2area.push(areadata[6])
-      areadata = g2area;
-    }
     
     const contentsEl = document.getElementsByClassName("eastWest");
+
     setTimeout(()=>{
       areadata.forEach((conData,index)=>{
+        
+        console.log(index)
         let gaugeColor;
         let conLevel;
         let border;
         let textColor;
         switch (conData.congestion) {
+          case "none":
+            gaugeColor = "#999";
+            conLevel= "미사용";
+            border = "1px solid #999";
+            textColor = "#99999";
           case "low":
             gaugeColor = "#EBF6FF";
             conLevel = "원활";
@@ -259,7 +294,7 @@ const MapService = (() => {
           contentsEl[index].innerHTML=htmlcontents;
         }else{
           var htmlcontents = '<div style = "background-color:'+gaugeColor+';text-align: center;border:'+border+'"><p class ="gatePoint">서편</p><h4 style = "color:'+textColor+'">'+conLevel+'</h4></div>';
-        
+          
           contentsEl[index].innerHTML=htmlcontents;
         }
         
@@ -301,10 +336,8 @@ const MapService = (() => {
           iw.close();
         });
         infoWindow.open(map, marker);
-        Logger.log(areaData.name + "마커가 클릭됨");
       }
       });
-    
     markers.push(marker);
     infoWindows.push(infoWindow);
 
@@ -327,6 +360,9 @@ const MapService = (() => {
     let gaugeColor;
 
     switch (areaData.congestion) {
+      case "none":
+        gaugeColor="#999";
+        break;
       case "low":
         gaugeColor = "#32A1FF";
         break;
@@ -344,7 +380,7 @@ const MapService = (() => {
     }
 
     return (
-      '<div class="info-window">' +
+      '<div class="info-window ' +areaData.congestion+'">' +
       "<h3>" +
       areaData.name +
       "</h3>" +
@@ -371,9 +407,9 @@ const MapService = (() => {
         size: new naver.maps.Size(27, 35),
         anchor: new naver.maps.Point(7,10),
       });
-
       infoWindows[index].setContent(getInfoWindowContent(updatedArea));
-      
+      let color=congestionColor(areaData);
+      infoWindows[index].setOptions({borderColor : color});
       areas[index] = updatedArea;
     });
 
@@ -409,7 +445,6 @@ const MapService = (() => {
   return {
     init: () => {
       console.log("MapService 초기화 시작");
-
       const mapElement = document.getElementById("map");
       if (!mapElement) {
         console.error("지도를 표시할 엘리먼트를 찾을 수 없음.");
@@ -420,7 +455,7 @@ const MapService = (() => {
         console.error("네이버 지도 API가 로드되지 않았습니다.");
         return null;
       }
-
+      
       try {
         console.log("지도 초기화 시도...");
 
@@ -565,29 +600,33 @@ const MapService = (() => {
     moveToUserLocation: () => {
       getCurrentPosition(
         (userLocation) => {
-          map.setCenter(
-            new naver.maps.LatLng(userLocation.lat, userLocation.lng)
-          );
-          Logger.log("사용자 위치로 이동했습니다.", "success");
-          console.log(
-            `현재 사용자 좌표 : Lat(${userLocation.lat}), Lng(${userLocation.lng})`
-          );
+          if(limitLocation(userLocation)){
+            map.setCenter(
+              new naver.maps.LatLng(userLocation.lat, userLocation.lng)
+            );
+            Logger.log("사용자 위치로 이동했습니다.", "success");
+            console.log(
+              `현재 사용자 좌표 : Lat(${userLocation.lat}), Lng(${userLocation.lng})`
+            );
+            
+            const userMarker = new naver.maps.Marker({
+              position: new naver.maps.LatLng(userLocation.lat, userLocation.lng),
+              map,
+              title: "현재 위치",
+              icon: {
+                content:
+                  '<div style="background-color: #4285F4; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #fff;"></div>',
+                size: new naver.maps.Size(18, 18),
+                anchor: new naver.maps.Point(9, 9),
+              },
+            });
+            setTimeout(() => {
+              userMarker.setMap(null);
+            }, 10000);
+          }else{
+            alert("이 기능은 인천공항 내에서만 사용가능한 기능입니다.")
+          }
 
-          const userMarker = new naver.maps.Marker({
-            position: new naver.maps.LatLng(userLocation.lat, userLocation.lng),
-            map,
-            title: "현재 위치",
-            icon: {
-              content:
-                '<div style="background-color: #4285F4; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #fff;"></div>',
-              size: new naver.maps.Size(18, 18),
-              anchor: new naver.maps.Point(9, 9),
-            },
-          });
-
-          setTimeout(() => {
-            userMarker.setMap(null);
-          }, 10000);
         },
         (error) => {
           alert(
@@ -605,13 +644,34 @@ const MapService = (() => {
 
     moveMap : (index) => {
     const allareas = DataService.getAllAreas();
-    
+    let idx=0;
+    console.log('여기 됨',index)
     var transition = {
       duration : 500,
       easing : 'linear'
     }
-    console.log(allareas[index].position);
-    map.panTo(allareas[index].position, transition)
+    switch(index){
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+      case 7:
+      case 8:
+        idx = index+1;
+        break;
+      case 9:
+        idx=0;
+        break;
+      case 10:
+        idx=9;
+        break;
+    }
+    console.log('index'+(idx));
+    console.log(allareas[idx])
+    map.panTo(allareas[idx].position, transition)
 
     },
 
@@ -621,7 +681,28 @@ const MapService = (() => {
 
 
     openWindowInfo : (index) => {
-      infoWindows[index].open(map,markers[index])
+      
+      let idx=0;
+      switch(index){
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+          idx = index+1;
+          break;
+        case 9:
+          idx=0;
+          break;
+        case 10:
+          idx=9;
+          break;
+      }
+      infoWindows[idx].open(map,markers[idx])
       
     },
 
