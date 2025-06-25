@@ -9,7 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script
       type="text/javascript"
-      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=6nv3jwasxn"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=API_KEY"
     ></script>
   </head>
   <body>
@@ -78,7 +78,6 @@
       </div>
     </div>
     
-
     <script src="data/mock-data.js"></script>
     <script src="js/dataService.js"></script>
     <script src="js/mapService.js"></script>
@@ -88,11 +87,11 @@
       // 페이지 로드 완료 후 실행
       window.addEventListener("load", function () {
         console.log("페이지 로드 완료");
-
+        
         // 지도 컨테이너 확인
         var mapDiv = document.getElementById("map");
         console.log("지도 컨테이너:", mapDiv);
-
+        
         // 네이버 Maps API 로드 확인
         if (typeof naver !== "undefined" && naver.maps) {
           console.log("네이버 Maps API 로드 성공");
@@ -100,6 +99,6 @@
           console.error("네이버 Maps API 로드 실패");
         }
       });
-    </script>
+      </script>
   </body>
 </html>

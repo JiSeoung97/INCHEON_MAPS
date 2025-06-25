@@ -159,8 +159,6 @@ const MapService = (() => {
 
 
     map = new naver.maps.Map("map", mapOptions);
-    
-    
     return map;
   };
   

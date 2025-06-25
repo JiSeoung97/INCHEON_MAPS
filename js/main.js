@@ -5,6 +5,7 @@ $(document).ready(() => {
   MapService.showMarkers();
   MapService.showBScongestion();
   MapService.timereset();
+  
   if(sessionStorage.getItem('render')){
     MapService.modalOpen();
   }
@@ -35,9 +36,10 @@ $(document).ready(() => {
   $("#modalClose").click(() => {
     MapService.modalClose();
   });
+  
   $("#reco").click(() => {
     console.log('버튼은 눌림')
-    window.location.href = 'http://www.naver.com';
+    window.open('http://www.naver.com');
   });
   $("#toggleCongestion").click(() => {
     
@@ -59,7 +61,7 @@ $(document).ready(() => {
  
 
   $("#requestLocation").click(() => {
-    requestLocationPermission
+    requestLocationPermission;
     MapService.moveToUserLocation();
     MapService.toggleCongestion();
     MapService.timereset();
@@ -71,7 +73,6 @@ $(document).ready(() => {
     MapService.changeMenu(btnIdx);
     console.log(btnIdx);
     if(btnIdx===0){
-      console.log('1번 실행됨')
       MapService.showBScongestion();
       const moveGate = document.getElementsByClassName('eastWest');
     
@@ -79,28 +80,25 @@ $(document).ready(() => {
         gate.addEventListener('click',()=>{
           MapService.moveMap(index);
           MapService.openWindowInfo(index);
-        
         })
       })
     }else{
-      console.log('2번 실행됨')
       CongestionService.render();
       const tag = document.getElementsByClassName('tag');
       const notag = document.getElementsByClassName('notag');
-      console.log(notag);
-      
-      
     }
   });
+
+  
 
   const requestLocationPermission = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
-          Logger.log("위치 권한 확인됨", "success");
+          console.log("위치 권한 확인됨", "success");
         },
         (error) => {
-          Logger.log("위치 권한 필요: " + error.message, "warning");
+          console.log("위치 권한 필요: " + error.message, "warning");
 
           switch (error.code) {
             case error.PERMISSION_DENIED:
