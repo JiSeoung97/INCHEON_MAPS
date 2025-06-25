@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Map-WEB</title>
     <link rel="stylesheet" href="css/style.css" />
-    <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
+      rel="stylesheet"
+    />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script
       type="text/javascript"
@@ -24,16 +27,16 @@
       <div class="tabs">
         <table>
           <tr>
-            <th>• 제1여객터미널 혼잡도 
+            <th>
+              • 제1여객터미널 혼잡도
               <span id="questionMark">?</span>
             </th>
             <th>
               <span id="reqLocation">내 위치 확인</span>
-              <img id="requestLocation" src="./images/user_Location.png">
+              <img id="requestLocation" src="./images/user_Location.png" />
             </th>
           </tr>
         </table>
-        
       </div>
       <div id="controls">
         <table id="contents">
@@ -48,7 +51,6 @@
             <th class="eastWest"></th>
           </tr>
           <tr class="gate4">
-            
             <th>4출국장</th>
             <th class="eastWest"></th>
             <th class="eastWest"></th>
@@ -63,21 +65,24 @@
       <p id="nTime"></p>
     </div>
     <div id="adModal" class="modal-overlay">
-      <div class="modal-content" >
-        <p id="modalClose"><img src="./images/x.png"></p>
+      <div class="modal-content">
+        <p id="modalClose"><img src="./images/x.png" /></p>
         <div id="modal-contents">
-        <div id="imgBox">
-          <img id="modelImg" src="./images/modal_img.jpg">
-        </div>
-        <div id="modalText">
-          <p>출국 전 든든한 한끼 어떠신가요?</p>
-          <P>인천공항 맛집 BEST 10!</P>
-          <button id="reco">인천공항 맛집 보러가기 <img id="arrow-right" src="./images/arrow-right.png"> </button>
-        </div>
+          <div id="imgBox">
+            <img id="modelImg" src="./images/modal_img.jpg" />
+          </div>
+          <div id="modalText">
+            <p>출국 전 든든한 한끼 어떠신가요?</p>
+            <p>인천공항 맛집 BEST 10!</p>
+            <button id="reco">
+              인천공항 맛집 보러가기
+              <img id="arrow-right" src="./images/arrow-right.png" />
+            </button>
+          </div>
         </div>
       </div>
     </div>
-    
+
     <script src="data/mock-data.js"></script>
     <script src="js/dataService.js"></script>
     <script src="js/mapService.js"></script>
@@ -87,11 +92,11 @@
       // 페이지 로드 완료 후 실행
       window.addEventListener("load", function () {
         console.log("페이지 로드 완료");
-        
+
         // 지도 컨테이너 확인
         var mapDiv = document.getElementById("map");
         console.log("지도 컨테이너:", mapDiv);
-        
+
         // 네이버 Maps API 로드 확인
         if (typeof naver !== "undefined" && naver.maps) {
           console.log("네이버 Maps API 로드 성공");
@@ -99,6 +104,6 @@
           console.error("네이버 Maps API 로드 실패");
         }
       });
-      </script>
+    </script>
   </body>
 </html>
