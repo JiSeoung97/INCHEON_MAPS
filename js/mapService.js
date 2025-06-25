@@ -74,27 +74,30 @@ const MapService = (() => {
 
   const getDistance = (area) => {
     const savedLocation = JSON.parse(localStorage.getItem("myLocation"));
+    console.log(savedLocation);
+    if (savedLocation !== null) {
+      const lng1 = area.position.lng;
+      const lat1 = area.position.lat;
+      const lng2 = savedLocation.lng;
+      const lat2 = savedLocation.lat;
 
-    const lng1 = area.position.lng;
-    const lat1 = area.position.lat;
-    const lng2 = savedLocation.lng;
-    const lat2 = savedLocation.lat;
+      const earthR = 6371000; // 지구 반지름
+      const degToRad = (deg) => deg * (Math.PI / 180);
 
-    const earthR = 6371000; // 지구 반지름
-    const degToRad = (deg) => deg * (Math.PI / 180);
+      const dLat = degToRad(lat2 - lat1);
+      const dlng = degToRad(lng2 - lng1);
 
-    const dLat = degToRad(lat2 - lat1);
-    const dlng = degToRad(lng2 - lng1);
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(degToRad(lat1)) *
+          Math.cos(degToRad(lat2)) *
+          Math.sin(dlng / 2) ** 2;
 
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(degToRad(lat1)) *
-        Math.cos(degToRad(lat2)) *
-        Math.sin(dlng / 2) ** 2;
-
-    return Math.round(
-      earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-    ).toLocaleString();
+      return Math.round(
+        earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a) + "M")
+      ).toLocaleString();
+    }
+    return "위치권한이 필요합니다!";
   };
   navigator.geolocation.getCurrentPosition(
     function (position) {
@@ -420,7 +423,7 @@ const MapService = (() => {
       "</p>" +
       "<p>거리: " +
       areaData.floorInfo +
-      "M</p>"
+      "</p>"
     );
   };
 
