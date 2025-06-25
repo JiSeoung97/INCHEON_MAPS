@@ -5,16 +5,22 @@
 }
 
 body {
+  display: flex;
   font-family: 'Pretendard', sans-serif;
   line-height: 1.6;
   overflow-y: visible;
+  justify-content: center;
+  background-color: #f8f8f8;
 }
 
 .container {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+  max-width: 430px;
+  margin: auto;
+  background-color: white;
+  min-height: 100vh;
+  box-shadow: 0 0 9px rgba(0,0,0,0,1);
+  
 }
 
 header {
@@ -405,3 +411,9 @@ div p {
   object-fit: cover;
 
 }
+ #google_translate_element {
+    top: 20px;
+    right: 20px;
+    padding: 5px;
+  }
+
