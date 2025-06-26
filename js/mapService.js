@@ -65,7 +65,9 @@ let areaData;
 const MapService = (() => {
   let map = null;
   let markers = [];
+  let boardingMarkers = [];
   let infoWindows = [];
+  let boardingInfoWindows = [];
   let areas = [];
   let companyMarker = null;
   let companyInfoWindow = null;
@@ -73,8 +75,8 @@ const MapService = (() => {
   let countE = null;
 
   const getDistance = (area) => {
-    const savedLocation = JSON.parse(localStorage.getItem("myLocation"));
-    console.log(savedLocation);
+    const savedLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+
     if (savedLocation !== null) {
       const lng1 = area.position.lng;
       const lat1 = area.position.lat;
@@ -93,25 +95,14 @@ const MapService = (() => {
           Math.cos(degToRad(lat2)) *
           Math.sin(dlng / 2) ** 2;
 
-      return Math.round(
-        earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a) + "M")
-      ).toLocaleString();
+      return (
+        Math.round(
+          earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        ).toLocaleString() + "M"
+      );
     }
     return "위치권한이 필요합니다!";
   };
-  navigator.geolocation.getCurrentPosition(
-    function (position) {
-      const locationData = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      localStorage.setItem("myLocation", JSON.stringify(locationData));
-      console.log("위치 저장 완료:", locationData);
-    },
-    function (error) {
-      console.error("위치 정보를 가져올 수 없습니다:", error);
-    }
-  );
 
   const limitLocation = (userLocation) => {
     const maxLat = 37.496831;
@@ -160,7 +151,6 @@ const MapService = (() => {
       mapDataControl: false,
       scaleControl: false,
       logoControl: false,
-      mapTypeControl: true,
       zoomControl: true,
       maxZoom: 20,
       minZoom: 17,
@@ -249,7 +239,7 @@ const MapService = (() => {
     const allAreadata = DataService.getAllAreas();
     const areadata = [];
     allAreadata.forEach((area, idx) => {
-      if (idx != 0 || idx != allAreadata.length) {
+      if (idx != 0 && idx < 9) {
         areadata.push(area);
       }
     });
@@ -258,7 +248,6 @@ const MapService = (() => {
 
     setTimeout(() => {
       areadata.forEach((conData, index) => {
-        console.log(index);
         let gaugeColor;
         let conLevel;
         let border;
@@ -272,25 +261,25 @@ const MapService = (() => {
           case "low":
             gaugeColor = "#EBF6FF";
             conLevel = "원활";
-            border = "1px solid #32A1FF";
+            border = "1px solid #E8E8E8";
             textColor = "#32A1FF";
             break;
           case "medium":
             gaugeColor = "#E6FAEC";
             conLevel = "보통";
-            border = "1px solid #00C73C";
+            border = "1px solid #E8E8E8";
             textColor = "#00C73C";
             break;
           case "high":
             gaugeColor = "#FFF3EC";
             conLevel = "혼잡";
-            border = "1px solid #FF823F";
+            border = "1px solid #E8E8E8";
             textColor = "#FF823F";
             break;
           case "veryhigh":
             gaugeColor = "#FFEFEF";
             conLevel = "매우혼잡";
-            border = "1px solid #FF5959";
+            border = "1px solid #E8E8E8";
             textColor = "#FF5959";
             break;
           default:
@@ -304,36 +293,30 @@ const MapService = (() => {
         }
         if (index % 2 == 1) {
           var htmlcontents =
-            '<div style = "background-color:' +
-            gaugeColor +
-            ";text-align: center;border:" +
+            '<div style = "text-align: center;border:' +
             border +
             '"><p class ="gatePoint">동편</p><h4 style = "color:' +
             textColor +
             '">' +
             conLevel +
             "</h4></div>";
-
           contentsEl[index].innerHTML = htmlcontents;
         } else {
           var htmlcontents =
-            '<div style = "background-color:' +
-            gaugeColor +
-            ";text-align: center;border:" +
+            '<div style = "text-align: center;border:' +
             border +
             '"><p class ="gatePoint">서편</p><h4 style = "color:' +
             textColor +
             '">' +
             conLevel +
             "</h4></div>";
-
           contentsEl[index].innerHTML = htmlcontents;
         }
       });
     }, 200);
   };
 
-  const createMarker = (areaData) => {
+  const createDepartureMarker = (areaData) => {
     const area = areaData.area || areaData;
     area.floorInfo = getDistance(area);
     const marker = new naver.maps.Marker({
@@ -374,6 +357,48 @@ const MapService = (() => {
     return markers;
   };
 
+  const createBoardingMarker = (areaData) => {
+    const area = areaData.area || areaData;
+    area.floorInfo = getDistance(area);
+    const marker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(area.position.lat, area.position.lng),
+      map: null,
+      title: areaData.name,
+      icon: {
+        content:
+          '<img src="./images/user_Location.png" style="width:15px; height = 15px;">',
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(7, 10),
+      },
+    });
+
+    const infoWindow = new naver.maps.InfoWindow({
+      content: getBoardingInfoWindowContent(areaData),
+      maxWidth: 300,
+      backgroundColor: "#fff",
+      borderColor: congestionColor(area),
+      disableAutopan: true,
+      borderWidth: 2,
+      borderRadius: 5,
+      disableAnchor: false,
+    });
+
+    naver.maps.Event.addListener(marker, "click", () => {
+      if (infoWindow.getMap()) {
+        infoWindow.close();
+      } else {
+        infoWindows.forEach((iw) => {
+          iw.close();
+        });
+        infoWindow.open(map, marker);
+      }
+    });
+    boardingMarkers.push(marker);
+    boardingInfoWindows.push(infoWindow);
+
+    return boardingMarkers;
+  };
+
   const getMarkerIcon = (congestion) => {
     const congestionInfo = DataService.getCongestionInfo(congestion);
     const color = congestionInfo ? congestionInfo.color : "#32A1FF";
@@ -384,29 +409,74 @@ const MapService = (() => {
       '; width: 16px; height: 16px; border-radius: 8px 8px 8px 8px;"></div>'
     );
   };
-
-  const getInfoWindowContent = (areaData) => {
+  const getBoardingInfoWindowContent = (areaData) => {
     const congestionInfo = DataService.getCongestionInfo(areaData.congestion);
     let gaugeColor;
-
+    let distance = getDistance(areaData);
+    let conLevel;
     switch (areaData.congestion) {
       case "none":
         gaugeColor = "#999";
-        break;
+        conLevel = "미사용";
       case "low":
-        gaugeColor = "#32A1FF";
+        gaugeColor = "#EBF6FF";
+        conLevel = "원활";
         break;
       case "medium":
-        gaugeColor = "#00C73C";
+        gaugeColor = "#E6FAEC";
+        conLevel = "보통";
         break;
       case "high":
-        gaugeColor = "#FF823F";
+        gaugeColor = "#FFF3EC";
+        conLevel = "혼잡";
         break;
       case "veryhigh":
-        gaugeColor = "#FF5959";
+        gaugeColor = "#FFEFEF";
+        conLevel = "매우혼잡";
         break;
       default:
-        gaugeColor = "#32A1FF";
+        gaugeColor = "#4CAF50";
+    }
+
+    return (
+      '<div class="info-window ' +
+      areaData.congestion +
+      '">' +
+      "<h3>" +
+      areaData.name +
+      "</h3>" +
+      "<p>거리: " +
+      distance +
+      "</p>"
+    );
+  };
+  const getInfoWindowContent = (areaData) => {
+    const congestionInfo = DataService.getCongestionInfo(areaData.congestion);
+    let gaugeColor;
+    let distance = getDistance(areaData);
+    let conLevel;
+    switch (areaData.congestion) {
+      case "none":
+        gaugeColor = "#999";
+        conLevel = "미사용";
+      case "low":
+        gaugeColor = "#EBF6FF";
+        conLevel = "원활";
+        break;
+      case "medium":
+        gaugeColor = "#E6FAEC";
+        conLevel = "보통";
+        break;
+      case "high":
+        gaugeColor = "#FFF3EC";
+        conLevel = "혼잡";
+        break;
+      case "veryhigh":
+        gaugeColor = "#FFEFEF";
+        conLevel = "매우혼잡";
+        break;
+      default:
+        gaugeColor = "#4CAF50";
     }
 
     return (
@@ -419,10 +489,10 @@ const MapService = (() => {
       '<p><span class="status ' +
       areaData.congestion +
       '"></span>혼잡도: ' +
-      congestionInfo.name +
+      conLevel +
       "</p>" +
       "<p>거리: " +
-      areaData.floorInfo +
+      distance +
       "</p>"
     );
   };
@@ -431,15 +501,20 @@ const MapService = (() => {
     if (!areas.length) return;
 
     areas.forEach((areaData, index) => {
+      areaData.floorInfo = getDistance(areaData);
       const updatedArea = DataService.getAreaData(areaData.id);
       if (!updatedArea) return;
+      if (index < 10) {
+        markers[index].setIcon({
+          content: getMarkerIcon(updatedArea.congestion),
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(7, 10),
+        });
+        infoWindows[index].setContent(getInfoWindowContent(updatedArea));
+      } else {
+        return;
+      }
 
-      markers[index].setIcon({
-        content: getMarkerIcon(updatedArea.congestion),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(7, 10),
-      });
-      infoWindows[index].setContent(getInfoWindowContent(updatedArea));
       let color = congestionColor(areaData);
       infoWindows[index].setOptions({ borderColor: color });
       areas[index] = updatedArea;
@@ -555,9 +630,13 @@ const MapService = (() => {
         }
 
         const allAreas = DataService.getAllAreas();
-        allAreas.forEach((area) => {
+        allAreas.forEach((area, index) => {
           areas.push(area);
-          createMarker(area);
+          if (index < 10) {
+            createDepartureMarker(area);
+          } else {
+            createBoardingMarker(area);
+          }
         });
 
         Logger.log(
@@ -574,6 +653,10 @@ const MapService = (() => {
 
     showMarkers: () => {
       markers.forEach((marker) => {
+        marker.setMap(map);
+      });
+      boardingMarkers.forEach((marker) => {
+        console.log(marker);
         marker.setMap(map);
       });
       Logger.log("마커가 표시되었습니다.");
@@ -595,8 +678,6 @@ const MapService = (() => {
     },
 
     resetMap: () => {
-      markers.forEach((marker) => {});
-
       infoWindows.forEach((infoWindow) => {
         infoWindow.close();
       });
@@ -665,65 +746,88 @@ const MapService = (() => {
     createMoveBtn: () => {
       createButtonTag();
     },
-
-    moveMap: (index) => {
+    savedLocation: () => {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          console.log("이 브라우저는 위치 기능을 지원하지 않습니다.");
+          return reject(new Error("Geolocation not supported"));
+        }
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const locationData = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            sessionStorage.setItem("myLocation", JSON.stringify(locationData));
+            console.log("위치 저장 완료:", locationData);
+            resolve();
+          },
+          (error) => {
+            console.error("위치 정보를 가져올 수 없습니다:", error);
+            reject(error);
+          }
+        );
+      });
+    },
+    moveBoardingMap: (index) => {
       const allareas = DataService.getAllAreas();
       let idx = 0;
-      console.log("여기 됨", index);
       var transition = {
         duration: 500,
         easing: "linear",
       };
-      switch (index) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-          idx = index + 1;
-          break;
-        case 9:
-          idx = 0;
-          break;
-        case 10:
-          idx = 9;
-          break;
+      idx = index + 10;
+      map.panTo(allareas[idx].position, transition);
+    },
+    moveMap: (index) => {
+      const allareas = DataService.getAllAreas();
+      let idx = 0;
+      var transition = {
+        duration: 500,
+        easing: "linear",
+      };
+      if (index !== 9 && index !== 10) {
+        idx = index + 1;
+      } else if (index == 9) {
+        idx = 0;
+      } else {
+        idx = 9;
       }
+
       console.log("index" + idx);
       console.log(allareas[idx]);
       map.panTo(allareas[idx].position, transition);
+
+      const div = document.querySelectorAll(".eastWest div");
+      div.forEach((divBox) => {
+        divBox.style.setProperty("border-color", "#E8E8E8");
+      });
+      div[idx - 1].style.setProperty(
+        "border-color",
+        congestionColor(allareas[idx])
+      );
     },
 
     changeMenu: (idx) => {
       changeMenu(idx);
     },
-
+    updateMarkers: () => {
+      updateMarkers();
+    },
     openWindowInfo: (index) => {
       let idx = 0;
-      switch (index) {
-        case 0:
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-          idx = index + 1;
-          break;
-        case 9:
-          idx = 0;
-          break;
-        case 10:
-          idx = 9;
-          break;
+      if (index !== 9 && index !== 10) {
+        idx = index + 1;
+      } else if (index == 9) {
+        idx = 0;
+      } else {
+        idx = 9;
       }
+      console.log(idx);
       infoWindows[idx].open(map, markers[idx]);
+    },
+    openBoardingWindowInfo: (index) => {
+      boardingInfoWindows[index].open(map, boardingMarkers[index]);
     },
 
     showBScongestion: () => {

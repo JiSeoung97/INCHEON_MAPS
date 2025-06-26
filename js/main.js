@@ -1,11 +1,16 @@
 "use strict";
 
-$(document).ready(() => {
-  const map = MapService.init();
+$(document).ready(async () => {
+  try {
+    await MapService.savedLocation();
+    const map = MapService.init();
+  } catch {
+    alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
+    const map = MapService.init();
+  }
   MapService.showMarkers();
   MapService.showBScongestion();
   MapService.timereset();
-
   if (sessionStorage.getItem("render")) {
     MapService.modalOpen();
   }
@@ -54,7 +59,6 @@ $(document).ready(() => {
   });
 
   $("#requestLocation").click(() => {
-    requestLocationPermission;
     MapService.moveToUserLocation();
     MapService.toggleCongestion();
     MapService.timereset();
@@ -80,36 +84,6 @@ $(document).ready(() => {
       MapService.modalOpen();
     }
   });
-
-  const requestLocationPermission = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          console.log("위치 권한 확인됨", "success");
-        },
-        (error) => {
-          console.log("위치 권한 필요: " + error.message, "warning");
-
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              Logger.log("사용자가 위치 접근 권한을 거부했습니다.", "warning");
-              break;
-            case error.POSITION_UNAVAILABLE:
-              Logger.log("위치 정보를 사용할 수 없습니다.", "error");
-              break;
-            case error.TIMEOUT:
-              Logger.log("위치 정보 요청 시간이 초과되었습니다.", "error");
-              break;
-            case error.UNKNOWN_ERROR:
-              Logger.log("알 수 없는 오류가 발생했습니다.", "error");
-              break;
-          }
-        }
-      );
-    } else {
-      Logger.log("이 브라우저에서는 위치 기능을 지원하지 않음.", "error");
-    }
-  };
 
   Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
   Logger.log(

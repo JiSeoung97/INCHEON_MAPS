@@ -10,112 +10,112 @@ const mockData = {
         {
           id: "gate_1_1",
           name: "1출국장",
-          position: { lat: 37.450312, lng: 126.454200 },
+          position: { lat: 37.450312, lng: 126.4542 },
           congestion: "none",
           count: 12,
           capacity: 50,
           floorInfo: "3층",
-          eastWest:"none",
+          eastWest: "none",
           description: "제 1여객터미널 1출국장",
         },
         {
           id: "gate_1_2_w",
           name: "2출국장 서편",
-          position: { lat: 37.450120, lng: 126.453100 },
+          position: { lat: 37.45021, lng: 126.4531 },
           congestion: "medium",
           count: 45,
           capacity: 80,
           floorInfo: "3층",
-          eastWest:"west",
+          eastWest: "west",
           description: "제 1여객터미널 2출국장 서편",
         },
         {
           id: "gate_1_2_e",
           name: "2출국장 동편",
-          position: { lat: 37.450169, lng: 126.453713 },
+          position: { lat: 37.450265, lng: 126.4536 },
           congestion: "low",
           count: 12,
           capacity: 50,
           floorInfo: "3층",
-          eastWest:"east",
+          eastWest: "east",
           description: "제 1여객터미널 2출국장 동편",
         },
         {
           id: "gate_1_3_w",
           name: "3출국장 서편",
-          position: { lat: 37.449830, lng: 126.451850 },
+          position: { lat: 37.449925, lng: 126.45187 },
           congestion: "high",
           count: 120,
           capacity: 150,
           floorInfo: "3층",
-          eastWest:"west",
+          eastWest: "west",
           description: "제 1여객터미널 3출국장 서쪽",
         },
         {
           id: "gate_1_3_e",
           name: "3출국장 동편",
-          position: { lat: 37.450000, lng: 126.452431 },
+          position: { lat: 37.45008, lng: 126.45242 },
           congestion: "high",
           count: 120,
           capacity: 150,
           floorInfo: "3층",
-          eastWest:"east",
+          eastWest: "east",
           description: "제 1여객터미널 3출국장 동편",
         },
         {
           id: "gate_1_4_w",
           name: "4출국장 서편",
-          position: { lat: 37.448291, lng: 126.449532 },
+          position: { lat: 37.448385, lng: 126.449415 },
           congestion: "high",
           count: 120,
           capacity: 150,
           floorInfo: "3층",
-          eastWest:"west",
+          eastWest: "west",
           description: "제 1여객터미널 4출국장 서편",
         },
         {
           id: "gate_1_4_e",
           name: "4출국장 동편",
-          position: { lat: 37.448700, lng: 126.449900 },
+          position: { lat: 37.448735, lng: 126.44979 },
           congestion: "high",
           count: 120,
           capacity: 150,
           floorInfo: "3층",
-          eastWest:"east",
+          eastWest: "east",
           description: "제 1여객터미널 4출국장 동편",
         },
         {
           id: "gate_1_5_w",
           name: "5출국장 서편",
-          position: { lat: 37.447493, lng: 126.448800 },
+          position: { lat: 37.44752, lng: 126.4488 },
           congestion: "high",
           count: 120,
           capacity: 150,
           floorInfo: "3층",
-          eastWest:"west",
+          eastWest: "west",
           description: "제 1여객터미널 5출국장 서편",
         },
         {
           id: "gate_1_5_e",
           name: "5출국장 동편",
-          position: { lat: 37.447860 , lng: 126.449130 },
+          position: { lat: 37.44792, lng: 126.449045 },
           congestion: "veryhigh",
           count: 120,
           capacity: 150,
           floorInfo: "3층",
-          eastWest:"east",
+          eastWest: "east",
           description: "제 1여객터미널 5출국장 동편",
         },
-        
+
         {
           id: "gate_1_6",
           name: "6출국장",
-          position: { lat: 37.447000, lng: 126.448400 },
+          position: { lat: 37.447, lng: 126.4484 },
           congestion: "none",
           count: 120,
           capacity: 150,
           floorInfo: "3층",
-          eastWest:"none",
+          eastWest: "none",
           description: "제 1여객터미널 6출국장",
         },
       ],
@@ -128,7 +128,7 @@ const mockData = {
         {
           id: "boardinGate_1",
           name: "탑승게이트1",
-          position: { lat: 37.450100, lng: 126.455812 },
+          position: { lat: 37.4501, lng: 126.455812 },
           congestion: "low",
           count: 8,
           capacity: 40,
@@ -138,7 +138,7 @@ const mockData = {
         {
           id: "boardinGate_2",
           name: "탑승게이트2",
-          position: { lat: 37.450090, lng: 126.456020 },
+          position: { lat: 37.45009, lng: 126.45602 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -148,7 +148,7 @@ const mockData = {
         {
           id: "boardinGate_3",
           name: "탑승게이트3",
-          position: { lat: 37.450160, lng: 126.456220 },
+          position: { lat: 37.45016, lng: 126.45622 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -158,7 +158,7 @@ const mockData = {
         {
           id: "boardinGate_6",
           name: "탑승게이트6",
-          position: { lat: 37.450305, lng: 126.456330 },
+          position: { lat: 37.450305, lng: 126.45633 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -168,7 +168,7 @@ const mockData = {
         {
           id: "boardinGate_7",
           name: "탑승게이트7",
-          position: { lat: 37.450525, lng: 126.456290 },
+          position: { lat: 37.450525, lng: 126.45629 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -178,7 +178,7 @@ const mockData = {
         {
           id: "boardinGate_8",
           name: "탑승게이트8",
-          position: { lat: 37.450645, lng: 126.456050 },
+          position: { lat: 37.450645, lng: 126.45605 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -188,7 +188,7 @@ const mockData = {
         {
           id: "boardinGate_9",
           name: "탑승게이트9",
-          position: { lat: 37.450800, lng: 126.455360 },
+          position: { lat: 37.4508, lng: 126.45536 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -198,7 +198,7 @@ const mockData = {
         {
           id: "boardinGate_10",
           name: "탑승게이트10",
-          position: { lat: 37.450890, lng: 126.454665 },
+          position: { lat: 37.45089, lng: 126.454665 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -208,7 +208,7 @@ const mockData = {
         {
           id: "boardinGate_11",
           name: "탑승게이트11",
-          position: { lat: 37.450910, lng: 126.453925 },
+          position: { lat: 37.45091, lng: 126.453925 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -228,7 +228,7 @@ const mockData = {
         {
           id: "boardinGate_14",
           name: "탑승게이트14",
-          position: { lat: 37.452085, lng: 126.452020 },
+          position: { lat: 37.452085, lng: 126.45202 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -238,7 +238,7 @@ const mockData = {
         {
           id: "boardinGate_15",
           name: "탑승게이트15",
-          position: { lat: 37.452750, lng: 126.451920 },
+          position: { lat: 37.45275, lng: 126.45192 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -248,7 +248,7 @@ const mockData = {
         {
           id: "boardinGate_16",
           name: "탑승게이트16",
-          position: { lat: 37.453380, lng: 126.451680 },
+          position: { lat: 37.45338, lng: 126.45168 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -258,7 +258,7 @@ const mockData = {
         {
           id: "boardinGate_17",
           name: "탑승게이트17",
-          position: { lat: 37.453650, lng: 126.451540 },
+          position: { lat: 37.45365, lng: 126.45154 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -268,7 +268,7 @@ const mockData = {
         {
           id: "boardinGate_18",
           name: "탑승게이트18",
-          position: { lat: 37.453750, lng: 126.451350 },
+          position: { lat: 37.45375, lng: 126.45135 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -278,7 +278,7 @@ const mockData = {
         {
           id: "boardinGate_19",
           name: "탑승게이트19",
-          position: { lat: 37.453750, lng: 126.451070 },
+          position: { lat: 37.45375, lng: 126.45107 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -288,7 +288,7 @@ const mockData = {
         {
           id: "boardinGate_20",
           name: "탑승게이트20",
-          position: { lat: 37.453620, lng: 126.450850 },
+          position: { lat: 37.45362, lng: 126.45085 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -298,7 +298,7 @@ const mockData = {
         {
           id: "boardinGate_21",
           name: "탑승게이트21",
-          position: { lat: 37.453475, lng: 126.450790 },
+          position: { lat: 37.453475, lng: 126.45079 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -308,7 +308,7 @@ const mockData = {
         {
           id: "boardinGate_22",
           name: "탑승게이트22",
-          position: { lat: 37.453185, lng: 126.450870 },
+          position: { lat: 37.453185, lng: 126.45087 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -318,7 +318,7 @@ const mockData = {
         {
           id: "boardinGate_23",
           name: "탑승게이트23",
-          position: { lat: 37.452550, lng: 126.451130 },
+          position: { lat: 37.45255, lng: 126.45113 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -328,7 +328,7 @@ const mockData = {
         {
           id: "boardinGate_24",
           name: "탑승게이트24",
-          position: { lat: 37.451950, lng: 126.451420 },
+          position: { lat: 37.45195, lng: 126.45142 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -338,7 +338,7 @@ const mockData = {
         {
           id: "boardinGate_25",
           name: "탑승게이트25",
-          position: { lat: 37.450930, lng: 126.451990 },
+          position: { lat: 37.45093, lng: 126.45199 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -348,7 +348,7 @@ const mockData = {
         {
           id: "boardinGate_26",
           name: "탑승게이트26",
-          position: { lat: 37.450400, lng: 126.451190 },
+          position: { lat: 37.4504, lng: 126.45119 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -358,7 +358,7 @@ const mockData = {
         {
           id: "boardinGate_27",
           name: "탑승게이트27",
-          position: { lat: 37.450120, lng: 126.450565 },
+          position: { lat: 37.45012, lng: 126.450565 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -368,7 +368,7 @@ const mockData = {
         {
           id: "boardinGate_28",
           name: "탑승게이트28",
-          position: { lat: 37.449800, lng: 126.449980 },
+          position: { lat: 37.4498, lng: 126.44998 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -378,7 +378,7 @@ const mockData = {
         {
           id: "boardinGate_29",
           name: "탑승게이트29",
-          position: { lat: 37.449050, lng: 126.448550 },
+          position: { lat: 37.44905, lng: 126.44855 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -388,7 +388,7 @@ const mockData = {
         {
           id: "boardinGate_30",
           name: "탑승게이트30",
-          position: { lat: 37.449380, lng: 126.448240 },
+          position: { lat: 37.44938, lng: 126.44824 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -398,7 +398,7 @@ const mockData = {
         {
           id: "boardinGate_31",
           name: "탑승게이트31",
-          position: { lat: 37.449760, lng: 126.447580 },
+          position: { lat: 37.44976, lng: 126.44758 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -408,7 +408,7 @@ const mockData = {
         {
           id: "boardinGate_32",
           name: "탑승게이트32",
-          position: { lat: 37.450210, lng: 126.446970 },
+          position: { lat: 37.45021, lng: 126.44697 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -418,7 +418,7 @@ const mockData = {
         {
           id: "boardinGate_33",
           name: "탑승게이트33",
-          position: { lat: 37.450590, lng: 126.446310 },
+          position: { lat: 37.45059, lng: 126.44631 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -438,7 +438,7 @@ const mockData = {
         {
           id: "boardinGate_35",
           name: "탑승게이트35",
-          position: { lat: 37.450730, lng: 126.445770 },
+          position: { lat: 37.45073, lng: 126.44577 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -448,7 +448,7 @@ const mockData = {
         {
           id: "boardinGate_36",
           name: "탑승게이트36",
-          position: { lat: 37.450610, lng: 126.445560 },
+          position: { lat: 37.45061, lng: 126.44556 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -458,7 +458,7 @@ const mockData = {
         {
           id: "boardinGate_37",
           name: "탑승게이트37",
-          position: { lat: 37.450410, lng: 126.445490 },
+          position: { lat: 37.45041, lng: 126.44549 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -468,7 +468,7 @@ const mockData = {
         {
           id: "boardinGate_38",
           name: "탑승게이트38",
-          position: { lat: 37.450240, lng: 126.445540 },
+          position: { lat: 37.45024, lng: 126.44554 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -478,7 +478,7 @@ const mockData = {
         {
           id: "boardinGate_39",
           name: "탑승게이트39",
-          position: { lat: 37.450050, lng: 126.445810 },
+          position: { lat: 37.45005, lng: 126.44581 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -488,7 +488,7 @@ const mockData = {
         {
           id: "boardinGate_40",
           name: "탑승게이트40",
-          position: { lat: 37.449670, lng: 126.446470 },
+          position: { lat: 37.44967, lng: 126.44647 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -498,7 +498,7 @@ const mockData = {
         {
           id: "boardinGate_41",
           name: "탑승게이트41",
-          position: { lat: 37.449370, lng: 126.447220 },
+          position: { lat: 37.44937, lng: 126.44722 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -508,7 +508,7 @@ const mockData = {
         {
           id: "boardinGate_42",
           name: "탑승게이트42",
-          position: { lat: 37.448020, lng: 126.448220 },
+          position: { lat: 37.44802, lng: 126.44822 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -518,7 +518,7 @@ const mockData = {
         {
           id: "boardinGate_43",
           name: "탑승게이트43",
-          position: { lat: 37.447495, lng: 126.447940 },
+          position: { lat: 37.447495, lng: 126.44794 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -528,7 +528,7 @@ const mockData = {
         {
           id: "boardinGate_45",
           name: "탑승게이트45",
-          position: { lat: 37.446945, lng: 126.447740 },
+          position: { lat: 37.446945, lng: 126.44774 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -538,7 +538,7 @@ const mockData = {
         {
           id: "boardinGate_46",
           name: "탑승게이트46",
-          position: { lat: 37.446395, lng: 126.447610 },
+          position: { lat: 37.446395, lng: 126.44761 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -548,7 +548,7 @@ const mockData = {
         {
           id: "boardinGate_47",
           name: "탑승게이트47",
-          position: { lat: 37.445825, lng: 126.447560 },
+          position: { lat: 37.445825, lng: 126.44756 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -558,7 +558,7 @@ const mockData = {
         {
           id: "boardinGate_48",
           name: "탑승게이트48",
-          position: { lat: 37.445575, lng: 126.447620 },
+          position: { lat: 37.445575, lng: 126.44762 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -568,7 +568,7 @@ const mockData = {
         {
           id: "boardinGate_49",
           name: "탑승게이트49",
-          position: { lat: 37.445490, lng: 126.447870 },
+          position: { lat: 37.44549, lng: 126.44787 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -578,7 +578,7 @@ const mockData = {
         {
           id: "boardinGate_50",
           name: "탑승게이트49",
-          position: { lat: 37.445570, lng: 126.448120 },
+          position: { lat: 37.44557, lng: 126.44812 },
           congestion: "medium",
           count: 25,
           capacity: 60,
@@ -586,12 +586,12 @@ const mockData = {
           description: "제 2여객터미널 2출국장",
         },
       ],
-    }
+    },
   ],
 
   companyLocation: {
     name: "1번 키오스크",
-    position: { lat: 37.447100, lng: 126.449370 },
+    position: { lat: 37.4471, lng: 126.44937 },
     description: "1출국장 5번출구 앞",
   },
 
@@ -618,11 +618,11 @@ const mockData = {
       color: "#FF823F",
       description: "혼잡함 (수용 인원의 70% 이상)",
     },
-    veryhigh:{
-      name:"매우혼잡",
+    veryhigh: {
+      name: "매우혼잡",
       color: "#FF5959",
       description: "혼잡함 (수용 인원의 90% 이상)",
-    }
+    },
   },
 };
 
