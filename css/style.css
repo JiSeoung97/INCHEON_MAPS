@@ -6,7 +6,7 @@
 
 body {
   display: flex;
-  font-family: 'Pretendard', sans-serif;
+  font-family: "Pretendard", sans-serif;
   line-height: 1.6;
   overflow-y: visible;
   justify-content: center;
@@ -19,8 +19,7 @@ body {
   margin: auto;
   background-color: white;
   min-height: 100vh;
-  box-shadow: 0 0 9px rgba(0,0,0,0,1);
-  
+  box-shadow: 0 0 9px rgba(0, 0, 0, 0, 1);
 }
 
 header {
@@ -46,15 +45,15 @@ header h1 {
   padding: 5px;
   background-color: #ffffff;
   border-radius: 5px;
-  display: grid;  /* 2열 고정 */
-  column-gap: 16px;                      
-  row-gap:    12px;                       
+  display: grid; /* 2열 고정 */
+  column-gap: 16px;
+  row-gap: 12px;
   margin: 0;
 }
 
-.moveGate{
+.moveGate {
   display: grid;
-  grid-template-columns: repeat(2,auto);
+  grid-template-columns: repeat(2, auto);
   columns: 16px;
   row-gap: 12px;
   width: max-content;
@@ -73,17 +72,17 @@ header h1 {
 .info-window p {
   margin-bottom: 5px;
 }
-.info-window.low{
-  border-color: #32A1FF;
+.info-window.low {
+  border-color: #32a1ff;
 }
-.info-window.medium{
-  border-color: #00C73C;
+.info-window.medium {
+  border-color: #00c73c;
 }
-.info-window.high{
-  border-color: #FF823F;
+.info-window.high {
+  border-color: #ff823f;
 }
-.info-window.veryhigh{
-  border-color: #FF5959;
+.info-window.veryhigh {
+  border-color: #ff5959;
 }
 .info-window.none {
   border-color: #999;
@@ -97,18 +96,18 @@ header h1 {
 }
 
 .info-window .status.low {
-  background-color: #32A1FF;
+  background-color: #32a1ff;
 }
 
 .info-window .status.medium {
-  background-color: #00C73C;
+  background-color: #00c73c;
 }
 
 .info-window .status.high {
-  background-color: #FF823F;
+  background-color: #ff823f;
 }
 .info-window .status.veryhigh {
-  background-color: #FF5959;
+  background-color: #ff5959;
 }
 .info-window .status.none {
   background-color: #999;
@@ -200,8 +199,7 @@ header h1 {
   background-color: #8395bb;
 }
 
-
-#cMapContainer{
+#cMapContainer {
   display: inline-block;
   width: 100%;
   height: auto;
@@ -212,7 +210,7 @@ header h1 {
   list-style: none;
   margin: 0;
   padding: 0;
-  text-align: center;       /* 텍스트 가운데 정렬 */
+  text-align: center; /* 텍스트 가운데 정렬 */
 }
 
 .list-item .gate {
@@ -231,26 +229,24 @@ header h1 {
   font-size: 14px;
 }
 
-.gate1Congestion{
+.gate1Congestion {
   align-items: center;
 }
 
-table{
+table {
   width: 100%;
   height: 100%;
-  text-align:left;
-  
+  text-align: left;
 }
 
-th{
+th {
   padding-right: 2px;
   padding-bottom: 5px;
 }
 
-
-th div{
-  width: 95% ;
-  height: 100% ;
+th div {
+  width: 95%;
+  height: 100%;
   border-radius: 10px;
   align-content: center;
 }
@@ -260,128 +256,132 @@ div p {
   font-size: 15px;
 }
 
-#contents tr th:nth-child(1){
-  width : 30%;
+#contents tr th:nth-child(1) {
+  width: 30%;
 }
-#contents tr th:nth-child(2), table th:nth-child(3){
-  width : 35%;
+#contents tr th:nth-child(2),
+table th:nth-child(3) {
+  width: 35%;
 }
 
-.tab{
+.tab {
   width: 45%;
 }
 
-#controls .info{
+#controls .info {
   width: 10px;
   height: 10px;
   border-radius: 5px;
   background-color: #ff0101;
 }
 
-#mapImg{
+#mapImg {
   width: 100%;
 }
 
-#dataInfo{
+#dataInfo {
   font-size: 10px;
   text-align: left;
-  
 }
 
-.gatePoint{
+.gatePoint {
   font-size: 12px;
 }
 
-#menu{
+#menu {
   width: 100%;
   text-align: center;
-
 }
 
-.menuBtn:nth-child(1),.menuBtn:nth-child(2){
+.menuBtn:nth-child(1),
+.menuBtn:nth-child(2) {
   width: 50%;
-  border-bottom: 1px solid #2121221A ;
+  border-bottom: 1px solid #2121221a;
 }
 
-.menuBtn:nth-child(1){
+.menuBtn:nth-child(1) {
   border-bottom: 3px solid #212122;
 }
 
-#controls th{
+#controls th {
   padding: 6px;
-  border-bottom: 1px solid #2121221A;
+  border-bottom: 1px solid #2121221a;
 }
-.tabs{
+.tabs {
   padding: 6px;
-  border-bottom: 1px solid #2121221A;
+  border-bottom: 1px solid #2121221a;
 }
-#nTime{
+#nTime {
   text-align: right;
 }
 
-.tabs table tr th{
+.tabs table tr th {
   font-size: 13px;
   color: #00000080;
   font-weight: 500;
   width: 50%;
 }
-.tabs table tr th:last-child{
+.tabs table tr th:last-child {
   text-align: right;
   justify-content: center;
 }
-.tabs table tr th p{
+.tabs table tr th p {
   font-size: 13px;
 }
 
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-  display: none;               /* 숨김 상태 */
-  align-items: flex-start; justify-content:center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none; /* 숨김 상태 */
+  align-items: flex-start;
+  justify-content: center;
   z-index: 4000;
   padding-top: 20px;
 }
 .modal-content {
   background: #fff;
   border-radius: 15px;
-  width: 90%; max-width: 480px;
-  min-height: 150px;           /* 필요에 따라 조절 */ 
+  width: 80%;
+  max-width: 25rem;
+  min-height: 150px; /* 필요에 따라 조절 */
   position: relative;
 }
-#imgBox{
+#imgBox {
   display: inline-flex;
   height: 120px;
   width: 30%;
   align-items: center;
   justify-content: center;
 }
-#modalClose{
+#modalClose {
   padding-top: 5px;
   padding-right: 5px;
   display: flex;
   justify-content: right;
 }
-#modal-contents{
+#modal-contents {
   display: flex;
   align-items: center;
 }
-#modalText{
+#modalText {
   flex: 1;
-  
 }
-#modalText p:nth-child(1){
+#modalText p:nth-child(1) {
   font-size: 12px;
   text-align: left;
   font-weight: bold;
 }
-#modalText p:nth-child(2){
+#modalText p:nth-child(2) {
   font-size: 18;
   font-weight: bold;
   text-align: left;
   font-weight: bold;
 }
-#reco{
+#reco {
   padding-top: 5px;
   padding-bottom: 5px;
   font-weight: bold;
@@ -389,12 +389,12 @@ div p {
   width: 90%;
   border-radius: 5px;
   border: 3px;
-  border-color: #2595FF;
+  border-color: #2595ff;
   color: #ffffff;
-  background-color: #2595FF;
+  background-color: #2595ff;
 }
 
-#questionMark{
+#questionMark {
   display: inline-flex;
   height: 12px;
   width: 12px;
@@ -402,18 +402,16 @@ div p {
   align-items: center;
   text-align: center;
   border-radius: 6px;
-  border:0.86px solid #808080 !important;
+  border: 0.86px solid #808080 !important;
   font-size: 10.29px;
 }
-#arrow-right{
+#arrow-right {
   padding-top: 3px;
   height: 18px;
   object-fit: cover;
-
 }
- #google_translate_element {
-    top: 20px;
-    right: 20px;
-    padding: 5px;
-  }
-
+#google_translate_element {
+  top: 20px;
+  right: 20px;
+  padding: 5px;
+}
