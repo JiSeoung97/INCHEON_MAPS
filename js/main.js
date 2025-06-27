@@ -14,7 +14,7 @@ $(document).ready(async () => {
   if (sessionStorage.getItem("render")) {
     MapService.modalOpen();
   }
-  sessionStorage.setItem("render", true);
+  // sessionStorage.setItem("render", true);
   let btnIdx = 0;
   $(".menuBtn").click((e) => {
     btnIdx = Number(e.currentTarget.dataset.idx);
