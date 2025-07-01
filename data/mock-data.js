@@ -577,7 +577,7 @@ const mockData = {
         },
         {
           id: "boardinGate_50",
-          name: "탑승게이트49",
+          name: "탑승게이트50",
           position: { lat: 37.44557, lng: 126.44812 },
           congestion: "medium",
           count: 25,

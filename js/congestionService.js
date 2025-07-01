@@ -166,16 +166,16 @@ const CongestionService = (() => {
     tagDivs.forEach((tagDiv, idx) => {
       tagDiv.addEventListener("click", () => {
         console.log(`태그 ${idx} 클릭됨`);
-        MapService.moveMap(idx);
         MapService.openWindowInfo(idx);
+        MapService.moveMap(idx);
       });
     });
     notag.forEach((tagDiv, idx) => {
       idx = idx + 9;
       tagDiv.addEventListener("click", () => {
         console.log(`태그 ${idx} 클릭됨`);
-        MapService.moveMap(idx);
         MapService.openWindowInfo(idx);
+        MapService.moveMap(idx);
       });
     });
 

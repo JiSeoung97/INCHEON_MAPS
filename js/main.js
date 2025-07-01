@@ -1,13 +1,24 @@
 "use strict";
 
 $(document).ready(async () => {
+  let map;
+  let boardingGate;
   try {
     await MapService.savedLocation();
-    const map = MapService.init();
+    const urlParams = new URLSearchParams(window.location.search);
+
+    boardingGate = urlParams.get("boardingGate");
+    console.log("boarding", boardingGate);
+    if (flightId && boardingGate) {
+      console.log("받은 항공편:", flightId);
+      console.log("받은 탑승게이트:", boardingGate);
+    }
+    map = MapService.init(boardingGate);
   } catch {
     alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
-    const map = MapService.init();
+    map = MapService.init();
   }
+
   MapService.showMarkers();
   MapService.showBScongestion();
   MapService.timereset();
@@ -38,6 +49,11 @@ $(document).ready(async () => {
   $("#modalClose").click(() => {
     MapService.modalClose();
   });
+  $("#moveBoardingGate").click(() => {
+    let gateNum = sessionStorage.getItem("boardingGate");
+    MapService.moveGate(gateNum);
+    MapService.openBoardingWindowInfo(gateNum);
+  });
 
   $("#reco").click(() => {
     console.log("버튼은 눌림");
@@ -55,9 +71,31 @@ $(document).ready(async () => {
     gate.addEventListener("click", () => {
       MapService.moveMap(index);
       MapService.openWindowInfo(index);
+      MapService.changeBorderColor(index);
     });
   });
 
+  const languageChange = document.getElementById("languageChange");
+  languageChange.addEventListener("change", async (e) => {
+    const selectedLang = e.target.value;
+
+    console.log("🌐 언어 변경:", selectedLang);
+
+    // 기존 map 정리
+    document.getElementById("map").innerHTML = "";
+    if (window.naver) delete window.naver;
+
+    // 스크립트 교체
+    await MapService.languageControl(selectedLang);
+
+    // 새 map 생성
+    setTimeout(() => {
+      const newMap = MapService.init();
+      MapService.showMarkers();
+      MapService.showBScongestion();
+      MapService.timereset();
+    }, 200);
+  });
   $("#requestLocation").click(() => {
     MapService.moveToUserLocation();
     MapService.toggleCongestion();
@@ -85,8 +123,8 @@ $(document).ready(async () => {
     }
   });
 
-  Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
-  Logger.log(
+  console.log("네이버 지도 API 프로토타입이 시작되었습니다.");
+  console.log(
     "지도가 초기화되었습니다. '마커 추가하기' 버튼을 클릭하여 시작하세요."
   );
 });
