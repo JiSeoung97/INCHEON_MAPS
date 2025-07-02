@@ -113,6 +113,7 @@ const MapService = (() => {
       mapTypeId: naver.maps.MapTypeId.NORMAL,
       mapDataControl: false,
       disableKineticPan: false,
+      tileSpare: 3,
       scaleControl: false,
       logoControl: true,
       logoControlOptions: {
@@ -124,6 +125,7 @@ const MapService = (() => {
     };
 
     map = new naver.maps.Map("map", mapOptions);
+    console.log("map객체 생성완료");
     return map;
   };
 
@@ -457,8 +459,6 @@ const MapService = (() => {
     const congestionInfo = DataService.getCongestionInfo(areaData.congestion);
     let gaugeColor;
     let distance = getDistance(areaData);
-    console.log(congestionInfo);
-    console.log(areaData.congestion);
     let conLevel;
     switch (areaData.congestion) {
       case "none":
@@ -576,6 +576,8 @@ const MapService = (() => {
           '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:10px">';
         const moveGateBtn =
           '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:175px;margin-left:10px">';
+        const maxMap =
+          '<img id ="mapSize" src="./images/bottomSheetdown.png" style="height:40px;width : 40px; marginleft :10px">';
         naver.maps.Event.once(map, "init", function () {
           console.log("StyleMap 초기화 완료");
           const urlParams = new URLSearchParams(window.location.search);
@@ -583,12 +585,39 @@ const MapService = (() => {
           const customControl = new naver.maps.CustomControl(locationBtnHtml, {
             position: naver.maps.Position.BOTTOM_RIGHT,
           });
+          const customControl3 = new naver.maps.CustomControl(maxMap, {
+            position: naver.maps.Position.BOTTOM_RIGHT,
+          });
           const customControl2 = new naver.maps.CustomControl(moveGateBtn, {
             position: naver.maps.Position.BOTTOM_LEFT,
           });
           customControl.setMap(map);
+          customControl3.setMap(map);
           customControl2.setMap(map);
           console.log("사용자 정의 컨트롤");
+          naver.maps.Event.addDOMListener(
+            customControl3.getElement(),
+            "click",
+            () => {
+              const mapView = document.getElementById("map");
+              const bottomSheet = document.getElementById("bottomSheet");
+              const value = mapView.style.getPropertyValue("height");
+              if (value !== "100vh") {
+                console.log(value, 1);
+                mapView.style.setProperty("height", "100vh");
+                bottomSheet.style.setProperty("display", "none");
+                // mapView.src = "./images/bottomSheetup.png";
+                console.log(customControl3);
+              } else {
+                console.log(value, 2);
+                mapView.style.setProperty("height", "60vh");
+                bottomSheet.style.setProperty("display", "flex");
+              }
+              setTimeout(() => {
+                map.refresh();
+              }, 100);
+            }
+          );
           naver.maps.Event.addDOMListener(
             customControl2.getElement(),
             "click",
@@ -951,7 +980,7 @@ const MapService = (() => {
 
         newScript.onload = () => {
           console.log("스크립트 로드 완료");
-          resolve(); // init 호출을 여기서 진행해야 함
+          resolve(MapService.init()); // init 호출을 여기서 진행해야 함
         };
 
         newScript.onerror = () => {
