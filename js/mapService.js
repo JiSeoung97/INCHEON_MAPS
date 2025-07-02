@@ -607,11 +607,14 @@ const MapService = (() => {
                 mapView.style.setProperty("height", "100vh");
                 bottomSheet.style.setProperty("display", "none");
                 // mapView.src = "./images/bottomSheetup.png";
-                console.log(customControl3);
+                customControl3.getElement().querySelector("img").src =
+                  "./images/bottomSheetup.png";
               } else {
                 console.log(value, 2);
                 mapView.style.setProperty("height", "60vh");
-                bottomSheet.style.setProperty("display", "flex");
+                bottomSheet.style.setProperty("display", "block");
+                customControl3.getElement().querySelector("img").src =
+                  "./images/bottomSheetdown.png";
               }
               setTimeout(() => {
                 map.refresh();
