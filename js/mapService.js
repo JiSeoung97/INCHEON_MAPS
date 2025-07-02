@@ -974,7 +974,7 @@ const MapService = (() => {
         const newScript = document.createElement("script");
         newScript.id = "naverMap";
         newScript.src =
-          "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=6nv3jwasxn&language=" +
+          "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=API_KEY&language=" +
           language;
         newScript.async = true;
 
