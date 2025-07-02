@@ -573,11 +573,11 @@ const MapService = (() => {
 
         console.log("지도 초기화 성공", map);
         const locationBtnHtml =
-          '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:10px">';
+          '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:60px">';
         const moveGateBtn =
           '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:175px;margin-left:10px">';
         const maxMap =
-          '<img id ="mapSize" src="./images/bottomSheetdown.png" style="height:40px;width : 40px; marginleft :10px">';
+          '<img id ="mapSize" src="./images/bottomSheetdown.png" style="height:40px;width : 40px; margin-right :10px">';
         naver.maps.Event.once(map, "init", function () {
           console.log("StyleMap 초기화 완료");
           const urlParams = new URLSearchParams(window.location.search);
@@ -586,7 +586,7 @@ const MapService = (() => {
             position: naver.maps.Position.BOTTOM_RIGHT,
           });
           const customControl3 = new naver.maps.CustomControl(maxMap, {
-            position: naver.maps.Position.BOTTOM_RIGHT,
+            position: naver.maps.Position.RIGHT_BOTTOM,
           });
           const customControl2 = new naver.maps.CustomControl(moveGateBtn, {
             position: naver.maps.Position.BOTTOM_LEFT,
@@ -594,7 +594,6 @@ const MapService = (() => {
           customControl.setMap(map);
           customControl3.setMap(map);
           customControl2.setMap(map);
-          console.log("사용자 정의 컨트롤");
           naver.maps.Event.addDOMListener(
             customControl3.getElement(),
             "click",
