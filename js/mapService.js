@@ -616,29 +616,7 @@ const MapService = (() => {
               }
             }
           );
-          naver.maps.Event.addDOMListener(
-            customControl3.getElement(),
-            "click",
-            () => {
-              const mapView = document.getElementById("map");
-              const bottomSheet = document.getElementById("bottomSheet");
-              const value = mapView.style.getPropertyValue("height");
-              if (value !== "100vh") {
-                console.log(value, 1);
-                mapView.style.setProperty("height", "100vh");
-                bottomSheet.style.setProperty("display", "none");
-                // mapView.src = "./images/bottomSheetup.png";
-                console.log(customControl3);
-              } else {
-                console.log(value, 2);
-                mapView.style.setProperty("height", "60vh");
-                bottomSheet.style.setProperty("display", "flex");
-              }
-              setTimeout(() => {
-                map.refresh();
-              }, 100);
-            }
-          );
+
           naver.maps.Event.addDOMListener(
             customControl2.getElement(),
             "click",
@@ -995,7 +973,7 @@ const MapService = (() => {
         const newScript = document.createElement("script");
         newScript.id = "naverMap";
         newScript.src =
-          "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=API_KEY&language=" +
+          "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=6nv3jwasxn&language=" +
           language;
         newScript.async = true;
 
