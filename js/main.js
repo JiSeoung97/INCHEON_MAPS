@@ -6,14 +6,12 @@ $(document).ready(async () => {
   try {
     await MapService.savedLocation();
     const urlParams = new URLSearchParams(window.location.search);
-
     boardingGate = urlParams.get("boardingGate");
     console.log("boarding", boardingGate);
-    if (flightId && boardingGate) {
-      console.log("받은 항공편:", flightId);
+    if (boardingGate) {
       console.log("받은 탑승게이트:", boardingGate);
     }
-    map = MapService.init(boardingGate);
+    map = MapService.init();
   } catch {
     alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
     map = MapService.init();
