@@ -117,7 +117,7 @@ const MapService = (() => {
       scaleControl: false,
       logoControl: true,
       logoControlOptions: {
-        position: naver.maps.Position.TOP_LEFT,
+        position: naver.maps.Position.TOP_RIGHT,
       },
       zoomControl: true,
       maxZoom: 20,
@@ -577,7 +577,7 @@ const MapService = (() => {
         const moveGateBtn =
           '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:175px;margin-left:10px">';
         const maxMap =
-          '<img id ="mapSize" src="./images/bottomSheetdown.png" style="height:40px;width : 40px; margin-right :10px">';
+          '<img id ="mapSize" src="./images/bottomSheetup.png" style="height:40px;width : 40px; margin-right :10px">';
         naver.maps.Event.once(map, "init", function () {
           console.log("StyleMap 초기화 완료");
           const urlParams = new URLSearchParams(window.location.search);
@@ -605,19 +605,15 @@ const MapService = (() => {
                 console.log(value, 1);
                 mapView.style.setProperty("height", "100vh");
                 bottomSheet.style.setProperty("display", "none");
-                // mapView.src = "./images/bottomSheetup.png";
                 customControl3.getElement().querySelector("img").src =
-                  "./images/bottomSheetup.png";
+                  "./images/bottomSheetdown.png";
               } else {
                 console.log(value, 2);
                 mapView.style.setProperty("height", "60vh");
                 bottomSheet.style.setProperty("display", "block");
                 customControl3.getElement().querySelector("img").src =
-                  "./images/bottomSheetdown.png";
+                  "./images/bottomSheetup.png";
               }
-              setTimeout(() => {
-                map.refresh();
-              }, 100);
             }
           );
           naver.maps.Event.addDOMListener(
