@@ -5,8 +5,8 @@ moveBtn.addEventListener("click", () => {
   const boardingGate = document.getElementById("boardingGate").value.trim();
 
   // 입력 검증
-  if (!flightId || !boardingGate) {
-    alert("항공편과 탑승게이트를 모두 입력해주세요.");
+  if (boardingGate > 132) {
+    alert("존재하지 않은 게이트 입니다.");
     return;
   }
 
