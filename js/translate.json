@@ -1,0 +1,56 @@
+{
+  "ko": {
+    "terminal": "제1여객터미널",
+    "update": "업데이트",
+    "departureHallCongestion": "출국장 혼잡도",
+    "departure hall": "출국장",
+    "showMap": "약도 보기",
+    "timeFormat": "yyyy.MM.dd a hh시 mm분",
+    "west": "서편",
+    "east": "동편",
+    "smooth": "여유",
+    "normal": "보통",
+    "crowded": "혼잡",
+    "veryCrowded": "매우혼잡"
+  },
+  "ja": {
+    "terminal": "第1旅客ターミナル",
+    "update": "更新",
+    "departureHallCongestion": "出発ホールの混雑状況",
+    "showMap": "地図を見る",
+    "timeFormat": "yyyy.MM.dd a hh時 mm分",
+    "west": "西側",
+    "east": "東側",
+    "smooth": "円滑",
+    "normal": "普通",
+    "crowded": "混雑",
+    "veryCrowded": "非常に混雑"
+  },
+  "zh": {
+    "terminal": "第1旅客航站楼",
+    "update": "更新时间",
+    "departureHallCongestion": "出发大厅拥堵情况",
+    "showMap": "查看地图",
+    "timeFormat": "yyyy.MM.dd a hh时 mm分",
+
+    "west": "西侧",
+    "east": "东侧",
+    "smooth": "顺畅",
+    "normal": "一般",
+    "crowded": "拥堵",
+    "veryCrowded": "非常拥堵"
+  },
+  "en": {
+    "terminal": "Passenger Terminal 1",
+    "update": "UPDATE",
+    "departureHallCongestion": "Departure Hall Congestion",
+    "showMap": "View Map",
+    "timeFormat": "yyyy.MM.dd hh:mm a",
+    "west": "West",
+    "east": "East",
+    "smooth": "Smooth",
+    "normal": "Normal",
+    "crowded": "Crowded",
+    "veryCrowded": "Very Crowded"
+  }
+}

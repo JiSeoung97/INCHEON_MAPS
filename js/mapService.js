@@ -586,7 +586,12 @@ const MapService = (() => {
           '<div style="flex: 1; height:100%; display: flex; align-items: center; justify-content: center;">∨</div>' +
           "</div>";
         const languageChange =
-          '<div style = "height: 12vh ;width :15vh; background-color:white; margin-top :1vh; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;"></div>';
+          '<div style = "height: 12vh ;width :15vh; background-color:white; margin-top :1vh; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;">' +
+          '<div class = "mapLang" style="width : 100% ; height:3vh">한국어</div>' +
+          '<div class = "mapLang" style="width : 100% ; height:3vh">English</div>' +
+          '<div class = "mapLang" style="width : 100% ; height:3vh">日本語</div>' +
+          '<div class = "mapLang" style="width : 100% ; height:3vh">中文</div>' +
+          "</div>";
 
         naver.maps.Event.once(map, "init", function () {
           console.log("StyleMap 초기화 완료");
@@ -615,8 +620,7 @@ const MapService = (() => {
           mapSizeCon.setMap(map);
           moveGateCon.setMap(map);
           selectLangCon.setMap(map);
-          let conSwitch = null;
-          console.log("transCon setMap");
+          let mapLangs;
           naver.maps.Event.addDOMListener(
             selectLangCon.getElement(),
             "click",
@@ -630,6 +634,31 @@ const MapService = (() => {
               }
             }
           );
+          let conSwitch = null;
+          console.log("transCon setMap");
+          let lang = ["ko", "en", "ja", "zh"];
+          console.log(lang);
+
+          mapLangs = Array.from(
+            langchangeCon.getElement().getElementsByClassName("mapLang")
+          );
+          console.log(mapLangs[0]);
+          mapLangs.forEach((mapLang, index) => {
+            mapLang.addEventListener("click", () => {
+              console.log("dfdff");
+              document.getElementById("map").innerHTML = "";
+              if (window.naver) delete window.naver;
+              console.log(lang[index]);
+              MapService.languageControl(lang[index]);
+
+              setTimeout(() => {
+                const newMap = MapService.init();
+                MapService.showMarkers();
+                MapService.showBScongestion();
+                MapService.timereset();
+              });
+            });
+          });
 
           naver.maps.Event.addDOMListener(
             mapSizeCon.getElement(),
