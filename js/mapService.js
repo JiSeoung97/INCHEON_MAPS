@@ -576,49 +576,84 @@ const MapService = (() => {
           '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:60px">';
         const moveGateBtn =
           '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:175px;margin-left:10px">';
-        const maxMap =
+        const mapSize =
           '<img id ="mapSize" src="./images/bottomSheetup.png" style="height:40px;width : 40px; margin-right :10px">';
+        const selectLang =
+          '<div id="selectLang" style="height:3vh; width:15vh; display: flex; justify-content: center; align-items: center;' +
+          ' background-color:white; margin-top: 15px; margin-right:10px; font-size:13px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 4px;">' +
+          '<div style="flex: 9; height:100%; display: flex; align-items: center; justify-content: left; ' +
+          'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">Select Language</div>' +
+          '<div style="flex: 1; height:100%; display: flex; align-items: center; justify-content: center;">∨</div>' +
+          "</div>";
+        const languageChange =
+          '<div style = "height: 12vh ;width :15vh; background-color:white; margin-top :1vh; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;"></div>';
+
         naver.maps.Event.once(map, "init", function () {
           console.log("StyleMap 초기화 완료");
           const urlParams = new URLSearchParams(window.location.search);
           const boardingGate = urlParams.get("boardingGate");
-          const customControl = new naver.maps.CustomControl(locationBtnHtml, {
+
+          const locaCon = new naver.maps.CustomControl(locationBtnHtml, {
             position: naver.maps.Position.BOTTOM_RIGHT,
           });
-          const customControl3 = new naver.maps.CustomControl(maxMap, {
+
+          const mapSizeCon = new naver.maps.CustomControl(mapSize, {
             position: naver.maps.Position.RIGHT_BOTTOM,
           });
-          const customControl2 = new naver.maps.CustomControl(moveGateBtn, {
+          const moveGateCon = new naver.maps.CustomControl(moveGateBtn, {
             position: naver.maps.Position.BOTTOM_LEFT,
           });
-          customControl.setMap(map);
-          customControl3.setMap(map);
-          customControl2.setMap(map);
+          const selectLangCon = new naver.maps.CustomControl(selectLang, {
+            position: naver.maps.Position.RIGHT_TOP,
+          });
+          const langchangeCon = new naver.maps.CustomControl(languageChange, {
+            position: naver.maps.Position.RIGHT_TOP,
+          });
+          console.log("position");
+
+          locaCon.setMap(map);
+          mapSizeCon.setMap(map);
+          moveGateCon.setMap(map);
+          selectLangCon.setMap(map);
+          let conSwitch = null;
+          console.log("transCon setMap");
           naver.maps.Event.addDOMListener(
-            customControl3.getElement(),
+            selectLangCon.getElement(),
+            "click",
+            () => {
+              if (conSwitch) {
+                conSwitch = null;
+                langchangeCon.setMap(conSwitch);
+              } else {
+                conSwitch = map;
+                langchangeCon.setMap(conSwitch);
+              }
+            }
+          );
+
+          naver.maps.Event.addDOMListener(
+            mapSizeCon.getElement(),
             "click",
             () => {
               const mapView = document.getElementById("map");
               const bottomSheet = document.getElementById("bottomSheet");
               const value = mapView.style.getPropertyValue("height");
               if (value !== "100vh") {
-                console.log(value, 1);
                 mapView.style.setProperty("height", "100vh");
                 bottomSheet.style.setProperty("display", "none");
-                customControl3.getElement().querySelector("img").src =
+                mapSizeCon.getElement().querySelector("img").src =
                   "./images/bottomSheetdown.png";
               } else {
-                console.log(value, 2);
                 mapView.style.setProperty("height", "60vh");
                 bottomSheet.style.setProperty("display", "block");
-                customControl3.getElement().querySelector("img").src =
+                mapSizeCon.getElement().querySelector("img").src =
                   "./images/bottomSheetup.png";
               }
             }
           );
 
           naver.maps.Event.addDOMListener(
-            customControl2.getElement(),
+            moveGateCon.getElement(),
             "click",
             () => {
               const areaData = DataService.getAllAreas();
@@ -638,35 +673,31 @@ const MapService = (() => {
             }
           );
 
-          naver.maps.Event.addDOMListener(
-            customControl.getElement(),
-            "click",
-            () => {
-              const userPos = JSON.parse(sessionStorage.getItem("myLocation"));
-              const latLng = new naver.maps.LatLng(
-                userPos["lat"],
-                userPos["lng"]
-              );
-              if (userPos) {
-                map.getCenter();
-                map.setCenter(latLng);
-                const marker = new naver.maps.Marker({
-                  position: new naver.maps.LatLng(latLng),
-                  map: null,
-                  title: "내 위치",
-                  icon: {
-                    content:
-                      '<img src="./images/user_Location.png" style="width:30px;height:30px">',
-                    size: new naver.maps.Size(27, 35),
-                    anchor: new naver.maps.Point(7, 10),
-                  },
-                });
-                marker.setMap(map);
-              } else {
-                alert("위치 정보가 없습니다.");
-              }
+          naver.maps.Event.addDOMListener(locaCon.getElement(), "click", () => {
+            const userPos = JSON.parse(sessionStorage.getItem("myLocation"));
+            const latLng = new naver.maps.LatLng(
+              userPos["lat"],
+              userPos["lng"]
+            );
+            if (userPos) {
+              map.getCenter();
+              map.setCenter(latLng);
+              const marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(latLng),
+                map: null,
+                title: "내 위치",
+                icon: {
+                  content:
+                    '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+                  size: new naver.maps.Size(27, 35),
+                  anchor: new naver.maps.Point(7, 10),
+                },
+              });
+              marker.setMap(map);
+            } else {
+              alert("위치 정보가 없습니다.");
             }
-          );
+          });
         });
         const data = DataService.initData();
         if (!data) {
