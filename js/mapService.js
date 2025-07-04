@@ -681,7 +681,7 @@ const MapService = (() => {
         const locationBtnHtml =
           '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:60px">';
         const moveGateBtn =
-          '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:175px;margin-left:10px">';
+          '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:120px;margin-left:10px">';
         const mapSize =
           '<img id ="mapSize" src="./images/bottomSheetup.png" style="height:40px;width : 40px; margin-right :10px">';
         const selectLang =
@@ -781,7 +781,6 @@ const MapService = (() => {
           mapLangs = Array.from(
             langchangeCon.getElement().getElementsByClassName("mapLang")
           );
-          console.log(mapLangs[0]);
           mapLangs.forEach((mapLang, index) => {
             mapLang.addEventListener("click", async () => {
               console.log("dfdff");
@@ -800,6 +799,14 @@ const MapService = (() => {
               } catch (error) {
                 console.error("언어변경실패", error);
               }
+            });
+          });
+          mapLangs.forEach((mapLang, index) => {
+            mapLang.addEventListener("mouseenter", () => {
+              mapLang.style.backgroundColor = "#F3F4F6";
+            });
+            mapLang.addEventListener("mouseleave", () => {
+              mapLang.style.backgroundColor = "white";
             });
           });
 
