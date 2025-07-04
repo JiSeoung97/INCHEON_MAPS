@@ -16,8 +16,40 @@ const MapService = (() => {
     console.log("lang 데이터 갖고옴", lang);
     return languageData[lang];
   };
+
+  const createLanguageArrayWithSelectiveImg = (
+    languageList,
+    currentLang,
+    imgSrc = "./images/up.svg"
+  ) => {
+    return Object.entries(languageList).map(([key, html]) => {
+      const baseHtml = html.replace(
+        'style="width : 100% ; height:3vh; display: flex; align-items: center"',
+        'style="width : 100% ; height:3vh; display: flex; align-items: center; justify-content: space-between; padding: 0 10px;"'
+      );
+      if (key === currentLang) {
+        // 현재 선택된 언어에만 img 추가\
+        return [
+          key,
+          baseHtml.replace(
+            "</div>",
+            `<img src="${imgSrc}" style="width:15px; height:15px;"></div>`
+          ),
+        ];
+      } else {
+        // 다른 언어들은 원본 그대로 반환
+        return [
+          key,
+          baseHtml.replace(
+            "</div>",
+            `<span style="width:15px; height:15px;"></span></div>`
+          ),
+        ];
+      }
+    });
+  };
+
   const translateAreaName = (areaName, language) => {
-    // "2출국장 서편" 같은 패턴을 번역
     if (areaName.includes("출국장")) {
       const gateNumber = areaName.match(/(\d+)출국장/)?.[1];
       const direction = areaName.includes("서편")
@@ -33,12 +65,10 @@ const MapService = (() => {
       }
     }
 
-    // 탑승게이트는 그대로 반환 (숫자만 있음)
     if (areaName.includes("탑승게이트")) {
-      return areaName; // "탑승게이트1" 등은 그대로
+      return areaName;
     }
 
-    // 기본값은 원래 이름 반환
     return areaName;
   };
   const getBoardingGateIdx = (index) => {
@@ -175,8 +205,6 @@ const MapService = (() => {
     const day = String(now.getDate()).padStart(2, "0");
     let hour = now.getHours();
     const minutes = String(now.getMinutes()).padStart(2, "0");
-    const ampm = hour < 12 ? "오전" : "오후";
-    hour = hour % 12 || 12;
     const hourStr = String(hour).padStart(2, "0");
     time.innerHTML =
       "UPDATE : " +
@@ -186,15 +214,12 @@ const MapService = (() => {
       "." +
       day +
       " " +
-      ampm +
-      " " +
       hourStr +
-      "시 " +
-      minutes +
-      "분 ";
+      ":" +
+      minutes;
   };
 
-  const changeMenu = (idx) => {
+  const changeMenu = (idx = 0) => {
     const menuBtn = document.getElementsByClassName("menuBtn");
     const controls = document.getElementById("controls");
     if (idx === 0) {
@@ -203,23 +228,31 @@ const MapService = (() => {
       controls.innerHTML = "";
       controls.innerHTML =
         ' <table id="contents">' +
-        '<tr class="gate2">' +
-        "  <th>2출국장</th>" +
+        '<tr class="gate">' +
+        "  <th>" +
+        language["gate2"] +
+        "</th>" +
         '  <th class="eastWest"></th>' +
         '  <th class="eastWest"></th>' +
         "</tr>" +
-        '<tr class="gate3">' +
-        "  <th>3출국장</th>" +
+        '<tr class="gate">' +
+        "  <th>" +
+        language["gate3"] +
+        "</th>" +
         '  <th class="eastWest"></th>' +
         '  <th class="eastWest"></th>' +
         "</tr>" +
-        '<tr class="gate4">' +
-        "  <th>4출국장</th>" +
+        '<tr class="gate">' +
+        "  <th>" +
+        language["gate4"] +
+        "</th>" +
         '  <th class="eastWest"></th>' +
         '  <th class="eastWest"></th>' +
         "</tr>" +
-        '<tr class="gate5">' +
-        "  <th>5출국장</th>" +
+        '<tr class="gate">' +
+        "  <th>" +
+        language["gate5"] +
+        "</th>" +
         '  <th class="eastWest"></th>' +
         '  <th class="eastWest"></th>' +
         "</tr>" +
@@ -231,6 +264,21 @@ const MapService = (() => {
       controls.innerHTML =
         '<div id="cMapContainer">\n<template id="congestionMap"></template>\n</div>';
     }
+  };
+  const translateMenu = () => {
+    const menuBtn = Array.from(document.getElementsByClassName("menuBtn"));
+    const conEx = document.getElementById("congestionEx");
+    menuBtn.forEach((menu, index) => {
+      if (index == 0) {
+        menu.innerHTML = language["departureHallCongestion"];
+      } else {
+        menu.innerHTML = "약도 보기";
+      }
+    });
+    conEx.innerHTML =
+      "• " +
+      language["departureHallCongestion"] +
+      '  <span id="questionMark">?</span>';
   };
   const openBoardingWindowInfo = (index) => {
     let idx = 0;
@@ -283,38 +331,38 @@ const MapService = (() => {
     setTimeout(() => {
       areadata.forEach((conData, index) => {
         let gaugeColor;
-        let conLevel;
         let border;
         let textColor;
+        let congestion;
         switch (conData.congestion) {
           case "none":
             gaugeColor = "#999";
-            conLevel = "미사용";
             border = "1px solid #999";
             textColor = "#99999";
+            congestion = language["none"];
           case "low":
             gaugeColor = "#EBF6FF";
-            conLevel = "원활";
             border = "1px solid #E8E8E8";
             textColor = "#32A1FF";
+            congestion = language["low"];
             break;
           case "medium":
             gaugeColor = "#E6FAEC";
-            conLevel = "보통";
             border = "1px solid #E8E8E8";
             textColor = "#00C73C";
+            congestion = language["medium"];
             break;
           case "high":
             gaugeColor = "#FFF3EC";
-            conLevel = "혼잡";
             border = "1px solid #E8E8E8";
             textColor = "#FF823F";
+            congestion = language["high"];
             break;
           case "veryhigh":
             gaugeColor = "#FFEFEF";
-            conLevel = "매우혼잡";
             border = "1px solid #E8E8E8";
             textColor = "#FF5959";
+            congestion = language["veryhigh"];
             break;
           default:
             gaugeColor = "#4CAF50";
@@ -329,20 +377,24 @@ const MapService = (() => {
           var htmlcontents =
             '<div style = "text-align: center;border:' +
             border +
-            '"><p class ="gatePoint">동편</p><h4 style = "color:' +
+            '"><p class ="gatePoint">' +
+            language["east"] +
+            '</p><h4 style = "color:' +
             textColor +
             '">' +
-            conLevel +
+            congestion +
             "</h4></div>";
           contentsEl[index].innerHTML = htmlcontents;
         } else {
           var htmlcontents =
             '<div style = "text-align: center;border:' +
             border +
-            '"><p class ="gatePoint">서편</p><h4 style = "color:' +
+            '"><p class ="gatePoint">' +
+            language["west"] +
+            '</p><h4 style = "color:' +
             textColor +
             '">' +
-            conLevel +
+            congestion +
             "</h4></div>";
           contentsEl[index].innerHTML = htmlcontents;
         }
@@ -589,10 +641,20 @@ const MapService = (() => {
   };
 
   return {
-    init: (lang = "ko") => {
+    init: () => {
       console.log("MapService 초기화 시작");
-      language = loadTranslateData(lang);
-      console.log(language);
+      let lang = sessionStorage.getItem("language");
+      let languageText;
+
+      if (lang == null) {
+        languageText = "Language";
+        lang = "ko";
+        language = loadTranslateData(lang);
+      } else {
+        language = loadTranslateData(lang);
+        languageText = language[lang];
+      }
+      console.log(lang, languageText);
       const mapElement = document.getElementById("map");
       if (!mapElement) {
         console.error("지도를 표시할 엘리먼트를 찾을 수 없음.");
@@ -608,8 +670,14 @@ const MapService = (() => {
         console.log("지도 초기화 시도...");
 
         map = initMap();
-
+        let langArray = ["ko", "en", "ja", "zh"];
         console.log("지도 초기화 성공", map);
+        let langCheck;
+        langArray.forEach((l) => {
+          if (l == lang) {
+            langCheck = language["current"];
+          }
+        });
         const locationBtnHtml =
           '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:60px">';
         const moveGateBtn =
@@ -617,18 +685,45 @@ const MapService = (() => {
         const mapSize =
           '<img id ="mapSize" src="./images/bottomSheetup.png" style="height:40px;width : 40px; margin-right :10px">';
         const selectLang =
-          '<div id="selectLang" style="height:3vh; width:15vh; display: flex; justify-content: center; align-items: center;' +
-          ' background-color:white; margin-top: 15px; margin-right:10px; font-size:13px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 4px;">' +
-          '<div style="flex: 9; height:100%; display: flex; align-items: center; justify-content: left; ' +
-          'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">Select Language</div>' +
-          '<div style="flex: 1; height:100%; display: flex; align-items: center; justify-content: center;">∨</div>' +
+          '<div id="selectLang" style="height:3vh; width:14vh; display: flex; justify-content: center; align-items: center;' +
+          'background-color:white; margin-top: 15px; margin-right:10px; font-size:13px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1.5vh;">' +
+          '<div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left; ' +
+          'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">' +
+          '<img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">' +
+          languageText +
+          "</div>" +
+          '<img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;">' +
           "</div>";
+        let languageList = {
+          ko:
+            '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">한국어(' +
+            language["korean"] +
+            ")</div>",
+          en:
+            '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">English(' +
+            language["english"] +
+            ")</div>",
+          ja:
+            '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">日本語(' +
+            language["japenese"] +
+            ")</div>",
+          zh:
+            '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">简体中文(' +
+            language["chinese"] +
+            ")</div>",
+        };
+        const langImgArray = createLanguageArrayWithSelectiveImg(
+          languageList,
+          lang
+        );
+        let langChan = "";
+        langImgArray.forEach((laImg) => {
+          langChan += laImg[1];
+        });
+        console.log("langChan", langChan);
         const languageChange =
-          '<div style = "height: 12vh ;width :15vh; background-color:white; margin-top :1vh; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;">' +
-          '<div class = "mapLang" style="width : 100% ; height:3vh">한국어</div>' +
-          '<div class = "mapLang" style="width : 100% ; height:3vh">English</div>' +
-          '<div class = "mapLang" style="width : 100% ; height:3vh">日本語</div>' +
-          '<div class = "mapLang" style="width : 100% ; height:3vh">简体中文</div>' +
+          '<div style = "height: 12vh ;width :14vh; background-color:white; margin-top :1vh; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:13px">' +
+          langChan +
           "</div>";
 
         naver.maps.Event.once(map, "init", function () {
@@ -668,16 +763,20 @@ const MapService = (() => {
               if (conSwitch) {
                 conSwitch = null;
                 langchangeCon.setMap(conSwitch);
+                const icon = selectLangCon.getElement().querySelector("#icon");
+                icon.src = "./images/dropDown.svg";
               } else {
                 conSwitch = map;
                 langchangeCon.setMap(conSwitch);
+                const icon = selectLangCon.getElement().querySelector("#icon");
+                icon.src = "./images/up.svg";
               }
             }
           );
           let conSwitch = null;
           console.log("transCon setMap");
-          let lang = ["ko", "en", "ja", "zh"];
-          console.log(lang);
+
+          console.log(langArray);
 
           mapLangs = Array.from(
             langchangeCon.getElement().getElementsByClassName("mapLang")
@@ -690,11 +789,14 @@ const MapService = (() => {
               if (window.naver) delete window.naver;
               console.log(lang[index]);
               try {
-                await MapService.languageControl(lang[index]);
-                const newMap = MapService.init(lang[index]);
+                await MapService.languageControl(langArray[index]);
+                sessionStorage.setItem("language", langArray[index]);
+                const newMap = MapService.init();
                 MapService.showMarkers();
                 MapService.showBScongestion();
                 MapService.timereset();
+                changeMenu();
+                translateMenu();
               } catch (error) {
                 console.error("언어변경실패", error);
               }
