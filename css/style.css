@@ -5,33 +5,42 @@
 }
 
 body {
-  display: flex;
-  font-family: "Pretendard", sans-serif;
-  line-height: 1.6;
-  overflow-y: visible;
-  justify-content: center;
-  background-color: #f8f8f8;
+  font-family: Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  position: relative;
 }
 
 .container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   width: 100%;
   max-width: 430px;
-  margin: auto;
-  background-color: white;
+  height: 100vh;
   min-height: 100vh;
+  background-color: transparent;
+  overflow: hidden;
+  z-index: 10;
 }
 
 #map {
-  width: 100%;
-  height: 60vh;
-  margin-bottom: 20px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  align-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  min-height: 100vh;
 }
 
 #controls {
   width: 100%;
+  min-height: 25vh;
   margin-bottom: 20px;
   padding: 5px;
   background-color: #ffffff;
@@ -230,11 +239,6 @@ table {
   text-align: left;
 }
 
-.eastWest {
-  padding-right: 2px;
-  padding-bottom: 5px;
-}
-
 th div {
   width: 95%;
   height: 100%;
@@ -254,9 +258,12 @@ div p {
 table th:nth-child(3) {
   width: 35%;
 }
-
+.eastWest {
+  min-height: 100px;
+}
 .tab {
   width: 45%;
+  min-height: 100px;
 }
 
 #controls .info {
@@ -282,6 +289,7 @@ table th:nth-child(3) {
 #menu {
   width: 100%;
   text-align: center;
+  min-height: 5vh;
 }
 
 .menuBtn:nth-child(1),
@@ -402,8 +410,26 @@ table th:nth-child(3) {
   height: 18px;
   object-fit: cover;
 }
-#google_translate_element {
-  top: 20px;
-  right: 20px;
-  padding: 5px;
+#handle {
+  width: 100%;
+  height: 2vh;
+
+  min-height: 20px;
+  border-radius: 1vh 1vh 0vh 0vh;
+}
+#bottomSheet {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100vw;
+  min-height: 40vh;
+  max-width: 430px;
+  align-self: center;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  transition: transform 0.3s ease;
+  overflow: hidden;
 }

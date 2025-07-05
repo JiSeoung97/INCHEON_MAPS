@@ -280,9 +280,11 @@ const MapService = (() => {
       language["departureHallCongestion"] +
       '  <span id="questionMark">?</span>';
   };
-  const openBoardingWindowInfo = (index) => {
+  const openBoardingWindowInfo = () => {
     let idx = 0;
     console.log(index);
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get("boardingGate");
     if (
       index == 4 ||
       index == 5 ||
@@ -499,6 +501,8 @@ const MapService = (() => {
     let gaugeColor;
     let distance = getDistance(areaData);
     let conLevel;
+    const urlParams = new URLSearchParams(window.location.search);
+    const boardingGate = urlParams.get("boardingGate");
     switch (areaData.congestion) {
       case "none":
         gaugeColor = "#999";
@@ -528,7 +532,8 @@ const MapService = (() => {
       areaData.congestion +
       '">' +
       "<h3>" +
-      areaData.name +
+      language["boardingGate"] +
+      boardingGate +
       "</h3>" +
       "<p>" +
       language["distance"] +
@@ -794,6 +799,7 @@ const MapService = (() => {
                 MapService.showMarkers();
                 MapService.showBScongestion();
                 MapService.timereset();
+
                 changeMenu();
                 translateMenu();
               } catch (error) {
@@ -848,7 +854,7 @@ const MapService = (() => {
                 }
               });
               console.log(boardingGate);
-              openBoardingWindowInfo(boardingGate);
+              openBoardingWindowInfo(e);
             }
           );
 
@@ -941,9 +947,9 @@ const MapService = (() => {
         allAreas.forEach((area, index) => {
           areas.push(area);
           if (index < 10) {
-            console.log("marker찍기전", lang);
             createDepartureMarker(area, lang);
           } else {
+            console.log("boardingMarker생성");
             createBoardingMarker(area, lang);
           }
         });
