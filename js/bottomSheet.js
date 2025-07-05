@@ -10,7 +10,7 @@ $(document).ready(function () {
 
   // BottomSheet 초기 높이 설정
   const sheetHeight = bottomSheet.offsetHeight;
-  const maxTransform = sheetHeight - 120; // 최소 120px는 보이도록 (기존: 80px)
+  const maxTransform = sheetHeight - 115; // 최소 120vh는 보이도록 (기존: 80px)
 
   // 터치/마우스 이벤트 통합 처리
   function getEventY(e) {
@@ -42,7 +42,7 @@ $(document).ready(function () {
     newTransform = Math.max(0, Math.min(maxTransform, newTransform));
 
     currentTransform = newTransform;
-    bottomSheet.style.transform = `translateX(-50%) translateY(${newTransform}px)`;
+    bottomSheet.style.transform = `translateX(-50%) translateY(${newTransform}rem)`;
 
     e.preventDefault();
   }
