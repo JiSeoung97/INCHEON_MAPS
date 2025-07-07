@@ -7,28 +7,23 @@ $(document).ready(async () => {
     await MapService.savedLocation();
     const urlParams = new URLSearchParams(window.location.search);
     boardingGate = urlParams.get("boardingGate");
-    console.log("boarding", boardingGate);
-    if (boardingGate) {
-      console.log("받은 탑승게이트:", boardingGate);
-    }
     map = MapService.init();
   } catch {
     alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
     map = MapService.init();
   }
+  MapService.showBScongestion();
 
   MapService.showMarkers();
-  MapService.showBScongestion();
   MapService.timereset();
   if (sessionStorage.getItem("render")) {
     MapService.modalOpen();
   }
-  // sessionStorage.setItem("render", true);
+  sessionStorage.setItem("render", true);
   let btnIdx = 0;
   $(".menuBtn").click((e) => {
     btnIdx = Number(e.currentTarget.dataset.idx);
     MapService.changeMenu(btnIdx);
-    console.log(btnIdx);
     if (btnIdx === 0) {
       MapService.showBScongestion();
       const moveGate = document.getElementsByClassName("eastWest");
@@ -54,7 +49,6 @@ $(document).ready(async () => {
   });
 
   $("#reco").click(() => {
-    console.log("버튼은 눌림");
     window.open("http://www.naver.com");
   });
   $("#toggleCongestion").click(() => {
@@ -73,34 +67,12 @@ $(document).ready(async () => {
     });
   });
 
-  const languageChange = document.getElementById("languageChange");
-  languageChange.addEventListener("change", async (e) => {
-    const selectedLang = e.target.value;
-
-    console.log("🌐 언어 변경:", selectedLang);
-
-    // 기존 map 정리
-    document.getElementById("map").innerHTML = "";
-    if (window.naver) delete window.naver;
-
-    // 스크립트 교체
-    await MapService.languageControl(selectedLang);
-
-    // 새 map 생성
-    setTimeout(() => {
-      const newMap = MapService.init();
-      MapService.showMarkers();
-      MapService.showBScongestion();
-      MapService.timereset();
-    }, 200);
-  });
   $("#requestLocation").click(() => {
     MapService.moveToUserLocation();
     MapService.toggleCongestion();
     MapService.timereset();
 
     MapService.changeMenu(btnIdx);
-    console.log(btnIdx);
     if (btnIdx === 0) {
       MapService.showBScongestion();
       const moveGate = document.getElementsByClassName("eastWest");
