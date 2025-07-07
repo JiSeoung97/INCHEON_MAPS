@@ -280,9 +280,11 @@ const MapService = (() => {
       language["departureHallCongestion"] +
       '  <span id="questionMark">?</span>';
   };
-  const openBoardingWindowInfo = (index) => {
+  const openBoardingWindowInfo = () => {
     let idx = 0;
     console.log(index);
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get("boardingGate");
     if (
       index == 4 ||
       index == 5 ||
@@ -499,6 +501,8 @@ const MapService = (() => {
     let gaugeColor;
     let distance = getDistance(areaData);
     let conLevel;
+    const urlParams = new URLSearchParams(window.location.search);
+    const boardingGate = urlParams.get("boardingGate");
     switch (areaData.congestion) {
       case "none":
         gaugeColor = "#999";
@@ -528,7 +532,8 @@ const MapService = (() => {
       areaData.congestion +
       '">' +
       "<h3>" +
-      areaData.name +
+      language["boardingGate"] +
+      boardingGate +
       "</h3>" +
       "<p>" +
       language["distance"] +
@@ -681,7 +686,8 @@ const MapService = (() => {
         const locationBtnHtml =
           '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:60px">';
         const moveGateBtn =
-          '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:175px;margin-left:10px">';
+          '<img id="moveBoardingGate" src="./images/boardingGate.png" style="height:40px; width:120px;margin-left:10px">';
+
         const mapSize =
           '<img id ="mapSize" src="./images/bottomSheetup.png" style="height:40px;width : 40px; margin-right :10px">';
         const selectLang =
@@ -802,6 +808,14 @@ const MapService = (() => {
               }
             });
           });
+          mapLangs.forEach((mapLang, index) => {
+            mapLang.addEventListener("mouseenter", () => {
+              mapLang.style.backgroundColor = "#F3F4F6";
+            });
+            mapLang.addEventListener("mouseleave", () => {
+              mapLang.style.backgroundColor = "white";
+            });
+          });
 
           naver.maps.Event.addDOMListener(
             mapSizeCon.getElement(),
@@ -841,7 +855,7 @@ const MapService = (() => {
                 }
               });
               console.log(boardingGate);
-              openBoardingWindowInfo(boardingGate);
+              openBoardingWindowInfo(e);
             }
           );
 
@@ -934,9 +948,9 @@ const MapService = (() => {
         allAreas.forEach((area, index) => {
           areas.push(area);
           if (index < 10) {
-            console.log("marker찍기전", lang);
             createDepartureMarker(area, lang);
           } else {
+            console.log("boardingMarker생성");
             createBoardingMarker(area, lang);
           }
         });

@@ -11,62 +11,57 @@
     />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script
+      id="naverMap"
       type="text/javascript"
-      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=API_KEY"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=6nv3jwasxn&language=ko"
     ></script>
   </head>
-  <!-- 배포테스트 -->
   <body>
     <div class="container">
       <div id="map"></div>
-      <table id="menu">
-        <tr>
-          <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
-          <th class="menuBtn" data-idx="1">약도 보기</th>
-        </tr>
-      </table>
-      <div class="tabs">
-        <table>
+      <div id="bottomSheet">
+        <table id="menu">
           <tr>
-            <th>
-              • 제1여객터미널 혼잡도
-              <span id="questionMark">?</span>
-            </th>
-            <th></th>
+            <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
+            <th class="menuBtn" data-idx="1">약도 보기</th>
           </tr>
         </table>
+        <div class="tabs">
+          <table>
+            <tr>
+              <th id="congestionEx">
+                • 제1여객터미널 혼잡도
+                <span id="questionMark">?</span>
+              </th>
+              <th><p id="nTime"></p></th>
+            </tr>
+          </table>
+        </div>
+        <div id="controls">
+          <table id="contents">
+            <tr class="gate">
+              <th>2출국장</th>
+              <th class="eastWest"></th>
+              <th class="eastWest"></th>
+            </tr>
+            <tr class="gate">
+              <th>3출국장</th>
+              <th class="eastWest"></th>
+              <th class="eastWest"></th>
+            </tr>
+            <tr class="gate">
+              <th>4출국장</th>
+              <th class="eastWest"></th>
+              <th class="eastWest"></th>
+            </tr>
+            <tr class="gate">
+              <th>5출국장</th>
+              <th class="eastWest"></th>
+              <th class="eastWest"></th>
+            </tr>
+          </table>
+        </div>
       </div>
-      <div id="controls">
-        <table id="contents">
-          <tr class="gate2">
-            <th>2출국장</th>
-            <th class="eastWest"></th>
-            <th class="eastWest"></th>
-          </tr>
-          <tr class="gate3">
-            <th>3출국장</th>
-            <th class="eastWest"></th>
-            <th class="eastWest"></th>
-          </tr>
-          <tr class="gate4">
-            <th>4출국장</th>
-            <th class="eastWest"></th>
-            <th class="eastWest"></th>
-          </tr>
-          <tr class="gate5">
-            <th>5출국장</th>
-            <th class="eastWest"></th>
-            <th class="eastWest"></th>
-          </tr>
-        </table>
-      </div>
-      <p id="nTime"></p>
-      <select id="languageChange">
-        <option value="ko">한국어</option>
-        <option value="en">English</option>
-        <option value="ja">日本語</option>
-        <option value="zh">中文</option>
-      </select>
     </div>
     <div id="adModal" class="modal-overlay">
       <div class="modal-content">
@@ -86,6 +81,7 @@
         </div>
       </div>
     </div>
+    <script src="js/language.js"></script>
     <script src="data/mock-data.js"></script>
     <script src="js/dataService.js"></script>
     <script src="js/mapService.js"></script>
