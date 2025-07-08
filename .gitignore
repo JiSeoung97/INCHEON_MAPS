@@ -4,3 +4,7 @@ congestion.local.html
 congestion2.local.html
 mapService2.js
 test.txt
+
+# gemini
+.gemini/
+.progress_text/
