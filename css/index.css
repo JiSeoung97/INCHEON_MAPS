@@ -21,7 +21,6 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   box-sizing: border-box;
-  padding: 2rem 1rem;
 }
 
 /* 테이블 */
