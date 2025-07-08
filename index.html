@@ -3,22 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/index.css" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <title>Document</title>
   </head>
   <body>
-    <table>
-      <tr>
-        <th>항공편</th>
-        <th><input type="text" id="flightId" /></th>
-      </tr>
-      <tr>
-        <th>탑승게이트</th>
-        <th><input type="text" id="boardingGate" /></th>
-      </tr>
-      <tr>
-        <button id="moveCongestionMap">이동</button>
-      </tr>
-    </table>
+    <div class="container">
+      <table>
+        <tr>
+          <th class="title">탑승게이트</th>
+          <th><input type="text" id="boardingGate" /></th>
+        </tr>
+        <tr>
+          <th class="title">탑승시간</th>
+          <td>
+            <div id="boardingHour">
+              <div class="time-control">
+                <input type="number" class="time" placeholder="Hour" />
+              </div>
+              <div class="time-control">
+                <input type="number" class="time" placeholder="Minute" />
+              </div>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <button id="moveCongestionMap">이동</button>
+    </div>
     <script src="js/firstPage.js"></script>
   </body>
 </html>

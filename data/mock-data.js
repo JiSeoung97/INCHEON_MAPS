@@ -40,6 +40,7 @@ const mockData = {
           eastWest: "east",
           description: "제 1여객터미널 2출국장 동편",
         },
+
         {
           id: "DG3_W",
           name: "3출국장 서편",
