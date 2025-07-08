@@ -42,7 +42,7 @@ $(document).ready(function () {
     newTransform = Math.max(0, Math.min(maxTransform, newTransform));
 
     currentTransform = newTransform;
-    bottomSheet.style.transform = `translateX(-50%) translateY(${newTransform}rem)`;
+    bottomSheet.style.transform = `translateX(-50%) translateY(${newTransform}px)`;
 
     e.preventDefault();
   }

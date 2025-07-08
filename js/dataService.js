@@ -2,40 +2,18 @@
 
 const DataService = (() => {
   let data = null;
-
-  const updateCongestionRandomly = () => {
+  let apiDatas = null;
+  let congestions = [];
+  const updateCongestion = () => {
     if (!data) return;
-
-    const congestionLevels = ["low", "medium", "high","veryhigh"];
+    Array.from(apiDatas).forEach((apiData) => {
+      congestions.push(calculateCongestionLevel(apiData));
+    });
 
     data.buildings.forEach((building) => {
-      building.areas.forEach((area,idx) => {
-        if(idx!==0&&idx!==9){
-          const randomLevel =
-            congestionLevels[Math.floor(Math.random() * congestionLevels.length)];
-            area.congestion = randomLevel;
-          switch (randomLevel) {
-            case "low":
-              area.count = Math.floor(
-                area.capacity * (Math.random() * 0.3)
-              );
-              break;
-            case "medium":
-              area.count = Math.floor(
-                area.capacity * (0.3 + Math.random() * 0.2)
-              );
-              break;
-            case "high":
-              area.count = Math.floor(
-                area.capacity * (0.4 + Math.random() * 0.3)
-              );
-            case "veryhigh":
-              area.count = Math.floor(
-                area.capacity * (0.5 + Math.random() * 0.2)
-              );
-              break;
-          }
-
+      building.areas.forEach((area, idx) => {
+        if (idx !== 0 && idx !== 9) {
+          area.congestion = congestions[idx];
         }
       });
     });
@@ -45,15 +23,69 @@ const DataService = (() => {
     return data;
   };
 
+  const calculateQueueScore = (queueLength) => {
+    const count = parseInt(queueLength) || 0;
+    return [
+      [0, 0],
+      [50, 25],
+      [100, 50],
+      [200, 75],
+      [Infinity, 100],
+    ].find(([limit]) => count <= limit)[1];
+  };
+
+  // 예상 대기시간 기준 점수 계산 (0-100)
+  const calculateWaitTimeScore = (waitTime) => {
+    if (waitTime === "D" || waitTime === "NA") return 0;
+    const time = parseInt(waitTime) || 0;
+    return [
+      [0, 0],
+      [300, 25],
+      [600, 50],
+      [1200, 75],
+      [Infinity, 100],
+    ].find(([limit]) => time <= limit)[1];
+  };
+
+  // 출국심사 소요시간 기준 점수 계산 (0-100)
+  const calculateImmigrationScore = (immigrationTime) => {
+    if (immigrationTime === "NA") return 0;
+    const time = parseInt(immigrationTime) || 0;
+    return time >= 600 ? 100 : time >= 480 ? 75 : time >= 360 ? 50 : 25;
+  };
+
+  // 종합 혼잡도 계산
+  const calculateCongestionLevel = (item) => {
+    const score =
+      calculateQueueScore(item.quelength) * 0.5 +
+      calculateWaitTimeScore(item.espwaittime) * 0.3 +
+      calculateImmigrationScore(item.immigrationtime) * 0.2;
+
+    console.log("대기인원점수", calculateQueueScore(item.quelength));
+    console.log("예상 대기시간", calculateWaitTimeScore(item.espwaittime));
+    console.log(
+      "출국심사 소요시간",
+      calculateImmigrationScore(item.immigrationtime)
+    );
+    return score <= 20
+      ? "low"
+      : score <= 50
+      ? "medium"
+      : score <= 75
+      ? "high"
+      : "veryhigh";
+  };
+
   return {
     initData: () => {
       data = window.mockData || null;
-
+      apiDatas = window.mockData2.data[0].response.body.items.item || null;
+      console.log(apiDatas);
       if (!data) {
         console.error("모킹 데이터 로드 실패함");
         return null;
       }
-
+      updateCongestion();
       return data;
     },
 
