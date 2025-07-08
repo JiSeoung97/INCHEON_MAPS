@@ -8,7 +8,7 @@ const mockData = {
       position: { lat: 37.449227, lng: 126.450611 },
       areas: [
         {
-          id: "gate_1_1",
+          id: "DG1",
           name: "1출국장",
           position: { lat: 37.450312, lng: 126.4542 },
           congestion: "none",
@@ -19,7 +19,7 @@ const mockData = {
           description: "제 1여객터미널 1출국장",
         },
         {
-          id: "gate_1_2_w",
+          id: "DG2_W",
           name: "2출국장 서편",
           position: { lat: 37.45021, lng: 126.4531 },
           congestion: "medium",
@@ -30,7 +30,7 @@ const mockData = {
           description: "제 1여객터미널 2출국장 서편",
         },
         {
-          id: "gate_1_2_e",
+          id: "DG2_E",
           name: "2출국장 동편",
           position: { lat: 37.450265, lng: 126.4536 },
           congestion: "low",
@@ -41,7 +41,7 @@ const mockData = {
           description: "제 1여객터미널 2출국장 동편",
         },
         {
-          id: "gate_1_3_w",
+          id: "DG3_W",
           name: "3출국장 서편",
           position: { lat: 37.449925, lng: 126.45187 },
           congestion: "high",
@@ -52,7 +52,7 @@ const mockData = {
           description: "제 1여객터미널 3출국장 서쪽",
         },
         {
-          id: "gate_1_3_e",
+          id: "DG3_E",
           name: "3출국장 동편",
           position: { lat: 37.45008, lng: 126.45242 },
           congestion: "high",
@@ -63,7 +63,7 @@ const mockData = {
           description: "제 1여객터미널 3출국장 동편",
         },
         {
-          id: "gate_1_4_w",
+          id: "DG4_W",
           name: "4출국장 서편",
           position: { lat: 37.448385, lng: 126.449415 },
           congestion: "high",
@@ -74,7 +74,7 @@ const mockData = {
           description: "제 1여객터미널 4출국장 서편",
         },
         {
-          id: "gate_1_4_e",
+          id: "DG4_E",
           name: "4출국장 동편",
           position: { lat: 37.448735, lng: 126.44979 },
           congestion: "high",
@@ -85,7 +85,7 @@ const mockData = {
           description: "제 1여객터미널 4출국장 동편",
         },
         {
-          id: "gate_1_5_w",
+          id: "DG5_W",
           name: "5출국장 서편",
           position: { lat: 37.44752, lng: 126.4488 },
           congestion: "high",
@@ -96,7 +96,7 @@ const mockData = {
           description: "제 1여객터미널 5출국장 서편",
         },
         {
-          id: "gate_1_5_e",
+          id: "DG5_E",
           name: "5출국장 동편",
           position: { lat: 37.44792, lng: 126.449045 },
           congestion: "veryhigh",
@@ -108,7 +108,7 @@ const mockData = {
         },
 
         {
-          id: "gate_1_6",
+          id: "DG6",
           name: "6출국장",
           position: { lat: 37.447, lng: 126.4484 },
           congestion: "none",
