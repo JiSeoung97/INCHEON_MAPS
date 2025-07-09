@@ -1,207 +1,142 @@
 <template id="congestionMap">
   <style>
-
-    :host {
-      position: relative;
-      display: inline-block;
+    body {
+      font-family: sans-serif;
+      background-color: #f5f5f5;
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      justify-content: center;
+    }
+    .card {
       width: 100%;
-      height: 300px;
-      overflow: visible;
-    }
-
-    .mapImg {
-      position: relative;
-      bottom: auto;
-      width: 100%;
-      overflow: visible;
-      object-fit: cover;
-      pointer-events: none;
-    }
-    .bubble-container {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      z-index: 2000;
-    }
-
-    /* Gate별 위치 & 배지 색상 */
-    .bubble-container.gate1 { top: 80%; left: 90%}
-    .bubble-container.gate2 { top: 52%; left: 80%}
-    .bubble-container.gate3 { top: 25%; left: 70%}
-    .bubble-container.gate4 { top: 25%; left: 30%}
-    .bubble-container.gate5 { top: 52%; left: 20%}
-    .bubble-container.gate6 { top: 80%; left: 10%}
-
-    .bubble-group {
-      display: inline-flex;
-      border-radius: 10px;
-      
-      background: #fff;
+      max-width: 360px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
       overflow: hidden;
-      
-      width: 102px;
-      height: 36px;
-      box-sizing: border-box;
-
     }
-
-    .bubble-group1 {
-      display: inline-flex;
-      border-radius: 10px;
-      
-      background: #fff;
-      overflow: hidden;
-
-
-      width: 52px;
-      height: 36px;
-      box-sizing: border-box;
-      transform: translateY(15%);
+    .section {
+      padding: 1.2rem;
+      border-bottom: 1px solid #eee;
     }
-    
-    .tags {
-        display: inline-flex;
-        width: 100%;
-        height: 100%;
+    .section:last-child {
+      border-bottom: none;
     }
-    .tag .dir {
-        font-size: 8px;
-        color: #333;
-        flex-shrink: 0;
-        padding-top: 3px;
-        
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 1rem;
     }
-    .tags .tag {
-      padding: 5.5px;
+    .reset-btn {
+      font-size: 0.9rem;
+      color: #2196f3;
+      cursor: pointer;
+    }
+    .input-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .input-box {
       flex: 1;
-      gap:0px;
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 0.8rem;
       display: flex;
       flex-direction: column;
+      font-size: 0.95rem;
+    }
+    .input-label {
+      font-size: 0.8rem;
+      color: #888;
+      margin-bottom: 0.4rem;
+    }
+    .input-value {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #222;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      padding: 0;
-      box-sizing: border-box;
+      gap: 0.4rem;
+    }
+    .clock-icon::after {
+      content: "⏰";
+      font-size: 1rem;
+    }
+    .time-summary {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 0.5rem;
+    }
+    .total-time {
+      font-size: 1rem;
+      color: #e53935;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .timeline-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      font-size: 0.9rem;
+      border-top: 1px solid #f0f0f0;
+    }
+    .timeline-item:first-child {
+      border-top: none;
+    }
+    .badge {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.4rem;
+      border-radius: 4px;
+      margin-left: 0.5rem;
+    }
+    .right {
+      color: #333;
       white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 15px;
-    }
-    .notag {
-      display: flex;              
-      justify-content: center;  
-      align-items: center;        
-      width: 100%;
-      height: 100%;
-      font-size: 11.12px;
-      color: #999;
-      border: 1.5px solid #999999;
-      border-radius: 10px;
-    }
-
-
-
-    .tag span{
-      font-size: 11.12px;
-    }
-    
-    .tag .status.medium     { color: #00C73C;}
-    .tag .status.low     { color: #32A1FF ;}
-    .tag .status.high    { color: #FF823F;}
-    .tag .status.veryhigh { color: #FF5959;}
-
-
-
-    .num {
-      display: inline-flex;
-      position: absolute;
-      top: -10px;
-      left: 50%;
-      transform: translate(-50%,30%);
-      width: 19px;
-      height: 19px;
-      line-height: 24px;
-      border-radius: 50%;
-      background: var(--badge-color, #999);
-      color: #fff;
-      font-size: 14px;
-      justify-content: center;
-      align-items: center;
-      border: 2px solid #fff;
-      box-sizing: border-box;
-      z-index: 2000;
     }
   </style>
-
-
-  <img class="mapImg" src="images/map.png" alt="공항 지도" />
-
-  <div class="bubble-container gate1">
-    <div class="bubble-group1">
-      <div class="tags">
-        <div class="notag">
-          <span class="status no-service">미운영</span>
+  <div class="card">
+    <!-- 탑승 정보 입력 -->
+    <div class="section">
+      <div class="header">
+        <span>탑승 정보 입력</span>
+        <span class="reset-btn">
+          <img src="../images/reset.svg" alt="?" /> Reset
+        </span>
+      </div>
+      <div class="input-group">
+        <div class="input-box">
+          <div class="input-label">탑승구</div>
+          <div class="input-value">12</div>
+        </div>
+        <div class="input-box">
+          <div class="input-label">탑승 시간</div>
+          <div class="input-value">
+            오후 2:41 <span class="clock-icon"></span>
+          </div>
         </div>
       </div>
     </div>
-    <span class="num">1</span>
-  </div>
-
-
-  <div class="bubble-container gate2">
-    <div class="bubble-group">
-      <div class="tags">
-        <div class="tag">
-        </div>
-        <div class="tag">
-        </div>
+    <!-- 구간별 소요시간 -->
+    <div class="section">
+      <div class="time-summary">구간별 예상 소요시간</div>
+      <div class="total-time">총 2시간 37분</div>
+      <div class="timeline-item">
+        <div>Departure Hall 2 West <span class="badge">Best</span></div>
+        <div class="right">Pass · 2시간 23분</div>
+      </div>
+      <div class="timeline-item">
+        <div>From duty-free zone to boarding gate</div>
+        <div class="right">14분</div>
       </div>
     </div>
-    <span class="num">2</span>
-  </div>
-
-  <div class="bubble-container gate3">
-    <div class="bubble-group">
-      <div class="tags">
-        <div class="tag">
-        </div>
-        <div class="tag">
-        </div>
-      </div>
-    </div>
-    <span class="num">3</span>
-  </div>
-
-  <div class="bubble-container gate4">
-    <div class="bubble-group">
-      <div class="tags">
-        <div class="tag">
-        </div>
-        <div class="tag">
-        </div>
-      </div>
-    </div>
-    <span class="num">4</span>
-  </div>
-
-  <div class="bubble-container gate5">
-    <div class="bubble-group">
-      <div class="tags">
-        <div class="tag">
-        </div>
-        <div class="tag">
-        </div>
-      </div>
-    </div>
-    <span class="num">5</span>
-  </div>
-
-  <div class="bubble-container gate6">
-    <div class="bubble-group1">
-      <div class="tags">
-        <div class="notag">
-          <span class="status no-service">미운영</span>
-        </div>
-      </div>
-    </div>
-    <span class="num">6</span>
   </div>
 </template>

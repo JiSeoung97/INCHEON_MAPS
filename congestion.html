@@ -20,42 +20,43 @@
     <div class="container">
       <div id="map"></div>
       <div id="bottomSheet">
+        <div id="handle"><img id="handleImg" src="./images/handle.png" /></div>
         <table id="menu">
           <tr>
             <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
             <th class="menuBtn" data-idx="1">약도 보기</th>
           </tr>
         </table>
-        <div class="tabs">
-          <table>
-            <tr>
-              <th id="congestionEx">
-                • 제1여객터미널 혼잡도
-                <span id="questionMark">?</span>
-              </th>
-              <th><p id="nTime"></p></th>
-            </tr>
-          </table>
-        </div>
         <div id="controls">
+          <div class="tabs">
+            <table>
+              <tr>
+                <th id="congestionEx">
+                  • 제1여객터미널 혼잡도
+                  <span id="questionMark">?</span>
+                </th>
+                <th><p id="nTime"></p></th>
+              </tr>
+            </table>
+          </div>
           <table id="contents">
             <tr class="gate">
-              <th>2출국장</th>
+              <th></th>
               <th class="eastWest"></th>
               <th class="eastWest"></th>
             </tr>
             <tr class="gate">
-              <th>3출국장</th>
+              <th></th>
               <th class="eastWest"></th>
               <th class="eastWest"></th>
             </tr>
             <tr class="gate">
-              <th>4출국장</th>
+              <th></th>
               <th class="eastWest"></th>
               <th class="eastWest"></th>
             </tr>
             <tr class="gate">
-              <th>5출국장</th>
+              <th></th>
               <th class="eastWest"></th>
               <th class="eastWest"></th>
             </tr>
@@ -82,9 +83,11 @@
       </div>
     </div>
     <script src="js/language.js"></script>
+    <script src="data/mock-data2.js"></script>
     <script src="data/mock-data.js"></script>
     <script src="js/dataService.js"></script>
-    <script src="js/mapService.js"></script>
+    <script src="js/bottomSheet.js"></script>
+    <script src="js/mapService2.js"></script>
     <script src="js/main.js"></script>
     <script src="js/congestionService.js" defer></script>
     <script>

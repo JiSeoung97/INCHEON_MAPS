@@ -171,25 +171,6 @@ body {
   font-weight: bold;
 }
 
-/* 경로 정보 패널 */
-.route-info {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  border-left: 4px solid #5347aa;
-}
-
-.route-info h4 {
-  margin-bottom: 5px;
-  color: #5347aa;
-}
-
-.route-info p {
-  margin: 3px 0;
-  font-size: 13px;
-}
-
 /* 위치 버튼 강조 */
 #requestLocation {
   width: 13px;
@@ -305,13 +286,12 @@ table th:nth-child(3) {
   border-bottom: 3px solid #212122;
 }
 
-#controls th {
+#contents th {
   padding: 6px;
   border-bottom: 1px solid #2121221a;
 }
-.tabs {
-  padding: 6px;
-  border-bottom: 1px solid #2121221a;
+#contents {
+  border-top: 1px solid #2121221a;
 }
 #nTime {
   text-align: right;
@@ -439,4 +419,98 @@ table th:nth-child(3) {
 #handleImg {
   width: 4vh;
   height: 0.4vh;
+}
+.card {
+  width: 100%;
+  max-width: 360px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+.section {
+  padding: 1.2rem;
+  border-bottom: 1px solid #eee;
+}
+.section:last-child {
+  border-bottom: none;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.reset-btn {
+  font-size: 0.9rem;
+  color: #2196f3;
+  cursor: pointer;
+}
+.input-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.input-box {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  font-size: 0.95rem;
+}
+.input-label {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 0.4rem;
+}
+.input-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+.clock-icon::after {
+  content: "⏰";
+  font-size: 1rem;
+}
+.time-summary {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+.total-time {
+  font-size: 1rem;
+  color: #e53935;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+.timeline-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0;
+  font-size: 0.9rem;
+  border-top: 1px solid #f0f0f0;
+}
+.timeline-item:first-child {
+  border-top: none;
+}
+.badge {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  margin-left: 0.5rem;
+}
+.right {
+  color: #333;
+  white-space: nowrap;
 }
