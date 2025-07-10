@@ -10,6 +10,10 @@ const MapService = (() => {
   let countW = null;
   let countE = null;
   let language;
+  let hour = null;
+  let minute = null;
+  let ampm;
+
   const loadTranslateData = (lang) => {
     return languageData[lang];
   };
@@ -199,9 +203,10 @@ const MapService = (() => {
     const year = now.getFullYear();
     const month = String(now.getMonth() + 1).padStart(2, "0");
     const day = String(now.getDate()).padStart(2, "0");
-    let hour = now.getHours();
-    const minutes = String(now.getMinutes()).padStart(2, "0");
+    hour = now.getHours();
+    minute = String(now.getMinutes()).padStart(2, "0");
     const hourStr = String(hour).padStart(2, "0");
+
     time.innerHTML =
       "UPDATE : " +
       year +
@@ -212,7 +217,7 @@ const MapService = (() => {
       " " +
       hourStr +
       ":" +
-      minutes;
+      minute;
   };
 
   const changeMenu = (idx = 0) => {
@@ -265,9 +270,22 @@ const MapService = (() => {
         '  <th class="eastWest"></th>' +
         "</tr>" +
         "</table>";
+      const moveGate = document.getElementsByClassName("eastWest");
+
+      Array.from(moveGate).forEach((gate, index) => {
+        gate.addEventListener("click", () => {
+          MapService.moveMap(index);
+          MapService.openWindowInfo(index);
+          MapService.changeBorderColor(index);
+        });
+      });
     } else {
       menuBtn[1].style.setProperty("border-bottom", "3px solid #212122");
       menuBtn[0].style.setProperty("border-bottom", "1px solid #2121221A");
+      if (hour > 12) {
+        hour = hour - 12;
+        ampm = language["pm"];
+      }
       controls.innerHTML = "";
       controls.innerHTML =
         '<div id="cMapContainer">\n<div class="card">' +
@@ -275,44 +293,23 @@ const MapService = (() => {
         '<div class="header">' +
         "<span>탑승 정보 입력</span>" +
         '<span class="reset-btn">' +
-        '<img src="./images/reset.svg" alt="?" /> Reset' +
+        '<img src="./images/reset.svg" alt="?" > Reset' +
         "</span>" +
         "</div>" +
         '<div class="input-group">' +
         '<div class="input-box">' +
         '<div class="input-label">탑승구</div>' +
-        '<div class="input-value">12</div>' +
-        "</div>" +
-        '<div class="input-box">' +
-        '<div class="input-label">탑승 시간</div>' +
-        '<div class="input-value">' +
-        "오후 2:41 " +
-        "</div>" +
-        "</div>" +
-        "</div>" +
-        "</div>" +
-        '<div class="section">' +
-        '<div class="time-summary">구간별 예상 소요시간</div>' +
-        '<div class="total-time">총 2시간 37분</div>' +
-        '<div class="timeline-item">' +
-        '<div>Departure Hall 2 West <span class="badge">Best</span></div>' +
-        '<div class="right">Pass · 2시간 23분</div>' +
-        "</div>" +
-        '<div class="timeline-item">' +
-        "<div>From duty-free zone to boarding gate</div>" +
-        '<div class="right">14분</div>' +
-        "</div>" +
-        "</div>" +
-        "</div>\n</div>";
+        '<div class="input-value"><input type ="number"></div>' +
+        "</div>";
+      timeModal();
     }
-    const moveGate = document.getElementsByClassName("eastWest");
+  };
 
-    Array.from(moveGate).forEach((gate, index) => {
-      gate.addEventListener("click", () => {
-        MapService.moveMap(index);
-        MapService.openWindowInfo(index);
-        MapService.changeBorderColor(index);
-      });
+  const timeModal = () => {
+    const inputValue = document.getElementsByClassName("input-value");
+    inputValue[1].addEventListener("click", () => {
+      const timeModal = document.getElementById("timeModal");
+      timeModal.style.setProperty("display", "flex");
     });
   };
   const translateMenu = () => {
@@ -702,6 +699,7 @@ const MapService = (() => {
         language = loadTranslateData(lang);
         languageText = language[lang];
       }
+      ampm = language["am"];
       const mapElement = document.getElementById("map");
       if (!mapElement) {
         console.error("지도를 표시할 엘리먼트를 찾을 수 없음.");

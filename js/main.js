@@ -36,7 +36,6 @@ $(document).ready(async () => {
       });
     } else {
       console.log("here");
-      CongestionService.render();
     }
   });
   $("#modalClose").click(() => {

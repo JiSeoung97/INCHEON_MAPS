@@ -454,7 +454,6 @@ table th:nth-child(3) {
   gap: 1rem;
 }
 .input-box {
-  flex: 1;
   background: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -462,6 +461,12 @@ table th:nth-child(3) {
   display: flex;
   flex-direction: column;
   font-size: 0.95rem;
+}
+.input-box:nth-child(1) {
+  flex: 3;
+}
+.input-box:nth-child(2) {
+  flex: 7;
 }
 .input-label {
   font-size: 0.8rem;
@@ -471,9 +476,9 @@ table th:nth-child(3) {
 .input-value {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #222;
   display: flex;
-  align-items: center;
+  align-items: end;
+  justify-content: flex-end;
   gap: 0.4rem;
 }
 .clock-icon::after {
@@ -513,4 +518,21 @@ table th:nth-child(3) {
 .right {
   color: #333;
   white-space: nowrap;
+}
+
+input[type="number"] {
+  width: 3rem;
+  border-top: 0;
+  border-left: 0;
+  border-right: 0;
+  border-bottom: 1px solid #000;
+  padding-bottom: 3px;
+  text-align: center;
+  font-size: 1.75rem;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }

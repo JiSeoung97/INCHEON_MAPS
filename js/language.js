@@ -31,6 +31,8 @@ const languageData = {
     english: "영어",
     en: "영어",
     current: "사용중",
+    am: "오전",
+    pm: "오후",
   },
   ja: {
     terminal: "第1旅客ターミナル",
@@ -64,6 +66,8 @@ const languageData = {
     english: "英語",
     en: "英語",
     current: "使用中",
+    am: "午前",
+    pm: "午後",
   },
   zh: {
     update: "更新时间",
@@ -96,6 +100,8 @@ const languageData = {
     english: "英语",
     en: "英语",
     current: "使用中",
+    am: "上午",
+    pm: "下午",
   },
   en: {
     terminal: "Passenger Terminal 1",
@@ -129,5 +135,7 @@ const languageData = {
     english: "ENG",
     en: "English",
     current: "In Use",
+    am: "am",
+    pm: "pm",
   },
 };

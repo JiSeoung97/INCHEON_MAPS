@@ -1,142 +1,274 @@
-<template id="congestionMap">
-  <style>
-    body {
-      font-family: sans-serif;
-      background-color: #f5f5f5;
-      margin: 0;
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
-    }
-    .card {
-      width: 100%;
-      max-width: 360px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-      overflow: hidden;
-    }
-    .section {
-      padding: 1.2rem;
-      border-bottom: 1px solid #eee;
-    }
-    .section:last-child {
-      border-bottom: none;
-    }
-    .header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      color: #333;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-    .reset-btn {
-      font-size: 0.9rem;
-      color: #2196f3;
-      cursor: pointer;
-    }
-    .input-group {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-    .input-box {
-      flex: 1;
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 0.8rem;
-      display: flex;
-      flex-direction: column;
-      font-size: 0.95rem;
-    }
-    .input-label {
-      font-size: 0.8rem;
-      color: #888;
-      margin-bottom: 0.4rem;
-    }
-    .input-value {
-      font-size: 1.2rem;
-      font-weight: bold;
-      color: #222;
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-    .clock-icon::after {
-      content: "⏰";
-      font-size: 1rem;
-    }
-    .time-summary {
-      font-size: 0.9rem;
-      color: #888;
-      margin-bottom: 0.5rem;
-    }
-    .total-time {
-      font-size: 1rem;
-      color: #e53935;
-      font-weight: bold;
-      margin-bottom: 1rem;
-    }
-    .timeline-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.6rem 0;
-      font-size: 0.9rem;
-      border-top: 1px solid #f0f0f0;
-    }
-    .timeline-item:first-child {
-      border-top: none;
-    }
-    .badge {
-      background-color: #e3f2fd;
-      color: #1976d2;
-      font-size: 0.75rem;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      margin-left: 0.5rem;
-    }
-    .right {
-      color: #333;
-      white-space: nowrap;
-    }
-  </style>
-  <div class="card">
-    <!-- 탑승 정보 입력 -->
-    <div class="section">
-      <div class="header">
-        <span>탑승 정보 입력</span>
-        <span class="reset-btn">
-          <img src="../images/reset.svg" alt="?" /> Reset
-        </span>
-      </div>
-      <div class="input-group">
-        <div class="input-box">
-          <div class="input-label">탑승구</div>
-          <div class="input-value">12</div>
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>드래그 & 휠 타임 피커 (분할 구분선)</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f2f5;
+        font-family: "Noto Sans KR", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      .time-picker-container {
+        width: 280px;
+        padding: 20px;
+        background-color: #ffffff;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      .time-picker {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 200px; /* 40px * 5 */
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        -moz-user-select: none;
+      }
+
+      /* 각 스크롤 휠 (오전/오후, 시, 분) */
+      .wheel {
+        flex: 1;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+
+      /* --- ✨ 변경된 부분: 분할된 구분선 --- */
+      /* ::before와 ::after 가상 요소를 사용해 각 휠에 독립적인 선을 추가 */
+      .wheel::before,
+      .wheel::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80%; /* 휠 너비의 80% */
+        height: 2px;
+        background-color: #e0e0e0;
+        pointer-events: none; /* 이벤트 방해 방지 */
+        z-index: 1;
+      }
+
+      .wheel::before {
+        /* (전체 높이 / 2) - (아이템 높이 / 2) = 100px - 20px */
+        top: 80px;
+      }
+
+      .wheel::after {
+        /* (전체 높이 / 2) + (아이템 높이 / 2) = 100px + 20px */
+        top: 120px;
+      }
+      /* --- ✨ 변경 끝 --- */
+
+      .wheel ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        transition: transform 0.2s ease-out;
+        transform: translateY(80px);
+      }
+
+      .wheel li {
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        font-size: 20px;
+        color: #b0b0b0;
+        transition: all 0.2s;
+      }
+
+      .colon {
+        font-size: 20px;
+        font-weight: bold;
+        color: #333;
+        padding: 0 5px;
+        line-height: 200px;
+      }
+
+      .wheel li.selected {
+        font-weight: 700;
+        color: #000000;
+        font-size: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="time-picker-container">
+      <div class="time-picker">
+        <div class="wheel" id="ampm-wheel">
+          <ul id="ampm-list">
+            <li>오전</li>
+            <li>오후</li>
+          </ul>
         </div>
-        <div class="input-box">
-          <div class="input-label">탑승 시간</div>
-          <div class="input-value">
-            오후 2:41 <span class="clock-icon"></span>
-          </div>
+
+        <div class="wheel" id="hour-wheel">
+          <ul id="hour-list"></ul>
+        </div>
+
+        <div class="colon">:</div>
+
+        <div class="wheel" id="minute-wheel">
+          <ul id="minute-list"></ul>
         </div>
       </div>
     </div>
-    <!-- 구간별 소요시간 -->
-    <div class="section">
-      <div class="time-summary">구간별 예상 소요시간</div>
-      <div class="total-time">총 2시간 37분</div>
-      <div class="timeline-item">
-        <div>Departure Hall 2 West <span class="badge">Best</span></div>
-        <div class="right">Pass · 2시간 23분</div>
-      </div>
-      <div class="timeline-item">
-        <div>From duty-free zone to boarding gate</div>
-        <div class="right">14분</div>
-      </div>
-    </div>
-  </div>
-</template>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const ITEM_HEIGHT = 40;
+        const PICKER_HEIGHT = 200;
+        const wheels = document.querySelectorAll(".wheel");
+
+        function populateWheels() {
+          const hourList = document.getElementById("hour-list");
+          const minuteList = document.getElementById("minute-list");
+          for (let i = 1; i <= 12; i++) {
+            const li = document.createElement("li");
+            li.textContent = String(i).padStart(2, "0");
+            hourList.appendChild(li);
+          }
+          for (let i = 0; i < 60; i++) {
+            const li = document.createElement("li");
+            li.textContent = String(i).padStart(2, "0");
+            minuteList.appendChild(li);
+          }
+        }
+
+        function setupWheel(wheel) {
+          const list = wheel.querySelector("ul");
+          const itemCount = list.children.length;
+          const initialTranslateY = PICKER_HEIGHT / 2 - ITEM_HEIGHT / 2;
+
+          let isDragging = false;
+          let startY = 0;
+          let startTranslateY = 0;
+
+          function getCurrentTranslateY() {
+            const style = window.getComputedStyle(list);
+            const matrix = new DOMMatrix(style.transform);
+            return matrix.m42;
+          }
+
+          list.style.transform = `translateY(${initialTranslateY}px)`;
+          updateSelected(list, 0);
+
+          function onDragStart(e) {
+            isDragging = true;
+            startY = e.pageY || e.touches[0].pageY;
+            startTranslateY = getCurrentTranslateY();
+            list.style.transition = "none";
+            document.addEventListener("mousemove", onDragMove);
+            document.addEventListener("mouseup", onDragEnd);
+            document.addEventListener("touchmove", onDragMove, {
+              passive: false,
+            });
+            document.addEventListener("touchend", onDragEnd);
+          }
+
+          function onDragMove(e) {
+            if (!isDragging) return;
+            e.preventDefault();
+            const currentY = e.pageY || e.touches[0].pageY;
+            const deltaY = currentY - startY;
+            list.style.transform = `translateY(${startTranslateY + deltaY}px)`;
+          }
+
+          function onDragEnd() {
+            if (!isDragging) return;
+            isDragging = false;
+            document.removeEventListener("mousemove", onDragMove);
+            document.removeEventListener("mouseup", onDragEnd);
+            document.removeEventListener("touchmove", onDragMove);
+            document.removeEventListener("touchend", onDragEnd);
+            snapToNearest();
+          }
+
+          function onWheelScroll(e) {
+            e.preventDefault();
+            const currentTranslateY = getCurrentTranslateY();
+            const direction = e.deltaY > 0 ? 1 : -1;
+            let selectedIndex = Math.round(
+              -(currentTranslateY - initialTranslateY) / ITEM_HEIGHT
+            );
+
+            selectedIndex += direction;
+            selectedIndex = Math.max(0, Math.min(itemCount - 1, selectedIndex));
+
+            const targetTranslateY =
+              initialTranslateY - selectedIndex * ITEM_HEIGHT;
+            list.style.transition = "transform 0.2s ease-out";
+            list.style.transform = `translateY(${targetTranslateY}px)`;
+            updateSelected(list, selectedIndex);
+          }
+
+          function snapToNearest() {
+            const currentTranslateY = getCurrentTranslateY();
+            list.style.transition = "transform 0.2s ease-out";
+            let selectedIndex = Math.round(
+              -(currentTranslateY - initialTranslateY) / ITEM_HEIGHT
+            );
+            selectedIndex = Math.max(0, Math.min(itemCount - 1, selectedIndex));
+
+            const targetTranslateY =
+              initialTranslateY - selectedIndex * ITEM_HEIGHT;
+            list.style.transform = `translateY(${targetTranslateY}px)`;
+            updateSelected(list, selectedIndex);
+          }
+
+          function updateSelected(list, selectedIndex) {
+            const items = list.querySelectorAll("li");
+            items.forEach((item, index) => {
+              item.classList.toggle("selected", index === selectedIndex);
+            });
+          }
+
+          wheel.addEventListener("mousedown", onDragStart);
+          wheel.addEventListener("touchstart", onDragStart);
+          wheel.addEventListener("wheel", onWheelScroll);
+        }
+
+        function initializeToSpecificTime(ampm, hour, minute) {
+          const wheelsData = [
+            { id: "ampm-wheel", index: ampm === "오후" ? 1 : 0 },
+            { id: "hour-wheel", index: hour - 1 },
+            { id: "minute-wheel", index: minute },
+          ];
+          const initialTranslateY = PICKER_HEIGHT / 2 - ITEM_HEIGHT / 2;
+
+          wheelsData.forEach((data) => {
+            const wheel = document.getElementById(data.id);
+            const list = wheel.querySelector("ul");
+            const targetY = initialTranslateY - data.index * ITEM_HEIGHT;
+
+            list.style.transition = "none";
+            list.style.transform = `translateY(${targetY}px)`;
+
+            const items = list.querySelectorAll("li");
+            items.forEach((item, index) => {
+              item.classList.toggle("selected", index === data.index);
+            });
+          });
+        }
+
+        populateWheels();
+        wheels.forEach(setupWheel);
+        initializeToSpecificTime("오후", 7, 35);
+      });
+    </script>
+  </body>
+</html>
