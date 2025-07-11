@@ -569,6 +569,7 @@ input[type="number"]::-webkit-inner-spin-button {
   align-items: left;
   margin-left: 10px;
   gap: 6px;
+  border: 1px solid #ffffff;
 }
 .time-info {
   display: flex;
@@ -587,4 +588,23 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 .icon {
   font-size: 14px;
+}
+#down {
+  width: 15px;
+  height: 15px;
+}
+#reco-priority:hover {
+  border: 1px solid #000;
+}
+#reco-select {
+  position: fixed;
+  display: flex;
+  width: 100px;
+  height: 100px;
+  bottom: 7.5rem;
+  left: 19rem;
+  z-index: 4000;
+}
+small {
+  color: #2e90fa;
 }

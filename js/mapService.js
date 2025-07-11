@@ -30,7 +30,7 @@ const MapService = (() => {
     } else {
       eastWest = "west";
     }
-    return language[newName] + " " + language[eastWest];
+    return language[newName].replace("<br>", "") + " " + language[eastWest];
   };
   const createLanguageArrayWithSelectiveImg = (
     languageList,
@@ -138,7 +138,39 @@ const MapService = (() => {
     }
     return "위치권한이 필요합니다!";
   };
+  const getBoardingDistance = (area, gateNum) => {
+    const areas = DataService.getAllAreas();
+    let gatePosition;
+    areas.forEach((bArea) => {
+      if (bArea == "탑승게이트" + gateNum) {
+        gatePosition = bArea.position;
+      }
+    });
 
+    if (savedLocation !== null) {
+      const lng1 = area.position.lng;
+      const lat1 = area.position.lat;
+      const lng2 = gatePosition.lng;
+      const lat2 = gatePosition.lat;
+
+      const earthR = 6371000; // 지구 반지름
+      const degToRad = (deg) => deg * (Math.PI / 180);
+
+      const dLat = degToRad(lat2 - lat1);
+      const dlng = degToRad(lng2 - lng1);
+
+      const a =
+        Math.sin(dLat / 2) ** 2 +
+        Math.cos(degToRad(lat1)) *
+          Math.cos(degToRad(lat2)) *
+          Math.sin(dlng / 2) ** 2;
+
+      return Math.round(
+        earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+      );
+    }
+    return "위치권한이 필요합니다!";
+  };
   const limitLocation = (userLocation) => {
     const maxLat = 37.496831;
     const minLat = 37.420388;
@@ -230,10 +262,12 @@ const MapService = (() => {
             json = {
               name: area.name,
               time: distance + waitingTime,
+              position: area.position,
             };
           }
         });
         recoArray.push(json);
+        console.log(recoArray);
       }
     });
     recoArray.sort((a, b) => a.time - b.time);
@@ -344,10 +378,12 @@ const MapService = (() => {
         "</div>" +
         '<div class="segment">' +
         '<img class="icon" src="./images/walk.png" />' +
-        '<div class="segment-inner">' +
+        '<div id ="reco-priority" class="segment-inner">' +
         "<span>" +
         departurehall[0] +
-        "<small>(1st)</small></span>" +
+        "<small>(" +
+        language["first"] +
+        ')</small><img id="down" src="./images/dropDown.svg"></span>' +
         "</div>" +
         '<div class="time-info">' +
         "<span>8분</span>" +
@@ -358,7 +394,9 @@ const MapService = (() => {
         '<div class="segment-inner">' +
         "<span>" +
         departurehall[0] +
-        "<small>(1st)</small></span>" +
+        "<small>(" +
+        language["first"] +
+        ")</small></span>" +
         "</div>" +
         '<div class="time-info">' +
         "<span>1시간 4분</span>" +
@@ -387,6 +425,10 @@ const MapService = (() => {
         "</div>" +
         "</div>" +
         "</div>";
+      const priority = document.getElementById("reco-priority");
+      priority.addEventListener("click", () => {
+        console.log("click!");
+      });
     }
   };
   const translateMenu = () => {
@@ -620,9 +662,6 @@ const MapService = (() => {
     let gaugeColor;
     let distance = getDistance(areaData);
     let conLevel;
-    const urlParams = new URLSearchParams(window.location.search);
-    const boardingGate = urlParams.get("boardingGate");
-
     switch (areaData.congestion) {
       case "none":
         gaugeColor = "#999";
@@ -850,8 +889,7 @@ const MapService = (() => {
           "</div>";
 
         naver.maps.Event.once(map, "init", function () {
-          const urlParams = new URLSearchParams(window.location.search);
-          const boardingGate = urlParams.get("boardingGate");
+          const boardingGate = sessionStorage.getItem("boardingGate");
 
           const locaCon = new naver.maps.CustomControl(locationBtnHtml, {
             position: naver.maps.Position.RIGHT_CENTER,
@@ -999,8 +1037,7 @@ const MapService = (() => {
       markers.forEach((marker) => {
         marker.setMap(map);
       });
-      const urlParams = new URLSearchParams(window.location.search);
-      const idx = urlParams.get("boardingGate");
+      const idx = sessionStorage.getItem("boardingGate");
       let boardingIdx = getBoardingGateIdx(idx);
       boardingMarkers[boardingIdx].setMap(map);
     },

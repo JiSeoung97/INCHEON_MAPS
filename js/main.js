@@ -5,8 +5,6 @@ $(document).ready(async () => {
   let boardingGate;
   try {
     await MapService.savedLocation();
-    const urlParams = new URLSearchParams(window.location.search);
-    boardingGate = urlParams.get("boardingGate");
     map = MapService.init();
   } catch {
     alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
