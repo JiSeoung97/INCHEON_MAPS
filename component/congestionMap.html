@@ -3,272 +3,112 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>드래그 & 휠 타임 피커 (분할 구분선)</title>
+    <title>구간별 예상 소요시간</title>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap");
-
       body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-        margin: 0;
-        background-color: #f0f2f5;
-        font-family: "Noto Sans KR", sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      .time-picker-container {
-        width: 280px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background-color: #f7f8fa;
         padding: 20px;
-        background-color: #ffffff;
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      }
-
-      .time-picker {
-        position: relative;
         display: flex;
         justify-content: center;
-        align-items: center;
-        height: 200px; /* 40px * 5 */
-        overflow: hidden;
-        user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-        -moz-user-select: none;
       }
-
-      /* 각 스크롤 휠 (오전/오후, 시, 분) */
-      .wheel {
-        flex: 1;
-        height: 100%;
-        overflow: hidden;
-        position: relative;
+      .recoContainer {
+        background-color: #fff;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        width: 340px;
       }
-
-      /* --- ✨ 변경된 부분: 분할된 구분선 --- */
-      /* ::before와 ::after 가상 요소를 사용해 각 휠에 독립적인 선을 추가 */
-      .wheel::before,
-      .wheel::after {
-        content: "";
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80%; /* 휠 너비의 80% */
-        height: 2px;
-        background-color: #e0e0e0;
-        pointer-events: none; /* 이벤트 방해 방지 */
-        z-index: 1;
-      }
-
-      .wheel::before {
-        /* (전체 높이 / 2) - (아이템 높이 / 2) = 100px - 20px */
-        top: 80px;
-      }
-
-      .wheel::after {
-        /* (전체 높이 / 2) + (아이템 높이 / 2) = 100px + 20px */
-        top: 120px;
-      }
-      /* --- ✨ 변경 끝 --- */
-
-      .wheel ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        transition: transform 0.2s ease-out;
-        transform: translateY(80px);
-      }
-
-      .wheel li {
-        height: 40px;
-        line-height: 40px;
-        text-align: center;
-        font-size: 20px;
-        color: #b0b0b0;
-        transition: all 0.2s;
-      }
-
-      .colon {
-        font-size: 20px;
+      .title {
         font-weight: bold;
-        color: #333;
-        padding: 0 5px;
-        line-height: 200px;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 16px;
+        align-items: center;
       }
-
-      .wheel li.selected {
-        font-weight: 700;
-        color: #000000;
-        font-size: 24px;
+      .segment {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px;
+        border-radius: 12px;
+        background-color: #f1f3f5;
+        margin-bottom: 8px;
+      }
+      .segment-inner {
+        background-color: #fff;
+        padding: 6px 12px;
+        border-radius: 16px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .time-info {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+      }
+      .total-time {
+        background-color: #333;
+        color: #fff;
+        padding: 4px 10px;
+        border-radius: 16px;
+        font-size: 13px;
+      }
+      .icon {
+        font-size: 14px;
       }
     </style>
   </head>
   <body>
-    <div class="time-picker-container">
-      <div class="time-picker">
-        <div class="wheel" id="ampm-wheel">
-          <ul id="ampm-list">
-            <li>오전</li>
-            <li>오후</li>
-          </ul>
+    <div class="recoContainer">
+      <div class="title">
+        <div>구간별 예상 소요시간</div>
+        <div class="total-time">총 1시간 45분</div>
+      </div>
+
+      <div class="segment">
+        <div class="segment-inner">
+          <img class="icon" src="../images/walk.png" />
+          <span>2 Departure Hall 2 West <small>(1st)</small></span>
         </div>
-
-        <div class="wheel" id="hour-wheel">
-          <ul id="hour-list"></ul>
+        <div class="time-info">
+          <span>8분</span>
         </div>
+      </div>
 
-        <div class="colon">:</div>
+      <div class="segment">
+        <div class="segment-inner">
+          <img class="icon" src="../images/ticket.png" />
+          <span>2 Departure Hall 2 West <small>(1st)</small></span>
+        </div>
+        <div class="time-info">
+          <span>1시간 4분</span>
+        </div>
+      </div>
 
-        <div class="wheel" id="minute-wheel">
-          <ul id="minute-list"></ul>
+      <div class="segment">
+        <div class="segment-inner">
+          <img class="icon" src="../images/ticket.png" />
+          <span>immigration examination</span>
+        </div>
+        <div class="time-info">
+          <span>23분</span>
+        </div>
+      </div>
+
+      <div class="segment">
+        <div class="segment-inner">
+          <img class="icon" src="../images/walk.png" />
+          <span>15 boarding gate</span>
+        </div>
+        <div class="time-info">
+          <span>10분</span>
         </div>
       </div>
     </div>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const ITEM_HEIGHT = 40;
-        const PICKER_HEIGHT = 200;
-        const wheels = document.querySelectorAll(".wheel");
-
-        function populateWheels() {
-          const hourList = document.getElementById("hour-list");
-          const minuteList = document.getElementById("minute-list");
-          for (let i = 1; i <= 12; i++) {
-            const li = document.createElement("li");
-            li.textContent = String(i).padStart(2, "0");
-            hourList.appendChild(li);
-          }
-          for (let i = 0; i < 60; i++) {
-            const li = document.createElement("li");
-            li.textContent = String(i).padStart(2, "0");
-            minuteList.appendChild(li);
-          }
-        }
-
-        function setupWheel(wheel) {
-          const list = wheel.querySelector("ul");
-          const itemCount = list.children.length;
-          const initialTranslateY = PICKER_HEIGHT / 2 - ITEM_HEIGHT / 2;
-
-          let isDragging = false;
-          let startY = 0;
-          let startTranslateY = 0;
-
-          function getCurrentTranslateY() {
-            const style = window.getComputedStyle(list);
-            const matrix = new DOMMatrix(style.transform);
-            return matrix.m42;
-          }
-
-          list.style.transform = `translateY(${initialTranslateY}px)`;
-          updateSelected(list, 0);
-
-          function onDragStart(e) {
-            isDragging = true;
-            startY = e.pageY || e.touches[0].pageY;
-            startTranslateY = getCurrentTranslateY();
-            list.style.transition = "none";
-            document.addEventListener("mousemove", onDragMove);
-            document.addEventListener("mouseup", onDragEnd);
-            document.addEventListener("touchmove", onDragMove, {
-              passive: false,
-            });
-            document.addEventListener("touchend", onDragEnd);
-          }
-
-          function onDragMove(e) {
-            if (!isDragging) return;
-            e.preventDefault();
-            const currentY = e.pageY || e.touches[0].pageY;
-            const deltaY = currentY - startY;
-            list.style.transform = `translateY(${startTranslateY + deltaY}px)`;
-          }
-
-          function onDragEnd() {
-            if (!isDragging) return;
-            isDragging = false;
-            document.removeEventListener("mousemove", onDragMove);
-            document.removeEventListener("mouseup", onDragEnd);
-            document.removeEventListener("touchmove", onDragMove);
-            document.removeEventListener("touchend", onDragEnd);
-            snapToNearest();
-          }
-
-          function onWheelScroll(e) {
-            e.preventDefault();
-            const currentTranslateY = getCurrentTranslateY();
-            const direction = e.deltaY > 0 ? 1 : -1;
-            let selectedIndex = Math.round(
-              -(currentTranslateY - initialTranslateY) / ITEM_HEIGHT
-            );
-
-            selectedIndex += direction;
-            selectedIndex = Math.max(0, Math.min(itemCount - 1, selectedIndex));
-
-            const targetTranslateY =
-              initialTranslateY - selectedIndex * ITEM_HEIGHT;
-            list.style.transition = "transform 0.2s ease-out";
-            list.style.transform = `translateY(${targetTranslateY}px)`;
-            updateSelected(list, selectedIndex);
-          }
-
-          function snapToNearest() {
-            const currentTranslateY = getCurrentTranslateY();
-            list.style.transition = "transform 0.2s ease-out";
-            let selectedIndex = Math.round(
-              -(currentTranslateY - initialTranslateY) / ITEM_HEIGHT
-            );
-            selectedIndex = Math.max(0, Math.min(itemCount - 1, selectedIndex));
-
-            const targetTranslateY =
-              initialTranslateY - selectedIndex * ITEM_HEIGHT;
-            list.style.transform = `translateY(${targetTranslateY}px)`;
-            updateSelected(list, selectedIndex);
-          }
-
-          function updateSelected(list, selectedIndex) {
-            const items = list.querySelectorAll("li");
-            items.forEach((item, index) => {
-              item.classList.toggle("selected", index === selectedIndex);
-            });
-          }
-
-          wheel.addEventListener("mousedown", onDragStart);
-          wheel.addEventListener("touchstart", onDragStart);
-          wheel.addEventListener("wheel", onWheelScroll);
-        }
-
-        function initializeToSpecificTime(ampm, hour, minute) {
-          const wheelsData = [
-            { id: "ampm-wheel", index: ampm === "오후" ? 1 : 0 },
-            { id: "hour-wheel", index: hour - 1 },
-            { id: "minute-wheel", index: minute },
-          ];
-          const initialTranslateY = PICKER_HEIGHT / 2 - ITEM_HEIGHT / 2;
-
-          wheelsData.forEach((data) => {
-            const wheel = document.getElementById(data.id);
-            const list = wheel.querySelector("ul");
-            const targetY = initialTranslateY - data.index * ITEM_HEIGHT;
-
-            list.style.transition = "none";
-            list.style.transform = `translateY(${targetY}px)`;
-
-            const items = list.querySelectorAll("li");
-            items.forEach((item, index) => {
-              item.classList.toggle("selected", index === data.index);
-            });
-          });
-        }
-
-        populateWheels();
-        wheels.forEach(setupWheel);
-        initializeToSpecificTime("오후", 7, 35);
-      });
-    </script>
   </body>
 </html>

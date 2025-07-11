@@ -13,11 +13,25 @@ const MapService = (() => {
   let hour = null;
   let minute = null;
   let ampm;
-
+  let recoArray = [];
+  let boardinGateNum;
   const loadTranslateData = (lang) => {
     return languageData[lang];
   };
-
+  const transName = (name) => {
+    let names = name.split(" ");
+    console.log(name);
+    names[0] = names[0].replace("출국장", "");
+    let newName = "gate" + names[0];
+    console.log("newName : ", newName);
+    let eastWest;
+    if (names[1] == "동편") {
+      eastWest = "east";
+    } else {
+      eastWest = "west";
+    }
+    return language[newName] + " " + language[eastWest];
+  };
   const createLanguageArrayWithSelectiveImg = (
     languageList,
     currentLang,
@@ -200,9 +214,9 @@ const MapService = (() => {
   const recoGate = () => {
     const areas = DataService.getAllAreas();
     const apiData = DataService.getApiData();
-    const recoArray = [];
+
     areas.forEach((area, index) => {
-      if (index < 10) {
+      if (index < 10 && area.id !== "DG1" && area.id !== "DG6") {
         let json;
         apiData.forEach((api) => {
           const distance = Math.round(
@@ -314,20 +328,64 @@ const MapService = (() => {
         hour = hour - 12;
         ampm = language["pm"];
       }
+      let departurehall = [];
+      recoArray.forEach((reco, idx) => {
+        if (idx < 3) {
+          departurehall.push(transName(reco.name));
+          console.log("name : ", reco.name);
+        }
+      });
       controls.innerHTML = "";
       controls.innerHTML =
-        '<div id="cMapContainer">\n<div class="card">' +
-        '<div class="section">' +
-        '<div class="header">' +
-        "<span>탑승 정보 입력</span>" +
-        '<span class="reset-btn">' +
-        '<img src="./images/reset.svg" alt="?" > Reset' +
+        '<div class="recoContainer">' +
+        '<div class="title">' +
+        '<div id ="title-text">구간별 예상 소요시간</div>' +
+        '<div class="total-time">총 1시간 45분</div>' +
+        "</div>" +
+        '<div class="segment">' +
+        '<img class="icon" src="./images/walk.png" />' +
+        '<div class="segment-inner">' +
+        "<span>" +
+        departurehall[0] +
+        "<small>(1st)</small></span>" +
+        "</div>" +
+        '<div class="time-info">' +
+        "<span>8분</span>" +
+        "</div>" +
+        "</div>" +
+        '<div class="segment">' +
+        '<img class="icon" src="./images/ticket.png" />' +
+        '<div class="segment-inner">' +
+        "<span>" +
+        departurehall[0] +
+        "<small>(1st)</small></span>" +
+        "</div>" +
+        '<div class="time-info">' +
+        "<span>1시간 4분</span>" +
+        "</div>" +
+        "</div>" +
+        '<div class="segment">' +
+        '<img class="icon" src="./images/ticket.png" />' +
+        '<div class="segment-inner">' +
+        "<span>" +
+        language["immigration"] +
         "</span>" +
         "</div>" +
-        '<div class="input-group">' +
-        '<div class="input-box">' +
-        '<div class="input-label">탑승구</div>' +
-        '<div class="input-value"><input type ="number"></div>' +
+        '<div class="time-info">' +
+        "<span>23분</span>" +
+        "</div>" +
+        "</div>" +
+        '<div class="segment">' +
+        '<img class="icon" src="./images/walk.png" />' +
+        '<div class="segment-inner">' +
+        "<span>" +
+        language["nthGate"].replace("{{number}}", boardinGateNum) +
+        "</span>" +
+        "</div>" +
+        '<div class="time-info">' +
+        "<span>10분</span>" +
+        "</div>" +
+        "</div>" +
         "</div>";
     }
   };
@@ -593,8 +651,7 @@ const MapService = (() => {
       areaData.congestion +
       '">' +
       "<h3>" +
-      language["boardingGate"] +
-      boardingGate +
+      language["nthGate"].replace("{{number}}", boardinGateNum) +
       "</h3>" +
       "<p>" +
       language["distance"] +
@@ -738,6 +795,7 @@ const MapService = (() => {
         changeMenu();
         translateMenu();
         recoGate();
+        boardinGateNum = sessionStorage.getItem("boardingGate");
         let langArray = ["ko", "en", "ja", "zh"];
         let langCheck;
         langArray.forEach((l) => {

@@ -108,7 +108,7 @@ const mockData = {
         },
 
         {
-          id: "DG26",
+          id: "DG6",
           name: "6출국장",
           position: { lat: 37.447, lng: 126.4484 },
           congestion: "none",
