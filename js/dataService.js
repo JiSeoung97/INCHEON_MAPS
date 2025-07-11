@@ -4,6 +4,7 @@ const DataService = (() => {
   let data = null;
   let apiDatas = null;
   let congestions = [];
+
   const updateCongestion = () => {
     if (!data) return;
     Array.from(apiDatas).forEach((apiData) => {
@@ -49,6 +50,7 @@ const DataService = (() => {
   return {
     initData: () => {
       data = window.mockData || null;
+      console.log("data", data);
       apiDatas = window.mockData2.data[0].response.body.items.item || null;
       console.log(apiDatas);
       if (!data) {
@@ -62,10 +64,17 @@ const DataService = (() => {
     getAllData: () => {
       return data;
     },
-
+    getApiData: () => {
+      return apiDatas;
+    },
+    getTotalWaitTime: (item) => {
+      return calculateTotalWaitTime(item);
+    },
     getCompanyLocation: () => {
-      if (!data) return null;
-
+      if (!data) {
+        console.log("data", data);
+        return null;
+      }
       return data.companyLocation;
     },
 
@@ -99,8 +108,10 @@ const DataService = (() => {
     },
 
     getAllAreas: () => {
-      if (!data) return null;
-
+      if (!data) {
+        console.log(data);
+        return null;
+      }
       const allAreas = [];
       data.buildings.forEach((building) => {
         building.areas.forEach((area) => {

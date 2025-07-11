@@ -164,6 +164,7 @@ const MapService = (() => {
     }
     return gaugeColor;
   };
+
   const initMap = () => {
     const mapOptions = {
       center: new naver.maps.LatLng(37.44703, 126.449211),
@@ -196,7 +197,34 @@ const MapService = (() => {
     const modal = document.getElementById("adModal");
     modal.style.setProperty("display", "none");
   };
-
+  const recoGate = () => {
+    const areas = DataService.getAllAreas();
+    const apiData = DataService.getApiData();
+    const recoArray = [];
+    areas.forEach((area, index) => {
+      if (index < 10) {
+        let json;
+        apiData.forEach((api) => {
+          const distance = Math.round(
+            Number(getDistance(area).replace("M", "").replace(",", "")) / 70
+          );
+          const waitingTime = Math.round(
+            DataService.getTotalWaitTime(api) / 60
+          );
+          console.log(distance);
+          if (api.deskname == area.id) {
+            json = {
+              name: area.name,
+              time: distance + waitingTime,
+            };
+          }
+        });
+        recoArray.push(json);
+      }
+    });
+    recoArray.sort((a, b) => a.time - b.time);
+    console.log(recoArray);
+  };
   const timereset = () => {
     const time = document.getElementById("nTime");
     const now = new Date();
@@ -301,16 +329,7 @@ const MapService = (() => {
         '<div class="input-label">탑승구</div>' +
         '<div class="input-value"><input type ="number"></div>' +
         "</div>";
-      timeModal();
     }
-  };
-
-  const timeModal = () => {
-    const inputValue = document.getElementsByClassName("input-value");
-    inputValue[1].addEventListener("click", () => {
-      const timeModal = document.getElementById("timeModal");
-      timeModal.style.setProperty("display", "flex");
-    });
   };
   const translateMenu = () => {
     const menuBtn = Array.from(document.getElementsByClassName("menuBtn"));
@@ -362,7 +381,7 @@ const MapService = (() => {
     }
     boardingInfoWindows[idx].open(map, boardingMarkers[idx]);
   };
-  const showGateCongestion = (index) => {
+  const showGateCongestion = () => {
     const allAreadata = DataService.getAllAreas();
     const areadata = [];
     allAreadata.forEach((area, idx) => {
@@ -690,6 +709,7 @@ const MapService = (() => {
       console.log("MapService 초기화 시작");
       let lang = sessionStorage.getItem("language");
       let languageText;
+      DataService.initData();
 
       if (lang == null) {
         languageText = "Language";
@@ -717,6 +737,7 @@ const MapService = (() => {
         map = initMap();
         changeMenu();
         translateMenu();
+        recoGate();
         let langArray = ["ko", "en", "ja", "zh"];
         let langCheck;
         langArray.forEach((l) => {

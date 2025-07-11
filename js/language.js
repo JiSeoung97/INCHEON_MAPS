@@ -14,7 +14,6 @@ const languageData = {
     high: "혼잡",
     veryhigh: "매우혼잡",
     distance: "거리",
-    // 모든 게이트 추가
     boardingGate: "탑승게이트",
     gate1: "1출국장",
     gate2: "2출국장",
@@ -49,7 +48,6 @@ const languageData = {
     high: "混雑",
     veryhigh: "非常に混雑",
     distance: "距離",
-    // 모든 게이트 추가
     boardingGate: "搭乗ゲート",
     gate1: "1番出発ホール",
     gate2: "2番出発ホール",
@@ -83,7 +81,6 @@ const languageData = {
     high: "拥堵",
     veryhigh: "非常拥堵",
     distance: "距离",
-    // 모든 게이트 추가
     boardingGate: "登机口",
     gate1: "1号出发大厅",
     gate2: "2号出发大厅",
@@ -118,7 +115,6 @@ const languageData = {
     high: "Crowded",
     veryhigh: "Very Crowded",
     distance: "distance",
-    // 모든 게이트 추가
     boardingGate: "Boarding Gate",
     gate1: "Departure Hall 1",
     gate2: "Departure Hall 2",
