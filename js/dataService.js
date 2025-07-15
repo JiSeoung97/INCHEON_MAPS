@@ -39,7 +39,6 @@ const DataService = (() => {
   // 총 대기시간 기준 혼잡도 계산
   const calculateCongestionLevel = (item) => {
     const totalWaitTime = calculateTotalWaitTime(item);
-    console.log(totalWaitTime);
     // 시간 기준 혼잡도 (초 단위)
     if (totalWaitTime <= 600) return "low"; // 10분 이하
     if (totalWaitTime <= 1800) return "medium"; // 30분 이하
@@ -50,9 +49,8 @@ const DataService = (() => {
   return {
     initData: () => {
       data = window.mockData || null;
-      console.log("data", data);
       apiDatas = window.mockData2.data[0].response.body.items.item || null;
-      console.log(apiDatas);
+
       if (!data) {
         console.error("모킹 데이터 로드 실패함");
         return null;

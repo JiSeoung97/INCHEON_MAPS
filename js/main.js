@@ -2,7 +2,7 @@
 
 $(document).ready(async () => {
   let map;
-  let boardingGate;
+  let boardingGate = sessionStorage.getItem("boardingGate");
   try {
     await MapService.savedLocation();
     map = MapService.init();
@@ -11,18 +11,19 @@ $(document).ready(async () => {
     map = MapService.init();
   }
   MapService.showBScongestion();
-
-  MapService.showMarkers();
-  MapService.timereset();
+  if (boardingGate != null) {
+    MapService.showMarkers();
+    MapService.timereset();
+  }
   if (sessionStorage.getItem("render")) {
     MapService.modalOpen();
   }
-  sessionStorage.setItem("render", true);
+  // sessionStorage.setItem("render", true);
   let btnIdx = 0;
   $(".menuBtn").click((e) => {
     btnIdx = Number(e.currentTarget.dataset.idx);
-    MapService.changeMenu(btnIdx);
     if (btnIdx === 0) {
+      MapService.changeMenu(btnIdx);
       MapService.showBScongestion();
       const moveGate = document.getElementsByClassName("eastWest");
 
@@ -33,8 +34,29 @@ $(document).ready(async () => {
         });
       });
     } else {
-      console.log("here");
+      if (boardingGate == null) {
+        const modal = document.getElementById("modal-background");
+        modal.style.display = "flex";
+      } else {
+        MapService.changeMenu(btnIdx);
+        console.log("here");
+      }
     }
+  });
+  $(".btn-cancel").click(() => {
+    const modal = document.getElementById("modal-background");
+    modal.style.display = "none";
+  });
+  $(".confirm-btn").click(() => {
+    const modal = document.getElementById("modal-background");
+    modal.style.display = "none";
+    const gateNum = document.getElementsByClassName("gate-input")[0];
+    boardingGate = gateNum.value;
+    console.log(boardingGate);
+    sessionStorage.setItem("boardingGate", boardingGate);
+    MapService.init();
+    MapService.changeMenu(1);
+    MapService.showMarkers();
   });
   $("#modalClose").click(() => {
     MapService.modalClose();
