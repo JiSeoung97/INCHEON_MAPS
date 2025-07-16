@@ -171,18 +171,6 @@ body {
   font-weight: bold;
 }
 
-/* 위치 버튼 강조 */
-#requestLocation {
-  width: 13px;
-  height: 13px;
-  border-radius: 5px;
-  color: #ffffff;
-}
-
-#requestLocation:hover {
-  background-color: #8395bb;
-}
-
 #cMapContainer {
   display: inline-block;
   width: 100%;
@@ -238,12 +226,19 @@ div p {
 #contents tr th:nth-child(1) {
   width: 30%;
 }
+#contents tr {
+  height: 3.75rem;
+}
 #contents tr th:nth-child(2),
 table th:nth-child(3) {
   width: 35%;
 }
 .eastWest {
   min-height: 100px;
+  height: auto;
+}
+.eastWest div {
+  height: 3rem;
 }
 .tab {
   width: 45%;
@@ -268,6 +263,7 @@ table th:nth-child(3) {
 
 .gatePoint {
   font-size: 12px;
+  margin-bottom: 3px;
 }
 
 #menu {
@@ -291,6 +287,7 @@ table th:nth-child(3) {
   border-bottom: 1px solid #2121221a;
 }
 #contents {
+  height: auto;
   border-top: 1px solid #2121221a;
 }
 #nTime {
@@ -731,4 +728,10 @@ small {
 }
 #boardingInfo:hover {
   border: 1px solid #0099ff;
+}
+#requestLocation:hover {
+  border: 1px solid #0099ff;
+}
+#segment-check:hover {
+  border: 1px solid #000;
 }

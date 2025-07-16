@@ -421,8 +421,8 @@ const MapService = (() => {
         "</div>" +
         '<div class="segment">' +
         '<img class="icon" src="./images/walk.png" />' +
-        '<div class="segment-inner">' +
-        '<span style="display:flex;align-items: center;justify-content: center">' +
+        '<div id ="segment-check" class="segment-inner">' +
+        '<span id= "boardingGateCheck"style="display:flex;align-items: center;justify-content: center">' +
         language["boardingGate"] +
         " : " +
         '<span style="color:#2E90FA">' +
@@ -440,6 +440,11 @@ const MapService = (() => {
         "</div>";
       const priority = document.getElementById("reco-priority");
       const recoRank = document.getElementsByClassName("reco-rank");
+      $("#boardingGateCheck").click(() => {
+        const modal = document.getElementById("modal-background");
+        console.log("fdfd");
+        modal.style.display = "flex";
+      });
 
       Array.from(recoRank).forEach((rank, idx) => {
         rank.innerHTML =
@@ -972,7 +977,7 @@ const MapService = (() => {
       let lang = sessionStorage.getItem("language");
       let languageText;
       DataService.initData();
-
+      let firstlang = lang;
       if (lang == null) {
         languageText = "Language";
         lang = "ko";
@@ -997,6 +1002,7 @@ const MapService = (() => {
         console.log("지도 초기화 시도...");
 
         map = initMap();
+
         changeMenu();
         translateMenu();
         recoGate();
@@ -1064,7 +1070,7 @@ const MapService = (() => {
 
         const langImgArray = createLanguageArrayWithSelectiveImg(
           languageList,
-          lang
+          firstlang
         );
         let langChan = "";
         console.log("langImgArray : ", langImgArray);

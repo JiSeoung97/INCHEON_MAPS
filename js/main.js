@@ -18,7 +18,7 @@ $(document).ready(async () => {
   if (sessionStorage.getItem("render")) {
     MapService.modalOpen();
   }
-  // sessionStorage.setItem("render", true);
+  sessionStorage.setItem("render", true);
   let btnIdx = 0;
   $(".menuBtn").click((e) => {
     btnIdx = Number(e.currentTarget.dataset.idx);
@@ -54,6 +54,10 @@ $(document).ready(async () => {
     boardingGate = gateNum.value;
     console.log(boardingGate);
     sessionStorage.setItem("boardingGate", boardingGate);
+    const boardingInfo = document.getElementById("boardingInfo");
+    const langSelect = document.getElementById("selectlang");
+    langSelect.remove();
+    boardingInfo.remove();
     MapService.init();
     MapService.changeMenu(1);
     MapService.showMarkers();
