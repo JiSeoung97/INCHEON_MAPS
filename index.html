@@ -13,7 +13,7 @@
     <script
       id="naverMap"
       type="text/javascript"
-      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=API-KEY&language=ko"
+      src="https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=API_KEY&language=ko"
     ></script>
   </head>
   <body>
@@ -82,7 +82,26 @@
         </div>
       </div>
     </div>
-    <div id="reco-select"><div></div></div>
+    <div id="modal-background">
+      <div class="modal">
+        <div class="modal-header">
+          탑승구 번호를 입력해주세요
+          <div class="modal-close">&times;</div>
+        </div>
+        <div class="input-container">
+          <input class="gate-input" type="number" maxlength="3" />
+        </div>
+        <div class="subtext">서브 타이틀 문구</div>
+        <button class="confirm-btn">확인</button>
+      </div>
+    </div>
+    <div id="reco-select">
+      <table>
+        <div class="reco-rank"></div>
+        <div class="reco-rank"></div>
+        <div class="reco-rank"></div>
+      </table>
+    </div>
     <script src="js/language.js"></script>
     <script src="data/mock-data2.js"></script>
     <script src="data/mock-data.js"></script>

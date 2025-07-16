@@ -15,6 +15,8 @@ const MapService = (() => {
   let ampm;
   let recoArray = [];
   let boardinGateNum;
+  let movePosition = null;
+  let departurehall = [];
   const loadTranslateData = (lang) => {
     return languageData[lang];
   };
@@ -356,7 +358,7 @@ const MapService = (() => {
         hour = hour - 12;
         ampm = language["pm"];
       }
-      let departurehall = [];
+
       recoArray.forEach((reco, idx) => {
         if (idx < 3) {
           departurehall.push(transName(reco.name));
@@ -437,19 +439,19 @@ const MapService = (() => {
         "</div>" +
         "</div>";
       const priority = document.getElementById("reco-priority");
+      const recoRank = document.getElementsByClassName("reco-rank");
+
+      Array.from(recoRank).forEach((rank, idx) => {
+        rank.innerHTML =
+          "<div>" +
+          departurehall[idx] +
+          " <small>(" +
+          ranks[idx] +
+          ")</small>" +
+          "</div>";
+      });
       priority.addEventListener("click", () => {
         const reco = document.getElementById("reco-select");
-        const recoRank = document.getElementsByClassName("reco-rank");
-
-        Array.from(recoRank).forEach((rank, idx) => {
-          rank.innerHTML =
-            "<div>" +
-            departurehall[idx] +
-            " <small>(" +
-            ranks[idx] +
-            ")</small>" +
-            "</div>";
-        });
 
         if (reco.style.display == "none") {
           reco.style.display = "flex";
@@ -474,6 +476,7 @@ const MapService = (() => {
     }
   };
   const selectEvent = () => {
+    const ranks = [language["first"], language["second"], language["third"]];
     const recoRanks = document.getElementsByClassName("reco-rank");
     Array.from(recoRanks).forEach((reco, idx) => {
       reco.addEventListener("click", () => {
@@ -498,6 +501,16 @@ const MapService = (() => {
           "</span>" +
           "<small>" +
           '</small><img id="down" src="./images/dropDown.svg">';
+
+        recoRanks[idx].innerHTML = "";
+        recoRanks[idx].innerHTML =
+          '<div style="display:flex; align-items: center;justify-content: center">' +
+          departurehall[idx] +
+          " <small>(" +
+          ranks[idx] +
+          ")</small>" +
+          '<img src = "./images/check.svg" style="height:1.25rem;width:1.25rem">' +
+          "</div>";
       });
     });
   };
@@ -517,19 +530,19 @@ const MapService = (() => {
     let boardingDistance = getBoardingDistance(foundData);
     if (distance > 60) {
       hallWaiting =
-        Math.round(distance / 70 / 60) +
+        Math.floor(distance / 70 / 60) +
         language["hour"] +
         " " +
-        Math.round((distance / 70) % 60) +
+        Math.floor((distance / 70) % 60) +
         language["minute"];
-      totalTime += Math.round(distance / 70);
+      totalTime += Math.floor(distance / 70);
     } else {
-      hallWaiting = Math.round(distance / 70) + language["minute"];
-      totalTime += Math.round(distance / 70);
+      hallWaiting = Math.floor(distance / 70) + language["minute"];
+      totalTime += Math.floor(distance / 70);
     }
     console.log("hallwaiting 추가 : ", totalTime);
-    boardingtime = Math.round(boardingDistance / 70) + language["minute"];
-    totalTime += Math.round(boardingDistance / 70);
+    boardingtime = Math.floor(boardingDistance / 70) + language["minute"];
+    totalTime += Math.floor(boardingDistance / 70);
     console.log("boardingtime 추가 : ", totalTime);
     let waitTime;
     if (foundApi.espwaittime == "D") {
@@ -538,8 +551,8 @@ const MapService = (() => {
       waitTime = foundApi.espwaittime;
     }
 
-    totalTime += Math.round(waitTime / 60);
-    waitingTime = Math.round(waitTime / 60) + language["minute"];
+    totalTime += Math.floor(waitTime / 60);
+    waitingTime = Math.floor(waitTime / 60) + language["minute"];
 
     console.log("waittime 추가 : ", totalTime);
     let totalWait;
@@ -549,25 +562,25 @@ const MapService = (() => {
       totalWait = foundApi.immigrationtime * foundApi.quelength;
     }
     if (foundApi.immigrationtime * foundApi.quelength > 3600) {
-      totalTime += Math.round(
+      totalTime += Math.floor(
         (foundApi.immigrationtime * foundApi.quelength) / 60
       );
       immigration =
-        Math.round(totalWait / 3600) +
+        Math.floor(totalWait / 3600) +
         language["hour"] +
         " " +
-        Math.round((totalWait % 3600) / 60) +
+        Math.floor((totalWait % 3600) / 60) +
         language["minute"];
-      totalTime += Math.round(totalWait / 60);
+      totalTime += Math.floor(totalWait / 60);
     } else {
-      immigration = Math.round(totalWait / 60) + language["minute"];
-      totalTime += Math.round(totalWait / 60);
+      immigration = Math.floor(totalWait / 60) + language["minute"];
+      totalTime += Math.floor(totalWait / 60);
     }
     console.log("immigration 추가 : ", totalTime);
     let strTotal;
     if (totalTime > 60) {
       strTotal =
-        Math.round(totalTime / 60) +
+        Math.floor(totalTime / 60) +
         language["hour"] +
         " " +
         (totalTime % 60) +
@@ -988,28 +1001,27 @@ const MapService = (() => {
         translateMenu();
         recoGate();
         boardinGateNum = sessionStorage.getItem("boardingGate");
-        let langArray = ["ko", "en", "ja", "zh"];
-        let langCheck;
-        langArray.forEach((l) => {
-          if (l == lang) {
-            langCheck = language["current"];
-          }
-        });
+        let langArray = ["en", "zh", "ja", "ko"];
         const locationBtnHtml =
-          '<img id="requestLocation" src="./images/userLocation.png" style="height:40px; width:40px;margin-right:10px;margin-top:15vh">';
-        const moveGateBtn =
-          '<div id="moveBoardingGate" style="display: flex ;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#000; color:#fff; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/Send.svg" style="height:30px;width:20px"></div>';
+          '<div id="requestLocation" style="height:40px;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:20px 20px 20px 20px ;width:40px;margin-right:10px;margin-top:15vh"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:25px; width:25px;display:none;" ></div>';
         let boarding;
+        let moveGateBtn;
         if (boardinGateNum != null) {
           boarding =
-            '<div id ="boardingInfo" style="display:flex ; height : 30px;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:5px" >' +
+            '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+          moveGateBtn =
+            '<div id ="boardingInfo" style="display:flex ; height : 30px;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >' +
+            '<img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px">' +
+            '<img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px">' +
             language["boardingGate"] +
             " : " +
             boardinGateNum +
-            ' <img src="./images/pen.svg" style="height:2rem;width:20px"></div>';
+            "</div>";
         } else {
           boarding =
-            '<div id ="boardingInfo" style="display:flex ; height : 30px ;width:auto; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:5p" >탑승구 : <img src="./images/pen.svg" style="height:1.1rem;width:1.1rem"></div>';
+            '<div id="moveBoardingGate" style="display: none ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+          moveGateBtn =
+            '<div id ="boardingInfo-none" style="display:flex;height : 30px ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">탑승구 : </div>';
         }
         const selectLang =
           '<div id="selectLang" style="height:3vh; width:14vh; display: flex; justify-content: center; align-items: center;' +
@@ -1039,13 +1051,30 @@ const MapService = (() => {
             language["chinese"] +
             ")</div>",
         };
+        const selectedLang = sessionStorage.getItem("language");
+
+        let selectedLangArray = [];
+        langArray.forEach((lang) => {
+          if (lang != selectedLang) {
+            selectedLangArray.push(lang);
+          } else {
+            selectedLangArray.push(selectedLang);
+          }
+        });
+
         const langImgArray = createLanguageArrayWithSelectiveImg(
           languageList,
           lang
         );
         let langChan = "";
-        langImgArray.forEach((laImg) => {
-          langChan += laImg[1];
+        console.log("langImgArray : ", langImgArray);
+        console.log("selectedLangArray : ", selectedLangArray);
+        selectedLangArray.forEach((lang) => {
+          langImgArray.forEach((langImg) => {
+            if (langImg[0] == lang) {
+              langChan += langImg[1];
+            }
+          });
         });
         const languageChange =
           '<div style = "height: 12vh ;width :14vh; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem">' +
@@ -1058,12 +1087,10 @@ const MapService = (() => {
           const locaCon = new naver.maps.CustomControl(locationBtnHtml, {
             position: naver.maps.Position.RIGHT_CENTER,
           });
-          console.log(boarding);
-          const boardingInfo = new naver.maps.CustomControl(boarding, {
+          const moveGateCon = new naver.maps.CustomControl(moveGateBtn, {
             position: naver.maps.Position.TOP_RIGHT,
           });
-          console.log("here2");
-          const moveGateCon = new naver.maps.CustomControl(moveGateBtn, {
+          const boardingInfo = new naver.maps.CustomControl(boarding, {
             position: naver.maps.Position.RIGHT_TOP,
           });
           const selectLangCon = new naver.maps.CustomControl(selectLang, {
@@ -1075,8 +1102,8 @@ const MapService = (() => {
           setTimeout(() => {
             locaCon.setMap(map);
             moveGateCon.setMap(map);
-            selectLangCon.setMap(map);
             boardingInfo.setMap(map);
+            selectLangCon.setMap(map);
           }, 50);
           let mapLangs;
 
@@ -1088,7 +1115,46 @@ const MapService = (() => {
               modal.style.display = "flex";
             }
           );
-
+          naver.maps.Event.addListener(map, "center_changed", () => {
+            const currentCenter = map.getCenter();
+            const sendBlack = document.getElementById("send-black");
+            const sendBlue = document.getElementById("send-blue");
+            const gpsBlack = document.getElementById("gps-black");
+            const gpsBlue = document.getElementById("gps-blue");
+            const user_location = JSON.parse(
+              sessionStorage.getItem("myLocation")
+            );
+            const userLat = Math.round(user_location.lat * 10000000) / 10000000;
+            const userLng = Math.round(user_location.lng * 10000000) / 10000000;
+            if (movePosition != null) {
+              if (
+                movePosition.lat == currentCenter._lat &&
+                movePosition.lng == currentCenter._lng
+              ) {
+                sendBlack.style.display = "none";
+                sendBlue.style.display = "block";
+              } else {
+                sendBlack.style.display = "block";
+                sendBlue.style.display = "none";
+              }
+            }
+            console.log("currenCenter._lat : ", currentCenter._lat);
+            console.log("userLat : ", userLat);
+            if (user_location != null) {
+              if (
+                currentCenter._lat == userLat &&
+                currentCenter._lng == userLng
+              ) {
+                console.log("작동함");
+                gpsBlack.style.display = "none";
+                gpsBlue.style.display = "block";
+              } else {
+                console.log("else작동함");
+                gpsBlack.style.display = "block";
+                gpsBlue.style.display = "none";
+              }
+            }
+          });
           naver.maps.Event.addDOMListener(
             selectLangCon.getElement(),
             "click",
@@ -1115,8 +1181,8 @@ const MapService = (() => {
               document.getElementById("map").innerHTML = "";
               if (window.naver) delete window.naver;
               try {
-                await MapService.languageControl(langArray[index]);
-                sessionStorage.setItem("language", langArray[index]);
+                await MapService.languageControl(selectedLangArray[index]);
+                sessionStorage.setItem("language", selectedLangArray[index]);
                 boardingMarkers = [];
                 markers = [];
                 boardingInfoWindows = [];
@@ -1145,20 +1211,26 @@ const MapService = (() => {
             moveGateCon.getElement(),
             "click",
             () => {
-              const areaData = DataService.getAllAreas();
+              if (boardinGateNum != null) {
+                const areaData = DataService.getAllAreas();
 
-              var transition = {
-                duration: 500,
-                easing: "linear",
-              };
-              Array.from(areaData).forEach((area) => {
-                if (area.name == "탑승게이트" + boardingGate) {
-                  console.log(area.position);
-                  map.panTo(area.position, transition);
-                }
-              });
-              console.log(boardingGate);
-              openBoardingWindowInfo(boardingGate);
+                var transition = {
+                  duration: 500,
+                  easing: "linear",
+                };
+                Array.from(areaData).forEach((area) => {
+                  if (area.name == "탑승게이트" + boardingGate) {
+                    console.log(area.position);
+                    movePosition = area.position;
+                    map.panTo(area.position, transition);
+                  }
+                });
+                console.log(boardingGate);
+                openBoardingWindowInfo(boardingGate);
+              } else {
+                const modal = document.getElementById("modal-background");
+                modal.style.display = "flex";
+              }
             }
           );
 

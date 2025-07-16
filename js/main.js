@@ -43,7 +43,7 @@ $(document).ready(async () => {
       }
     }
   });
-  $(".btn-cancel").click(() => {
+  $(".modal-close").click(() => {
     const modal = document.getElementById("modal-background");
     modal.style.display = "none";
   });
@@ -57,6 +57,10 @@ $(document).ready(async () => {
     MapService.init();
     MapService.changeMenu(1);
     MapService.showMarkers();
+    const boardingInfo_none = document.getElementById("boardingInfo-none");
+    const moveBoardingGate = document.getElementById("moveBoardingGate");
+    boardingInfo_none.style.display = "none";
+    moveBoardingGate.style.display = "flex";
   });
   $("#modalClose").click(() => {
     MapService.modalClose();
@@ -84,32 +88,6 @@ $(document).ready(async () => {
       MapService.openWindowInfo(index);
       MapService.changeBorderColor(index);
     });
-  });
-
-  $("#requestLocation").click(() => {
-    MapService.moveToUserLocation();
-    MapService.toggleCongestion();
-    MapService.timereset();
-
-    MapService.changeMenu(btnIdx);
-    if (btnIdx === 0) {
-      MapService.showBScongestion();
-      const moveGate = document.getElementsByClassName("eastWest");
-
-      Array.from(moveGate).forEach((gate, index) => {
-        gate.addEventListener("click", () => {
-          MapService.moveMap(index);
-          MapService.openWindowInfo(index);
-        });
-      });
-    } else {
-      CongestionService.render();
-      const tag = document.getElementsByClassName("tag");
-      const notag = document.getElementsByClassName("notag");
-    }
-    if (sessionStorage.getItem("render")) {
-      MapService.modalOpen();
-    }
   });
 
   console.log("네이버 지도 API 프로토타입이 시작되었습니다.");

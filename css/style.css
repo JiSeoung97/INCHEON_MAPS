@@ -729,3 +729,6 @@ small {
 .confirm-btn:active {
   background-color: #9ca3af;
 }
+#boardingInfo:hover {
+  border: 1px solid #0099ff;
+}
