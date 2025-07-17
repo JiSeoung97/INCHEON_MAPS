@@ -94,7 +94,7 @@ body {
   display: inline-block;
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: 5px 5px 5px 5px;
   margin-right: 5px;
 }
 
@@ -398,7 +398,7 @@ table th:nth-child(3) {
 }
 #bottomSheet {
   position: fixed;
-  bottom: 0;
+  bottom: 0rem;
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
@@ -544,6 +544,7 @@ input[type="number"]::-webkit-inner-spin-button {
 .title {
   font-weight: bold;
   display: flex;
+  height: 2.5rem;
   justify-content: space-between;
   align-items: center;
   font-size: 1rem;
@@ -551,7 +552,9 @@ input[type="number"]::-webkit-inner-spin-button {
 .segment {
   display: flex;
   align-items: center;
+  height: 3rem;
   justify-content: space-between;
+  position: relative;
   padding: 8px;
   border-radius: 12px;
   background-color: #f1f3f5;
@@ -734,4 +737,24 @@ small {
 }
 #segment-check:hover {
   border: 1px solid #000;
+}
+.flag {
+  padding-left: 2px;
+  padding-right: 2px;
+  width: 5rem;
+  text-align: center;
+  color: #35353580;
+  font-size: 0.75rem;
+  font-style: normal;
+  font-weight: 500;
+}
+.segment:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 15px; /* 아이콘 위치에 맞게 조정 */
+  top: 40px; /* 아이콘 아래 시작점 */
+  bottom: -15px; /* 다음 segment까지 */
+  width: 2px;
+  border-left: 2px dashed #ccc;
+  z-index: 1;
 }

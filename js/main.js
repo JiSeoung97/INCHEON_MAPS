@@ -56,14 +56,16 @@ $(document).ready(async () => {
     sessionStorage.setItem("boardingGate", boardingGate);
     const boardingInfo = document.getElementById("boardingInfo");
     const langSelect = document.getElementById("selectlang");
-    langSelect.remove();
+
     boardingInfo.remove();
     MapService.init();
     MapService.changeMenu(1);
     MapService.showMarkers();
     const boardingInfo_none = document.getElementById("boardingInfo-none");
     const moveBoardingGate = document.getElementById("moveBoardingGate");
-    boardingInfo_none.style.display = "none";
+    if (boardingInfo_none.style.display == "flex") {
+      boardingInfo_none.style.display = "none";
+    }
     moveBoardingGate.style.display = "flex";
   });
   $("#modalClose").click(() => {

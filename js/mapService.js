@@ -381,6 +381,9 @@ const MapService = (() => {
         "</div>" +
         '<div class="segment">' +
         '<img class="icon" src="./images/walk.png" />' +
+        '<span class="flag">' +
+        language["transfer"] +
+        "</span>" +
         '<div id ="reco-priority" class="segment-inner">' +
         '<span id="selectHall">' +
         language["selectHall"] +
@@ -395,6 +398,9 @@ const MapService = (() => {
         "</div>" +
         '<div class="segment">' +
         '<img class="icon" src="./images/ticket.png" />' +
+        '<span class="flag">' +
+        language["Immigration"] +
+        "</span>" +
         '<div class="segment-inner">' +
         "<span>" +
         language["waitingTime"] +
@@ -408,6 +414,9 @@ const MapService = (() => {
         "</div>" +
         '<div class="segment">' +
         '<img class="icon" src="./images/ticket.png" />' +
+        '<span class="flag">' +
+        language["Immigration"] +
+        "</span>" +
         '<div class="segment-inner">' +
         "<span>" +
         language["immigration"] +
@@ -421,6 +430,9 @@ const MapService = (() => {
         "</div>" +
         '<div class="segment">' +
         '<img class="icon" src="./images/walk.png" />' +
+        '<span class="flag">' +
+        language["walk"] +
+        "</span>" +
         '<div id ="segment-check" class="segment-inner">' +
         '<span id= "boardingGateCheck"style="display:flex;align-items: center;justify-content: center">' +
         language["boardingGate"] +
@@ -457,7 +469,9 @@ const MapService = (() => {
       });
       priority.addEventListener("click", () => {
         const reco = document.getElementById("reco-select");
-
+        console.log(priority.getBoundingClientRect().left);
+        reco.style.left = priority.getBoundingClientRect().left + "px";
+        reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
         if (reco.style.display == "none") {
           reco.style.display = "flex";
           selectEvent();
@@ -602,6 +616,7 @@ const MapService = (() => {
       time.innerText = waiting[idx];
     });
   };
+
   const translateMenu = () => {
     const menuBtn = Array.from(document.getElementsByClassName("menuBtn"));
     const conEx = document.getElementById("congestionEx");
@@ -867,7 +882,8 @@ const MapService = (() => {
       language["distance"] +
       ": " +
       distance +
-      "</p>"
+      "</p>" +
+      "</div>"
     );
   };
   const getInfoWindowContent = (areaData) => {
@@ -917,7 +933,8 @@ const MapService = (() => {
       language["distance"] +
       ": " +
       distance +
-      "</p>"
+      "</p>" +
+      "</div>"
     );
   };
 
@@ -1009,7 +1026,7 @@ const MapService = (() => {
         boardinGateNum = sessionStorage.getItem("boardingGate");
         let langArray = ["en", "zh", "ja", "ko"];
         const locationBtnHtml =
-          '<div id="requestLocation" style="height:40px;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:20px 20px 20px 20px ;width:40px;margin-right:10px;margin-top:15vh"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:25px; width:25px;display:none;" ></div>';
+          '<div id="requestLocation" style="height:40px;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:20px 20px 20px 20px ;width:40px;margin-right:10px;margin-top:5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:25px; width:25px;display:none;" ></div>';
         let boarding;
         let moveGateBtn;
         if (boardinGateNum != null) {

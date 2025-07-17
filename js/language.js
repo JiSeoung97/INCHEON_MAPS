@@ -45,6 +45,9 @@ const languageData = {
     selectHall: "출국장 선택",
     waitingTime: "심사 대기 시간",
     total: "총",
+    transfer: "이동",
+    walk: "도보",
+    Immigration: "심사",
   },
   ja: {
     terminal: "第1旅客ターミナル",
@@ -92,6 +95,9 @@ const languageData = {
     selectHall: "出発ゲートを選択",
     waitingTime: "審査待ち時間",
     total: "合計",
+    transfer: "乗り継ぎ",
+    walk: "徒歩",
+    Immigration: "審査",
   },
   zh: {
     update: "更新时间",
@@ -138,6 +144,9 @@ const languageData = {
     selectHall: "请选择出境大厅",
     waitingTime: "出境检查等候时间",
     total: "总计",
+    transfer: "中转",
+    walk: "步行",
+    Immigration: "审查",
   },
   en: {
     terminal: "Passenger Terminal 1",
@@ -185,5 +194,8 @@ const languageData = {
     selectHall: "Select Departure Hall",
     waitingTime: "Waiting Time",
     total: "total",
+    transfer: "transfer",
+    walk: "walk",
+    Immigration: "Immigration",
   },
 };
