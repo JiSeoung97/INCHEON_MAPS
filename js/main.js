@@ -6,17 +6,30 @@ $(document).ready(async () => {
   try {
     await MapService.savedLocation();
     map = MapService.init();
+    ModalService.init();
   } catch {
     alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
     map = MapService.init();
   }
   MapService.showBScongestion();
-  if (boardingGate != null) {
+  MapService.customControlSetMap();
+  MapService.createCustomControl();
+  MapService.customControlEvent();
+  if (
+    !(
+      (boardingGate < 101 && boardingGate > 50) ||
+      boardingGate > 132 ||
+      boardingGate == null ||
+      boardingGate == 4 ||
+      boardingGate == 5 ||
+      boardingGate == 44
+    )
+  ) {
     MapService.showMarkers();
     MapService.timereset();
   }
   if (sessionStorage.getItem("render")) {
-    MapService.modalOpen();
+    ModalService.adModalOpen();
   }
   sessionStorage.setItem("render", true);
   let btnIdx = 0;
@@ -44,8 +57,7 @@ $(document).ready(async () => {
     }
   });
   $(".modal-close").click(() => {
-    const modal = document.getElementById("modal-background");
-    modal.style.display = "none";
+    ModalService.boardingModalClose();
   });
   $(".confirm-btn").click(() => {
     const modal = document.getElementById("modal-background");
@@ -53,23 +65,39 @@ $(document).ready(async () => {
     const gateNum = document.getElementsByClassName("gate-input")[0];
     boardingGate = gateNum.value;
     console.log(boardingGate);
-    sessionStorage.setItem("boardingGate", boardingGate);
-    const boardingInfo = document.getElementById("boardingInfo");
-    const langSelect = document.getElementById("selectlang");
 
-    boardingInfo.remove();
-    MapService.init();
-    MapService.changeMenu(1);
-    MapService.showMarkers();
-    const boardingInfo_none = document.getElementById("boardingInfo-none");
-    const moveBoardingGate = document.getElementById("moveBoardingGate");
-    if (boardingInfo_none.style.display == "flex") {
-      boardingInfo_none.style.display = "none";
+    if (
+      (boardingGate < 101 && boardingGate > 50) ||
+      boardingGate > 132 ||
+      boardingGate == null ||
+      boardingGate == 4 ||
+      boardingGate == 5 ||
+      boardingGate == 44
+    ) {
+      console.log("if");
+      MapService.alertGateNumCheck();
+    } else {
+      console.log("else");
+      sessionStorage.setItem("boardingGate", boardingGate);
+      const boardingInfo = document.getElementById("boardingInfo");
+      const langSelect = document.getElementById("selectlang");
+      if (boardingInfo != null) {
+        boardingInfo.remove();
+      }
+      MapService.init();
+      MapService.changeMenu(1);
+      MapService.showMarkers();
+      MapService.trainShow();
+      const boardingInfo_none = document.getElementById("boardingInfo-none");
+      const moveBoardingGate = document.getElementById("moveBoardingGate");
+      if (boardingInfo_none != null) {
+        boardingInfo_none.style.display = "none";
+      }
+      moveBoardingGate.style.display = "flex";
     }
-    moveBoardingGate.style.display = "flex";
   });
   $("#modalClose").click(() => {
-    MapService.modalClose();
+    ModalService.adModalClose();
   });
   $("#moveBoardingGate").click(() => {
     let gateNum = sessionStorage.getItem("boardingGate");
