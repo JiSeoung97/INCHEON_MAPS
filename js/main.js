@@ -6,6 +6,7 @@ $(document).ready(async () => {
   try {
     await MapService.savedLocation();
     map = MapService.init();
+    BottomSheet.init();
     ModalService.init();
   } catch {
     alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
@@ -26,7 +27,6 @@ $(document).ready(async () => {
     )
   ) {
     MapService.showMarkers();
-    MapService.timereset();
   }
   if (sessionStorage.getItem("render")) {
     ModalService.adModalOpen();
@@ -36,7 +36,7 @@ $(document).ready(async () => {
   $(".menuBtn").click((e) => {
     btnIdx = Number(e.currentTarget.dataset.idx);
     if (btnIdx === 0) {
-      MapService.changeMenu(btnIdx);
+      BottomSheet.changeMenu(btnIdx);
       MapService.showBScongestion();
       const moveGate = document.getElementsByClassName("eastWest");
 
@@ -51,7 +51,7 @@ $(document).ready(async () => {
         const modal = document.getElementById("modal-background");
         modal.style.display = "flex";
       } else {
-        MapService.changeMenu(btnIdx);
+        BottomSheet.changeMenu(btnIdx);
         console.log("here");
       }
     }
@@ -85,7 +85,7 @@ $(document).ready(async () => {
         boardingInfo.remove();
       }
       MapService.init();
-      MapService.changeMenu(1);
+      BottomSheet.changeMenu(1);
       MapService.showMarkers();
       MapService.trainShow();
       const boardingInfo_none = document.getElementById("boardingInfo-none");

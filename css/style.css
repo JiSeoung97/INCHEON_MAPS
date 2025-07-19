@@ -389,7 +389,7 @@ table th:nth-child(3) {
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
-  min-height: 40vh;
+  min-height: 43vh;
   max-width: 430px;
   align-self: center;
   background: white;

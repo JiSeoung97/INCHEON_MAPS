@@ -64,12 +64,9 @@ const ModalService = (() => {
             boardingInfo.remove();
           }
           MapService.init();
-          MapService.changeMenu(1);
+          BottomSheet.changeMenu(1);
           MapService.showMarkers();
-          MapService.trainShow();
-          MapService.customControlSetMap();
-          MapService.createCustomControl();
-          MapService.customControlEvent();
+          BottomSheet.trainShow();
           const moveBoardingGate = document.getElementById("moveBoardingGate");
 
           moveBoardingGate.style.display = "flex";

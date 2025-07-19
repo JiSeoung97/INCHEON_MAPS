@@ -200,7 +200,7 @@ const languageData = {
     am: "am",
     pm: "pm",
     immigration: "Immigration",
-    nthGate: "Gate {{number}}",
+    nthGate: "Boarding Gate {{number}}",
     first: "1st",
     second: "2nd",
     third: "3rd",

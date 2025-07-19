@@ -14,7 +14,7 @@ const MapService = (() => {
   let minute = null;
   let ampm;
   let recoArray = [];
-  let boardinGateNum;
+  let boardingGateNum;
   let movePosition = null;
   let departurehall = [];
   let langArray = ["en", "zh", "ja", "ko"];
@@ -27,28 +27,16 @@ const MapService = (() => {
   let firstlang;
   let selectedLangArray = [];
   const loadTranslateData = (lang) => {
+    BottomSheet.languageChan(languageData[lang]);
     return languageData[lang];
   };
-  const transName = (name) => {
-    let names = name.split(" ");
-    console.log(name);
-    names[0] = names[0].replace("출국장", "");
-    let newName = "gate" + names[0];
-    console.log("newName : ", newName);
-    let eastWest;
-    if (names[1] == "동편") {
-      eastWest = "east";
-    } else {
-      eastWest = "west";
-    }
-    return language[newName].replace("<br>", "") + " " + language[eastWest];
-  };
+
   const createCustomControl = () => {
     const locationBtnHtml =
       '<div id="requestLocation" style="height:40px;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:20px 20px 20px 20px ;width:40px;margin-right:10px;margin-top:5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:25px; width:25px;display:none;" ></div>';
     let boarding;
     let moveGateBtn;
-    if (boardinGateNum != null) {
+    if (boardingGateNum != null) {
       boarding =
         '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
       moveGateBtn =
@@ -57,7 +45,7 @@ const MapService = (() => {
         '<img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px">' +
         language["boardingGate"] +
         " : " +
-        boardinGateNum +
+        boardingGateNum +
         "</div>";
     } else {
       boarding =
@@ -94,21 +82,25 @@ const MapService = (() => {
         ")</div>",
     };
     const selectedLang = sessionStorage.getItem("language");
-
+    selectedLangArray = [];
     langArray.forEach((lang) => {
-      if (lang != selectedLang) {
-        selectedLangArray.push(lang);
-      } else {
+      if (lang == selectedLang) {
         selectedLangArray.push(selectedLang);
       }
     });
-
+    langArray.forEach((lang) => {
+      if (lang != selectedLang) {
+        selectedLangArray.push(lang);
+      }
+    });
     const langImgArray = createLanguageArrayWithSelectiveImg(
       languageList,
       firstlang
     );
+
+    console.log("languageList :", languageList);
+    console.log("langImgArray", langImgArray);
     let langChan = "";
-    console.log("langImgArray : ", langImgArray);
     console.log("selectedLangArray : ", selectedLangArray);
     selectedLangArray.forEach((lang) => {
       langImgArray.forEach((langImg) => {
@@ -166,8 +158,6 @@ const MapService = (() => {
           sendBlue.style.display = "none";
         }
       }
-      console.log("currenCenter._lat : ", currentCenter._lat);
-      console.log("userLat : ", userLat);
       if (user_location != null) {
         if (currentCenter._lat == userLat && currentCenter._lng == userLng) {
           console.log("작동함");
@@ -208,15 +198,12 @@ const MapService = (() => {
           markers = [];
           boardingInfoWindows = [];
           infoWindows = [];
-          const newMap = MapService.init();
-          MapService.showMarkers();
-          MapService.showBScongestion();
-          MapService.timereset();
-          changeMenu();
-          translateMenu();
-          MapService.customControlSetMap();
+          const newMap = initMap();
           MapService.createCustomControl();
+          MapService.customControlSetMap();
           MapService.customControlEvent();
+          BottomSheet.translateMenu();
+          BottomSheet.changeMenu();
         } catch (error) {
           console.error("언어변경실패", error);
         }
@@ -232,7 +219,7 @@ const MapService = (() => {
     });
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
-      if (boardinGateNum != null) {
+      if (boardingGateNum != null) {
         const areaData = DataService.getAllAreas();
 
         var transition = {
@@ -240,14 +227,14 @@ const MapService = (() => {
           easing: "linear",
         };
         Array.from(areaData).forEach((area) => {
-          if (area.name == "탑승게이트" + boardinGateNum) {
+          if (area.name == "탑승게이트" + boardingGateNum) {
             console.log(area.position);
             movePosition = area.position;
             map.panTo(area.position, transition);
           }
         });
-        console.log(boardinGateNum);
-        openBoardingWindowInfo(boardinGateNum);
+        console.log(boardingGateNum);
+        openBoardingWindowInfo(boardingGateNum);
       } else {
         ModalService.boardingModalOpen();
       }
@@ -395,13 +382,15 @@ const MapService = (() => {
   const getBoardingDistance = (area) => {
     const areas = DataService.getAllAreas();
     let gatePosition;
+    console.log(boardingGateNum);
     areas.forEach((bArea) => {
-      if (bArea.name == "탑승게이트" + boardinGateNum) {
+      if (bArea.name == "탑승게이트" + boardingGateNum) {
         gatePosition = bArea.position;
         console.log("bArea :", bArea.name);
         console.log("area", area.name);
       }
     });
+    console.log(gatePosition);
     const lng1 = area.position.lng;
     const lat1 = area.position.lat;
     const lng2 = gatePosition.lng;
@@ -488,420 +477,6 @@ const MapService = (() => {
     return map;
   };
 
-  const recoGate = () => {
-    const areas = DataService.getAllAreas();
-    const apiData = DataService.getApiData();
-    recoArray = [];
-    areas.forEach((area, index) => {
-      if (index < 10 && area.id !== "DG1" && area.id !== "DG6") {
-        let json;
-        apiData.forEach((api) => {
-          const distance = Math.round(
-            Number(getDistance(area).replace("M", "").replace(",", "")) / 70
-          );
-          const waitingTime = Math.round(
-            DataService.getTotalWaitTime(api) / 60
-          );
-          if (api.deskname == area.id) {
-            json = {
-              name: area.name,
-              time: distance + waitingTime,
-              position: area.position,
-            };
-          }
-        });
-        recoArray.push(json);
-      }
-    });
-    recoArray.sort((a, b) => a.time - b.time);
-    console.log(recoArray);
-  };
-  const timereset = () => {
-    const time = document.getElementById("nTime");
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const day = String(now.getDate()).padStart(2, "0");
-    hour = now.getHours();
-    minute = String(now.getMinutes()).padStart(2, "0");
-    const hourStr = String(hour).padStart(2, "0");
-
-    time.innerHTML =
-      "UPDATE : " +
-      year +
-      "." +
-      month +
-      "." +
-      day +
-      " " +
-      hourStr +
-      ":" +
-      minute;
-  };
-
-  const changeMenu = (idx = 0) => {
-    const menuBtn = document.getElementsByClassName("menuBtn");
-    const controls = document.getElementById("controls");
-    if (idx === 0) {
-      menuBtn[0].style.setProperty("border-bottom", "3px solid #212122");
-      menuBtn[1].style.setProperty("border-bottom", "1px solid #2121221A");
-      controls.innerHTML = "";
-      controls.innerHTML =
-        '<div class="tabs">' +
-        "<table>" +
-        "<tr>" +
-        '<th id="congestionEx">' +
-        "•" +
-        language["departureHallCongestion"] +
-        '<span id="questionMark">?</span>' +
-        "</th>" +
-        '<th><p id="nTime"></p></th>' +
-        "</tr>" +
-        "</table>" +
-        "</div>" +
-        ' <table id="contents">' +
-        '<tr class="gate">' +
-        "  <th>" +
-        language["gate2"] +
-        "</th>" +
-        '  <th class="eastWest"></th>' +
-        '  <th class="eastWest"></th>' +
-        "</tr>" +
-        '<tr class="gate">' +
-        "  <th>" +
-        language["gate3"] +
-        "</th>" +
-        '  <th class="eastWest"></th>' +
-        '  <th class="eastWest"></th>' +
-        "</tr>" +
-        '<tr class="gate">' +
-        "  <th>" +
-        language["gate4"] +
-        "</th>" +
-        '  <th class="eastWest"></th>' +
-        '  <th class="eastWest"></th>' +
-        "</tr>" +
-        '<tr class="gate">' +
-        "  <th>" +
-        language["gate5"] +
-        "</th>" +
-        '  <th class="eastWest"></th>' +
-        '  <th class="eastWest"></th>' +
-        "</tr>" +
-        "</table>";
-      const moveGate = document.getElementsByClassName("eastWest");
-
-      Array.from(moveGate).forEach((gate, index) => {
-        gate.addEventListener("click", () => {
-          MapService.moveMap(index);
-          MapService.openWindowInfo(index);
-          MapService.changeBorderColor(index);
-        });
-      });
-    } else {
-      menuBtn[1].style.setProperty("border-bottom", "3px solid #212122");
-      menuBtn[0].style.setProperty("border-bottom", "1px solid #2121221A");
-      if (hour > 12) {
-        hour = hour - 12;
-        ampm = language["pm"];
-      }
-
-      recoArray.forEach((reco, idx) => {
-        if (idx < 3) {
-          departurehall.push(transName(reco.name));
-          console.log("name : ", reco.name);
-        }
-      });
-      const ranks = [language["first"], language["second"], language["third"]];
-      controls.innerHTML = "";
-      let innerHTML =
-        '<div class="recoContainer">' +
-        '<div class="title">' +
-        '<div id ="title-text">' +
-        language["estimatedTime"] +
-        "</div>" +
-        '<div class="total-time">' +
-        language["total"] +
-        " - " +
-        language["minute"] +
-        "</div>" +
-        "</div>" +
-        '<div class="segment">' +
-        '<img class="icon" src="./images/walk.png" />' +
-        '<span class="flag">' +
-        language["transfer"] +
-        "</span>" +
-        '<div id ="reco-priority" class="segment-inner">' +
-        '<span id="selectHall">' +
-        language["selectHall"] +
-        "<small>" +
-        '</small><img id="down" src="./images/dropDown.svg"></span>' +
-        "</div>" +
-        '<div class="time-info">' +
-        '<span class ="latingTime">-' +
-        language["minute"] +
-        "</span>" +
-        "</div>" +
-        "</div>" +
-        '<div class="segment">' +
-        '<img class="icon" src="./images/ticket.png" />' +
-        '<span class="flag">' +
-        language["Immigration"] +
-        "</span>" +
-        '<div class="segment-inner">' +
-        "<span>" +
-        language["waitingTime"] +
-        "<small></small></span>" +
-        "</div>" +
-        '<div class="time-info">' +
-        '<span class ="latingTime">-' +
-        language["minute"] +
-        "</span>" +
-        "</div>" +
-        "</div>" +
-        '<div class="segment">' +
-        '<img class="icon" src="./images/ticket.png" />' +
-        '<span class="flag">' +
-        language["Immigration"] +
-        "</span>" +
-        '<div class="segment-inner">' +
-        "<span>" +
-        language["immigration"] +
-        "</span>" +
-        "</div>" +
-        '<div class="time-info">' +
-        '<span class ="latingTime">-' +
-        language["minute"] +
-        "</span>" +
-        "</div>" +
-        "</div>" +
-        '<div class = "segment" id ="trainAlert">' +
-        '<img class="icon" src ="./images/train.svg"/>' +
-        "<div>" +
-        language["needTrain"] +
-        "</div>" +
-        "<span>10" +
-        language["minute"] +
-        "</span>" +
-        "</div>" +
-        '<div class="segment">' +
-        '<img class="icon" src="./images/walk.png" />' +
-        '<span class="flag">' +
-        language["walk"] +
-        "</span>" +
-        '<div id ="segment-check" class="segment-inner">' +
-        '<span id= "boardingGateCheck"style="display:flex;align-items: center;justify-content: center">' +
-        language["boardingGate"] +
-        " : " +
-        '<span style="color:#2E90FA">' +
-        boardinGateNum +
-        "</span>" +
-        '<img src="./images/pen.svg" style="height:1rem;width:1rem">' +
-        "</span>" +
-        "</div>" +
-        '<div class="time-info">' +
-        '<span class ="latingTime">-' +
-        language["minute"] +
-        "</span>" +
-        "</div>" +
-        "</div>" +
-        "</div>";
-
-      controls.innerHTML = innerHTML;
-      trainShow();
-      const priority = document.getElementById("reco-priority");
-      const recoRank = document.getElementsByClassName("reco-rank");
-      $("#boardingGateCheck").click(() => {
-        const modal = document.getElementById("modal-background");
-        console.log("fdfd");
-        modal.style.display = "flex";
-      });
-
-      Array.from(recoRank).forEach((rank, idx) => {
-        rank.innerHTML =
-          "<div>" +
-          departurehall[idx] +
-          " <small>(" +
-          ranks[idx] +
-          ")</small>" +
-          "</div>";
-      });
-      priority.addEventListener("click", () => {
-        const reco = document.getElementById("reco-select");
-        console.log(priority.getBoundingClientRect().left);
-        reco.style.left = priority.getBoundingClientRect().left + "px";
-        reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
-        if (reco.style.display == "none") {
-          reco.style.display = "flex";
-          selectEvent();
-          const handleOutsideClick = (event) => {
-            if (
-              !reco.contains(event.target) &&
-              !priority.contains(event.target)
-            ) {
-              reco.style.display = "none";
-              document.removeEventListener("click", handleOutsideClick);
-            }
-          };
-
-          setTimeout(() => {
-            document.addEventListener("click", handleOutsideClick);
-          }, 100);
-        } else {
-          reco.style.display = "none";
-        }
-      });
-    }
-  };
-  const trainShow = () => {
-    const train = document.getElementById("trainAlert");
-    if (boardinGateNum > 100 && boardinGateNum < 133) {
-      train.style.display = "flex";
-    }
-  };
-  const selectEvent = () => {
-    const ranks = [language["first"], language["second"], language["third"]];
-    const recoRanks = document.getElementsByClassName("reco-rank");
-    Array.from(recoRanks).forEach((reco, idx) => {
-      reco.addEventListener("click", () => {
-        estimated(idx);
-        const reco = document.getElementById("reco-select");
-        reco.style.display = "none";
-        const selectHall = document.getElementById("selectHall");
-        const departure = recoArray[idx].name.replace("출국장", "").split(" ");
-        let eastWest;
-        if (departure[1] == "동편") {
-          eastWest = language["east"];
-        } else {
-          eastWest = language["west"];
-        }
-        selectHall.innerHTML =
-          language["departurehall"] +
-          " : " +
-          '<span style="color:#2E90FA">' +
-          departure[0] +
-          " " +
-          eastWest +
-          "</span>" +
-          "<small>" +
-          '</small><img id="down" src="./images/dropDown.svg">';
-
-        recoRanks[idx].innerHTML = "";
-        recoRanks[idx].innerHTML =
-          '<div style="display:flex; align-items: center;justify-content: center">' +
-          departurehall[idx] +
-          " <small>(" +
-          ranks[idx] +
-          ")</small>" +
-          '<img src = "./images/check.svg" style="height:1.25rem;width:1.25rem">' +
-          "</div>";
-      });
-    });
-  };
-  const estimated = (idx) => {
-    const datas = DataService.getAllAreas();
-    const apiData = DataService.getApiData();
-    let hallWaiting;
-    let waitingTime;
-    let immigration;
-    let boardingtime;
-    let totalTime = 0;
-    const foundData = datas.find((data) => data.name === recoArray[idx].name);
-    const foundApi = apiData.find((data) => data.deskname === foundData.id);
-    let distance = Number(
-      getDistance(foundData).replace("M", "").replace(",", "")
-    );
-    let boardingDistance = getBoardingDistance(foundData);
-    if (distance > 60) {
-      hallWaiting =
-        Math.floor(distance / 70 / 60) +
-        language["hour"] +
-        " " +
-        Math.floor((distance / 70) % 60) +
-        language["minute"];
-      totalTime += Math.floor(distance / 70);
-    } else {
-      hallWaiting = Math.floor(distance / 70) + language["minute"];
-      totalTime += Math.floor(distance / 70);
-    }
-    console.log("hallwaiting 추가 : ", totalTime);
-    if (Math.floor(boardingDistance / 70) > 10) {
-      boardingtime =
-        Math.floor(boardingDistance / 70) - 10 + language["minute"];
-    } else {
-      boardingtime = Math.floor(boardingDistance / 70) + language["minute"];
-    }
-    totalTime += Math.floor(boardingDistance / 70);
-    console.log("boardingtime 추가 : ", totalTime);
-    let waitTime;
-    if (foundApi.espwaittime == "D") {
-      waitTime = 0;
-    } else {
-      waitTime = foundApi.espwaittime;
-    }
-
-    totalTime += Math.floor(waitTime / 60);
-    waitingTime = Math.floor(waitTime / 60) + language["minute"];
-
-    console.log("waittime 추가 : ", totalTime);
-    let totalWait;
-    if (foundApi.immigrationtime == "NA") {
-      totalWait = 60;
-    } else {
-      totalWait = foundApi.immigrationtime * foundApi.quelength;
-    }
-    if (foundApi.immigrationtime * foundApi.quelength > 3600) {
-      totalTime += Math.floor(
-        (foundApi.immigrationtime * foundApi.quelength) / 60
-      );
-      immigration =
-        Math.floor(totalWait / 3600) +
-        language["hour"] +
-        " " +
-        Math.floor((totalWait % 3600) / 60) +
-        language["minute"];
-      totalTime += Math.floor(totalWait / 60);
-    } else {
-      immigration = Math.floor(totalWait / 60) + language["minute"];
-      totalTime += Math.floor(totalWait / 60);
-    }
-    console.log("immigration 추가 : ", totalTime);
-    let strTotal;
-    if (totalTime > 60) {
-      strTotal =
-        Math.floor(totalTime / 60) +
-        language["hour"] +
-        " " +
-        (totalTime % 60) +
-        language["minute"];
-    } else {
-      strTotal = totalTime + language["minute"];
-    }
-    let total = document.getElementsByClassName("total-time");
-    const latingTime = document.getElementsByClassName("latingTime");
-    let waiting = [hallWaiting, waitingTime, immigration, boardingtime];
-    total[0].innerText = strTotal;
-    Array.from(latingTime).forEach((time, idx) => {
-      time.innerHTML = "";
-      time.innerText = waiting[idx];
-    });
-  };
-
-  const translateMenu = () => {
-    const menuBtn = Array.from(document.getElementsByClassName("menuBtn"));
-    const conEx = document.getElementById("congestionEx");
-    menuBtn.forEach((menu, index) => {
-      if (index == 0) {
-        menu.innerHTML = language["departureHallCongestion"];
-      } else {
-        menu.innerHTML = language["estimated"];
-      }
-    });
-    conEx.innerHTML =
-      "• " +
-      language["departureHallCongestion"] +
-      '  <span id="questionMark">?</span>';
-  };
   const openBoardingWindowInfo = (index) => {
     let idx = 0;
     console.log(index);
@@ -1120,7 +695,7 @@ const MapService = (() => {
       '<div class="info-window boardingGate' +
       '">' +
       "<h3>" +
-      language["nthGate"].replace("{{number}}", boardinGateNum) +
+      language["nthGate"].replace("{{number}}", boardingGateNum) +
       "</h3>" +
       "<p>" +
       language["distance"] +
@@ -1265,11 +840,10 @@ const MapService = (() => {
 
         map = initMap();
 
-        changeMenu();
-        translateMenu();
-        recoGate();
-        boardinGateNum = sessionStorage.getItem("boardingGate");
-
+        BottomSheet.changeMenu();
+        BottomSheet.translateMenu();
+        BottomSheet.recoGate();
+        boardingGateNum = sessionStorage.getItem("boardingGate");
         const data = DataService.initData();
         if (!data) {
           console.log("데이터 초기화 실패", "error");
@@ -1301,8 +875,8 @@ const MapService = (() => {
       markers.forEach((marker) => {
         marker.setMap(map);
       });
-      if (boardinGateNum != null) {
-        const idx = boardinGateNum;
+      if (boardingGateNum != null) {
+        const idx = boardingGateNum;
         let boardingIdx = getBoardingGateIdx(idx);
         boardingMarkers[boardingIdx].setMap(map);
       }
@@ -1414,9 +988,6 @@ const MapService = (() => {
 
       map.panTo(allareas[idx].position, transition);
     },
-    trainShow: () => {
-      trainShow();
-    },
     changeBorderColor: (index) => {
       const allareas = DataService.getAllAreas();
       let idx = 0;
@@ -1437,9 +1008,6 @@ const MapService = (() => {
       );
     },
 
-    changeMenu: (idx) => {
-      changeMenu(idx);
-    },
     updateMarkers: () => {
       updateMarkers();
     },
@@ -1459,14 +1027,17 @@ const MapService = (() => {
       showGateCongestion(0);
     },
 
-    timereset: () => {
-      timereset();
-    },
     languageReturn: () => {
       return language;
     },
     alertGateNumCheck: () => {
       alert(language["checkNum"]);
+    },
+    getDistance: (area) => {
+      return getDistance(area);
+    },
+    getBoardingDistance: (area) => {
+      return getBoardingDistance(area);
     },
     languageControl: (language) => {
       return new Promise((resolve, reject) => {
