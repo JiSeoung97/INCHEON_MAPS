@@ -58,7 +58,6 @@ const BottomSheet = (() => {
     if (idx === 0) {
       menuBtn[0].style.setProperty("border-bottom", "3px solid #212122");
       menuBtn[1].style.setProperty("border-bottom", "1px solid #2121221A");
-      controls.innerHTML = "";
       controls.innerHTML =
         '<div class="tabs">' +
         "<table>" +
@@ -127,7 +126,6 @@ const BottomSheet = (() => {
         }
       });
       const ranks = [language["first"], language["second"], language["third"]];
-      controls.innerHTML = "";
       let innerHTML =
         '<div class="recoContainer">' +
         '<div class="title">' +

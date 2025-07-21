@@ -6,16 +6,14 @@ $(document).ready(async () => {
   try {
     await MapService.savedLocation();
     map = MapService.init();
+    MapService.setting();
     BottomSheet.init();
     ModalService.init();
   } catch {
     alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
     map = MapService.init();
   }
-  MapService.showBScongestion();
-  MapService.customControlSetMap();
-  MapService.createCustomControl();
-  MapService.customControlEvent();
+
   if (
     !(
       (boardingGate < 101 && boardingGate > 50) ||
@@ -87,7 +85,7 @@ $(document).ready(async () => {
       MapService.init();
       BottomSheet.changeMenu(1);
       MapService.showMarkers();
-      MapService.trainShow();
+      BottomSheet.trainShow();
       const boardingInfo_none = document.getElementById("boardingInfo-none");
       const moveBoardingGate = document.getElementById("moveBoardingGate");
       if (boardingInfo_none != null) {
