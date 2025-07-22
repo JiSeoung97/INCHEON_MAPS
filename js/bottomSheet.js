@@ -848,7 +848,6 @@ const BottomSheet = (() => {
       }
     },
 
-    // 새로 추가된 유틸리티 함수들
     updateTimeDisplay: async (timeData) => {
       try {
         await updateTimeDisplay(timeData);
@@ -873,13 +872,6 @@ const BottomSheet = (() => {
       }
     },
 
-    // 상태 조회 함수들
-    getCurrentPosition: () => currentPosition,
-
-    isOpen: () => currentPosition === POSITIONS.OPEN,
-
-    isClosed: () => currentPosition === POSITIONS.CLOSED,
-
     // 강제 위치 변경 함수
     forceOpen: () => {
       currentPosition = POSITIONS.OPEN;
@@ -902,21 +894,6 @@ const BottomSheet = (() => {
           resolve();
         }, 300);
       });
-    },
-
-    // 디버깅용 함수들
-    getDebugInfo: () => {
-      return {
-        currentPosition,
-        currentBottom,
-        positions: POSITIONS,
-        isDragging,
-        elementFound: {
-          bottomSheet: !!bottomSheet,
-          handle: !!handle,
-          peekElement: !!peekElement,
-        },
-      };
     },
 
     // 리소스 정리 함수
