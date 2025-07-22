@@ -123,24 +123,27 @@ $(document).ready(async () => {
         const gateNum = document.getElementsByClassName("gate-input")[0];
         boardingGate = gateNum.value;
         console.log("입력된 탑승구:", boardingGate);
-
-        if (MapService.boardingGateIdx(boardingGate)) {
+        console.log(
+          "MapService.boardingGateIdx(boardingGate) : ",
+          !MapService.boardingGateIdx(boardingGate)
+        );
+        if (!MapService.boardingGateIdx(boardingGate)) {
           console.log("유효하지 않은 탑승구");
           MapService.alertGateNumCheck();
           return;
+        } else {
+          console.log("유효한 탑승구로 설정");
+          sessionStorage.setItem("boardingGate", boardingGate);
+          MapService.customControlAllDelete();
+          // 서비스 재초기화
+          await MapService.setting();
+          BottomSheet.changeMenu(1);
+          await MapService.showMarkers();
+          BottomSheet.trainShow();
+
+          // UI 업데이트
+          updateBoardingGateUI();
         }
-
-        console.log("유효한 탑승구로 설정");
-        sessionStorage.setItem("boardingGate", boardingGate);
-        MapService.customControlAllDelete();
-        // 서비스 재초기화
-        await MapService.setting();
-        BottomSheet.changeMenu(1);
-        await MapService.showMarkers();
-        BottomSheet.trainShow();
-
-        // UI 업데이트
-        updateBoardingGateUI();
       } catch (error) {
         console.error("탑승구 확인 처리 오류:", error);
         alert("탑승구 설정 중 오류가 발생했습니다.");

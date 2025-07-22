@@ -715,18 +715,23 @@ const MapService = (() => {
     });
   };
   const customControlSetMap = () => {
+    console.log("moveGateCon", moveGateCon);
+    console.log("boardingInfo", boardingInfo);
     setTimeout(() => {
       locaCon.setMap(map);
       boardingInfo.setMap(map);
-      moveGateCon.setMap(map);
       selectLangCon.setMap(map);
+      moveGateCon.setMap(map);
     }, 50);
   };
   const customControlAllDelete = () => {
     try {
+      const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
       positions.forEach((position) => {
         map.controls[position].clear();
       });
+
+      map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
     } catch (error) {
       console.error(`커스텀 컨트롤 삭제 실패:`, error);
     }
@@ -768,7 +773,8 @@ const MapService = (() => {
       (index > 50 && index < 101) ||
       index > 132 ||
       index == 4 ||
-      (index == 5) | (index == 44)
+      index == 5 ||
+      index == 44
     );
   };
 
