@@ -15,9 +15,11 @@ $(document).ready(async () => {
       }
       MapService.setting();
       console.log("MapService 설정 완료");
+
       initBottomSheet();
       await Promise.all([initModalService]);
       console.log("map, modal init 완료");
+
       return { success: true, hasLocation: true };
     } catch (error) {
       console.warn("위치 권한 없음 : ", error);
