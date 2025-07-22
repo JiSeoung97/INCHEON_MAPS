@@ -20,8 +20,10 @@
     <div class="container">
       <div id="map"></div>
       <div id="bottomSheet">
-        <div id="handle"><img id="handleImg" src="./images/handle.png" /></div>
-        <table id="menu">
+        <div id="handle" class="peek">
+          <img id="handleImg" src="./images/handle.png" />
+        </div>
+        <table id="menu" class="peek">
           <tr>
             <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
             <th class="menuBtn" data-idx="1">약도 보기</th>
@@ -89,7 +91,13 @@
           <div class="modal-close">&times;</div>
         </div>
         <div class="input-container">
-          <input class="gate-input" type="number" maxlength="3" />
+          <input
+            class="gate-input"
+            type="number"
+            maxlength="3"
+            min="1"
+            max="132"
+          />
         </div>
         <div class="subtext">서브 타이틀 문구</div>
         <button class="confirm-btn">확인</button>
@@ -108,8 +116,8 @@
     <script src="js/dataService.js"></script>
     <script src="js/bottomSheet.js"></script>
     <script src="js/mapService.js"></script>
+    <script src="js/modalService.js"></script>
     <script src="js/main.js"></script>
-    <script src="js/congestionService.js" defer></script>
     <script>
       // 페이지 로드 완료 후 실행
       window.addEventListener("load", function () {
