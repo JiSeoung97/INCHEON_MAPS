@@ -2,19 +2,31 @@
 
 $(document).ready(async () => {
   let map;
-  let boardingGate = sessionStorage.getItem("boardingGate");
+  let boardingGate;
+  try {
+    await MapService.savedLocation();
+    const urlParams = new URLSearchParams(window.location.search);
+    boardingGate = urlParams.get("boardingGate");
+    map = MapService.init();
+  } catch {
+    alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
+    map = MapService.init();
+  }
+  MapService.showBScongestion();
+
+  MapService.showMarkers();
+  MapService.timereset();
+  if (sessionStorage.getItem("render")) {
+    MapService.modalOpen();
+  }
+  // sessionStorage.setItem("render", true);
   let btnIdx = 0;
-  const initializeServices = async () => {
-    try {
-      sessionStorage.setItem("render", true);
-      await MapService.savedLocation();
-      console.log("사용자 위치 저장 완료");
-      map = await MapService.init();
-      if (!map) {
-        throw new Error("지도 초기화 실패");
-      }
-      MapService.setting();
-      console.log("MapService 설정 완료");
+  $(".menuBtn").click((e) => {
+    btnIdx = Number(e.currentTarget.dataset.idx);
+    MapService.changeMenu(btnIdx);
+    if (btnIdx === 0) {
+      MapService.showBScongestion();
+      const moveGate = document.getElementsByClassName("eastWest");
 
       await Promise.all([initBottomSheet, initModalService]);
 
@@ -37,16 +49,32 @@ $(document).ready(async () => {
         return { success: false, hasLocation: false, error: criticalError };
       }
     }
-  };
-  const initBottomSheet = async () => {
-    return new Promise((resolve) => {
-      try {
-        BottomSheet.init();
-        resolve();
-      } catch (error) {
-        console.error("bottomSheet init fail : ", error);
-        resolve();
-      }
+  });
+  $("#modalClose").click(() => {
+    MapService.modalClose();
+  });
+  $("#moveBoardingGate").click(() => {
+    let gateNum = sessionStorage.getItem("boardingGate");
+    MapService.moveGate(gateNum);
+    MapService.openBoardingWindowInfo(gateNum);
+  });
+
+  $("#reco").click(() => {
+    window.open("http://www.naver.com");
+  });
+  $("#toggleCongestion").click(() => {
+    MapService.showBScongestion();
+  });
+  $("#showMenu").click(() => {
+    MapService.showBScongestion();
+  });
+  const moveGate = document.getElementsByClassName("eastWest");
+
+  Array.from(moveGate).forEach((gate, index) => {
+    gate.addEventListener("click", () => {
+      MapService.moveMap(index);
+      MapService.openWindowInfo(index);
+      MapService.changeBorderColor(index);
     });
   };
   const initModalService = async () => {
