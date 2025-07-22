@@ -699,7 +699,7 @@ const BottomSheet = (() => {
     const hiddenHeight = sheetHeight - peekHeight;
     const closedRem = -pxToRem(hiddenHeight);
 
-    POSITIONS.CLOSED = Math.max(closedRem, -5);
+    POSITIONS.CLOSED = Math.max(closedRem, -4);
     POSITIONS.OPEN = -5;
 
     console.log("Sheet Height:", sheetHeight);
