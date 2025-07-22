@@ -76,15 +76,13 @@ $(document).ready(async () => {
     );
   };
   const handleMarkerDisplay = async () => {
-    if (isValidBoardingGate(boardingGate)) {
-      try {
-        setTimeout(async () => {
-          await MapService.showMarkers();
-        }, 100);
-        console.log("마커 표시 완료");
-      } catch (error) {
-        console.error("마커 표시 실패:", error);
-      }
+    try {
+      setTimeout(async () => {
+        await MapService.showMarkers();
+      }, 100);
+      console.log("마커 표시 완료");
+    } catch (error) {
+      console.error("마커 표시 실패:", error);
     }
   };
 
