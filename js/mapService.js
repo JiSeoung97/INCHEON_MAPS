@@ -7,8 +7,6 @@ const MapService = (() => {
   let infoWindows = [];
   let boardingInfoWindows = [];
   let areas = [];
-  let countW = null;
-  let countE = null;
   let language;
   let selectedMarker = null;
   let ampm;
@@ -33,15 +31,475 @@ const MapService = (() => {
     naver.maps.Position.TOP_RIGHT,
     naver.maps.Position.RIGHT_CENTER,
   ];
-  const loadTranslateData = (lang) => {
-    BottomSheet.languageChan(languageData[lang]);
-    return languageData[lang];
+  const loadTranslateData = async (lang) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      BottomSheet.languageChan(languageData[lang]);
+      return languageData[lang];
+    } catch (error) {
+      console.log("언어 로드 실패 : ", error);
+    }
+  };
+  const translateAreaName = (areaName, language) => {
+    if (areaName.includes("출국장")) {
+      const gateNumber = areaName.match(/(\d+)출국장/)?.[1];
+      const direction = areaName.includes("서편")
+        ? "west"
+        : areaName.includes("동편")
+        ? "east"
+        : "";
+
+      if (gateNumber && direction) {
+        return language[`gate${gateNumber}`] + " " + language[direction];
+      } else if (gateNumber) {
+        return language[`gate${gateNumber}`];
+      }
+    }
+
+    if (areaName.includes("탑승게이트")) {
+      return areaName;
+    }
+
+    return areaName;
+  };
+  const getCurrentPosition = () => {
+    return new Promise((resolve, reject) => {
+      if (!navigator.geolocation) {
+        reject(console.log("gps is not supported by this browser"));
+        return;
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const userLocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            resolve(userLocation);
+          },
+          (error) => {
+            console.error("위치 정보 가져오기 실패", error);
+            reject(error);
+          },
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0,
+          }
+        );
+      }
+    });
+  };
+  const savedLocation = async () => {
+    try {
+      const position = await getCurrentPosition();
+      const locationData = {
+        lat: position.lat,
+        lng: position.lng,
+      };
+      console.log(
+        "JSON.stringify(locationData) : ",
+        JSON.stringify(locationData)
+      );
+      sessionStorage.setItem("myLocation", JSON.stringify(locationData));
+      return locationData;
+    } catch (error) {
+      console.error("위치 정보를 가져올 수 없습니다 : ", error);
+    }
+  };
+  const moveToUserLocation = async () => {
+    try {
+      const userLocation = await getCurrentPosition();
+
+      if (limitLocation(userLocation)) {
+        map.setCenter(
+          new naver.maps.LatLng(userLocation.lat, userLocation.lng)
+        );
+        console.log("사용자 위치로 이동했습니다.", "success");
+        console.log(
+          `현재 사용자 좌표 : Lat(${userLocation.lat}), Lng(${userLocation.lng})`
+        );
+
+        const userMarker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(userLocation.lat, userLocation.lng),
+          map,
+          title: "현재 위치",
+          icon: {
+            content:
+              '<div style="background-color: #4285F4; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #fff;"></div>',
+            size: new naver.maps.Size(18, 18),
+            anchor: new naver.maps.Point(9, 9),
+          },
+        });
+
+        setTimeout(() => {
+          userMarker.setMap(null);
+        }, 10000);
+      } else {
+        alert("이 기능은 인천공항 내에서만 사용가능한 기능입니다.");
+      }
+    } catch (error) {
+      alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
+      console.log("위치 권한 오류: " + error.message, "error");
+    }
+  };
+  const getDistance = (area) => {
+    try {
+      const savedLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+      if (savedLocation !== null) {
+        const lng1 = area.position.lng;
+        const lat1 = area.position.lat;
+        const lng2 = savedLocation.lng;
+        const lat2 = savedLocation.lat;
+
+        const earthR = 6371000; // 지구 반지름
+        const degToRad = (deg) => deg * (Math.PI / 180);
+
+        const dLat = degToRad(lat2 - lat1);
+        const dlng = degToRad(lng2 - lng1);
+
+        const a =
+          Math.sin(dLat / 2) ** 2 +
+          Math.cos(degToRad(lat1)) *
+            Math.cos(degToRad(lat2)) *
+            Math.sin(dlng / 2) ** 2;
+
+        const distance =
+          Math.round(
+            earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+          ).toLocaleString() + "M";
+        return distance;
+      }
+    } catch (error) {
+      console.error("위치권한이 필요합니다 : ", error);
+    }
+  };
+  const getBoardingDistance = async (area) => {
+    const areas = DataService.getAllAreas();
+    let gatePosition;
+    areas.forEach((bArea) => {
+      if (bArea.name == "탑승게이트" + boardingGateNum) {
+        gatePosition = bArea.position;
+        console.log("bArea :", bArea.name);
+        console.log("area", area.name);
+      }
+    });
+    if (!gatePosition) {
+      return;
+    }
+    const lng1 = area.position.lng;
+    const lat1 = area.position.lat;
+    const lng2 = gatePosition.lng;
+    const lat2 = gatePosition.lat;
+
+    const earthR = 6371000; // 지구 반지름
+    const degToRad = (deg) => deg * (Math.PI / 180);
+
+    const dLat = degToRad(lat2 - lat1);
+    const dlng = degToRad(lng2 - lng1);
+
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(degToRad(lat1)) *
+        Math.cos(degToRad(lat2)) *
+        Math.sin(dlng / 2) ** 2;
+
+    const distance = Math.round(
+      earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+    );
+    return distance;
+  };
+  const createDepartureMarker = async (areaData, index) => {
+    try {
+      const area = areaData.area || areaData;
+      area.floorInfo = getDistance(area);
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(area.position.lat, area.position.lng),
+        map: null,
+        title: areaData.name,
+        icon: {
+          content: getMarkerIcon(areaData, index),
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(15, 10),
+        },
+      });
+      const infoWindow = new naver.maps.InfoWindow({
+        content: getInfoWindowContent(areaData),
+        maxWidth: 300,
+        backgroundColor: "#fff",
+        borderColor: congestionColor(area),
+        disableAutopan: true,
+        borderWidth: 2,
+        borderRadius: 5,
+        disableAnchor: false,
+      });
+
+      naver.maps.Event.addListener(marker, "click", () => {
+        replaceAllMarkerIcon();
+        if (selectedMarker == null) {
+          selectedMarker = marker;
+        } else {
+          selectedMarker = null;
+        }
+
+        replaceMarkerIcon(marker);
+        if (selectedInfowindow == null) {
+          selectedInfowindow = infoWindow;
+        } else {
+          selectedInfowindow = null;
+        }
+        if (infoWindow.getMap()) {
+          infoWindow.close();
+        } else {
+          infoWindows.forEach((iw) => {
+            iw.close();
+          });
+
+          infoWindow.open(map, marker);
+        }
+      });
+      markers.push(marker);
+      infoWindows.push(infoWindow);
+
+      return { marker, infoWindow };
+    } catch (error) {
+      console.error("출국장 마커 생성 실패 : ", error);
+    }
   };
 
+  const createBoardingMarker = async () => {
+    try {
+      const data = DataService.getAllAreas();
+
+      const area = data.find(
+        (data) => data.name === "탑승게이트" + boardingGateNum
+      );
+      console.log("data : ", area);
+      area.floorInfo = getBoardingDistance(area);
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(area.position.lat, area.position.lng),
+        map: null,
+        title: area.name,
+        icon: {
+          content:
+            '<img src="./images/user_Location.png" style="width:15px; height = 15px;">',
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(7, 10),
+        },
+      });
+
+      const infoWindow = new naver.maps.InfoWindow({
+        content: getBoardingInfoWindowContent(area),
+        maxWidth: 300,
+        backgroundColor: "#fff",
+        borderColor: congestionColor(area),
+        disableAutopan: true,
+        borderWidth: 3,
+        borderRadius: 12,
+        disableAnchor: false,
+      });
+
+      naver.maps.Event.addListener(marker, "click", () => {
+        if (infoWindow.getMap()) {
+          infoWindow.close();
+        } else {
+          infoWindows.forEach((iw) => {
+            iw.close();
+          });
+
+          selectedInfowindow = infoWindow;
+          infoWindow.open(map, marker);
+        }
+      });
+      boardingMarkers.push(marker);
+      boardingInfoWindows.push(infoWindow);
+
+      return { marker, infoWindow };
+    } catch (error) {
+      console.error("탑승구 마커 생성 실패", error);
+    }
+  };
+  const replaceAllMarkerIcon = () => {
+    let newIcon;
+    markers.forEach((marker) => {
+      newIcon = {
+        content: marker
+          .getIcon()
+          ["content"].replace("white", "blue")
+          .replace("color:#fff", "color:#056CFE")
+          .replace("background-color:#056CFE", "background-color:#fff"),
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(15, 10),
+      };
+      marker.setIcon(newIcon);
+    });
+    selectedMarker = null;
+  };
+  const replaceMarkerIcon = (selectMarker) => {
+    let newIcon;
+    if (selectedMarker == null) {
+      newIcon = {
+        content: selectMarker
+          .getIcon()
+          ["content"].replace("white", "blue")
+          .replace("color:#fff", "color:#056CFE")
+          .replace("background-color:#056CFE", "background-color:#fff"),
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(15, 10),
+      };
+    } else {
+      newIcon = {
+        content: selectMarker
+          .getIcon()
+          ["content"].replace("blue", "white")
+          .replace("color:#056CFE", "color:#fff")
+          .replace("background-color:#fff", "background-color:#056CFE"),
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(15, 10),
+      };
+    }
+    selectMarker.setIcon(newIcon);
+  };
+  const getMarkerIcon = (area, index) => {
+    const congestionInfo = DataService.getCongestionInfo(area.congestion);
+    const color = congestionInfo ? congestionInfo.color : "#32A1FF";
+    let departure = area.name.replace("출국장", "").split(" ");
+    let eastWest;
+    if (departure[1] == "서편") {
+      eastWest = language["west"];
+    } else if (departure[1] == "동편") {
+      eastWest = language["east"];
+    } else {
+      console.log("eastwest error");
+    }
+    let departureTag =
+      language["departurehall"] + departure[0] + " " + eastWest;
+    if (index % 2 == 1) {
+      return (
+        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2rem; height: 2.2rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 8px 0px 0px 8px;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
+        departure[0] +
+        '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
+        departureTag +
+        "</span></div>"
+      );
+    } else {
+      return (
+        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2rem; height: 2.2rem;padding-top:2px;flex-direction: column; border-radius: 0px 8px 8px 0px;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+        departure[0] +
+        '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
+        departureTag +
+        "</span></div>"
+      );
+    }
+  };
+  const getBoardingInfoWindowContent = (areaData) => {
+    let distance = getDistance(areaData);
+    return (
+      '<div class="info-window boardingGate' +
+      '">' +
+      "<h3>" +
+      language["nthGate"].replace("{{number}}", boardingGateNum) +
+      "</h3>" +
+      "<p>" +
+      language["distance"] +
+      ": " +
+      distance +
+      "</p>" +
+      "</div>"
+    );
+  };
+  const getInfoWindowContent = (areaData) => {
+    let gaugeColor;
+    let distance = getDistance(areaData);
+    let conLevel;
+    switch (areaData.congestion) {
+      case "none":
+        gaugeColor = "#999";
+        conLevel = language["none"];
+        break;
+      case "low":
+        gaugeColor = "#EBF6FF";
+        conLevel = language["low"];
+        break;
+      case "medium":
+        gaugeColor = "#E6FAEC";
+        conLevel = language["medium"];
+        break;
+      case "high":
+        gaugeColor = "#FFF3EC";
+        conLevel = language["high"];
+        break;
+      case "veryhigh":
+        gaugeColor = "#FFEFEF";
+        conLevel = language["veryhigh"];
+        break;
+      default:
+        gaugeColor = "#4CAF50";
+    }
+    const translatedName = translateAreaName(areaData.name, language);
+    return (
+      '<div class="info-window ' +
+      areaData.congestion +
+      '">' +
+      "<h3>" +
+      translatedName +
+      "</h3>" +
+      '<p><span class="status ' +
+      areaData.congestion +
+      '"></span>' +
+      conLevel +
+      "</p>" +
+      '<p style = "color:#21212280">' +
+      language["distance"] +
+      ": " +
+      distance +
+      "</p>" +
+      "</div>"
+    );
+  };
+  const allMarkerDelete = async () => {
+    try {
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      boardingMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
+    } catch (error) {
+      console.error("marker가 존재하지 않음");
+    }
+  };
+  const changeLanguage = async (newLang) => {
+    try {
+      sessionStorage.setItem("language", newLang);
+
+      // 기존 마커들 제거
+      boardingMarkers.forEach((e) => {
+        e.setMap(null);
+      });
+      markers.forEach((e) => {
+        e.setMap(null);
+      });
+
+      deletecustomControl();
+
+      // 배열 초기화
+      boardingMarkers = [];
+      markers = [];
+      boardingInfoWindows = [];
+      infoWindows = [];
+
+      // 재설정
+      await MapService.setting();
+      await MapService.showMarkers();
+    } catch (error) {
+      console.error("언어변경실패", error);
+    }
+  };
   const deletecustomControl = () => {
-    console.log("delete customControle");
     positions.forEach((position) => {
-      map.controls[position].clear(); // 배열 비우기
+      map.controls[position].clear();
     });
   };
   const createCustomControl = () => {
@@ -49,9 +507,8 @@ const MapService = (() => {
       '<div id="requestLocation" style="height:40px;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:20px 20px 20px 20px ;width:40px;margin-right:10px;margin-top:5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:25px; width:25px;display:none;" ></div>';
     let boarding;
     let moveGateBtn;
+
     if (boardingGateNum != null) {
-      boarding =
-        '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
       moveGateBtn =
         '<div id ="boardingInfo" style="display:flex ; height : 30px;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >' +
         '<img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px">' +
@@ -60,11 +517,13 @@ const MapService = (() => {
         " : " +
         boardingGateNum +
         "</div>";
-    } else {
       boarding =
-        '<div id="moveBoardingGate" style="display: none ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+        '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+    } else {
       moveGateBtn =
         '<div id ="boardingInfo-none" style="display:flex;height : 30px ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">탑승구 : </div>';
+      boarding =
+        '<div id="moveBoardingGate" style="display: none ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     }
     const selectLang =
       '<div id="selectLang" style="height:3vh; width:14vh; display: flex; justify-content: center; align-items: center;' +
@@ -198,24 +657,7 @@ const MapService = (() => {
     );
     mapLangs.forEach((mapLang, index) => {
       mapLang.addEventListener("click", async () => {
-        try {
-          sessionStorage.setItem("language", selectedLangArray[index]);
-          boardingMarkers.forEach((e) => {
-            e.setMap(null);
-          });
-          markers.forEach((e) => {
-            e.setMap(null);
-          });
-          deletecustomControl();
-          boardingMarkers = [];
-          markers = [];
-          boardingInfoWindows = [];
-          infoWindows = [];
-          MapService.setting();
-          MapService.showMarkers();
-        } catch (error) {
-          console.error("언어변경실패", error);
-        }
+        await changeLanguage(selectedLangArray[index]);
       });
     });
     mapLangs.forEach((mapLang) => {
@@ -243,7 +685,7 @@ const MapService = (() => {
           }
         });
         console.log(boardingGateNum);
-        openBoardingWindowInfo(boardingGateNum);
+        openBoardingWindowInfo();
       } else {
         ModalService.boardingModalOpen();
       }
@@ -275,10 +717,19 @@ const MapService = (() => {
   const customControlSetMap = () => {
     setTimeout(() => {
       locaCon.setMap(map);
-      moveGateCon.setMap(map);
       boardingInfo.setMap(map);
+      moveGateCon.setMap(map);
       selectLangCon.setMap(map);
     }, 50);
+  };
+  const customControlAllDelete = () => {
+    try {
+      positions.forEach((position) => {
+        map.controls[position].clear();
+      });
+    } catch (error) {
+      console.error(`커스텀 컨트롤 삭제 실패:`, error);
+    }
   };
   const createLanguageArrayWithSelectiveImg = (
     languageList,
@@ -312,111 +763,15 @@ const MapService = (() => {
     });
   };
 
-  const translateAreaName = (areaName, language) => {
-    if (areaName.includes("출국장")) {
-      const gateNumber = areaName.match(/(\d+)출국장/)?.[1];
-      const direction = areaName.includes("서편")
-        ? "west"
-        : areaName.includes("동편")
-        ? "east"
-        : "";
-
-      if (gateNumber && direction) {
-        return language[`gate${gateNumber}`] + " " + language[direction];
-      } else if (gateNumber) {
-        return language[`gate${gateNumber}`];
-      }
-    }
-
-    if (areaName.includes("탑승게이트")) {
-      return areaName;
-    }
-
-    return areaName;
-  };
   const getBoardingGateIdx = (index) => {
-    let idx = 0;
-    if (index < 4) {
-      idx = index - 1;
-    } else if (index > 5 && index < 13) {
-      idx = index - 3;
-    } else if (index < 44) {
-      idx = index - 4;
-    } else if (index < 51) {
-      idx = index - 5;
-    } else if (index < 116 && index > 100) {
-      idx = index - 55;
-    } else if (index < 120) {
-      idx = index - 56;
-    } else if (index <= 132) {
-      idx = index - 57;
-    } else {
-      alert("존재하지 않는 탑승구입니다.");
-      return;
-    }
-    return idx;
+    return !(
+      (index > 50 && index < 101) ||
+      index > 132 ||
+      index == 4 ||
+      (index == 5) | (index == 44)
+    );
   };
 
-  const getDistance = (area) => {
-    const savedLocation = JSON.parse(sessionStorage.getItem("myLocation"));
-
-    if (savedLocation !== null) {
-      const lng1 = area.position.lng;
-      const lat1 = area.position.lat;
-      const lng2 = savedLocation.lng;
-      const lat2 = savedLocation.lat;
-
-      const earthR = 6371000; // 지구 반지름
-      const degToRad = (deg) => deg * (Math.PI / 180);
-
-      const dLat = degToRad(lat2 - lat1);
-      const dlng = degToRad(lng2 - lng1);
-
-      const a =
-        Math.sin(dLat / 2) ** 2 +
-        Math.cos(degToRad(lat1)) *
-          Math.cos(degToRad(lat2)) *
-          Math.sin(dlng / 2) ** 2;
-
-      return (
-        Math.round(
-          earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-        ).toLocaleString() + "M"
-      );
-    }
-    return "위치권한이 필요합니다!";
-  };
-  const getBoardingDistance = (area) => {
-    const areas = DataService.getAllAreas();
-    let gatePosition;
-    console.log(boardingGateNum);
-    areas.forEach((bArea) => {
-      if (bArea.name == "탑승게이트" + boardingGateNum) {
-        gatePosition = bArea.position;
-        console.log("bArea :", bArea.name);
-        console.log("area", area.name);
-      }
-    });
-    console.log(gatePosition);
-    const lng1 = area.position.lng;
-    const lat1 = area.position.lat;
-    const lng2 = gatePosition.lng;
-    const lat2 = gatePosition.lat;
-
-    const earthR = 6371000; // 지구 반지름
-    const degToRad = (deg) => deg * (Math.PI / 180);
-
-    const dLat = degToRad(lat2 - lat1);
-    const dlng = degToRad(lng2 - lng1);
-
-    const a =
-      Math.sin(dLat / 2) ** 2 +
-      Math.cos(degToRad(lat1)) *
-        Math.cos(degToRad(lat2)) *
-        Math.sin(dlng / 2) ** 2;
-
-    return Math.round(earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
-  };
   const limitLocation = (userLocation) => {
     const maxLat = 37.496831;
     const minLat = 37.420388;
@@ -484,413 +839,13 @@ const MapService = (() => {
     return map;
   };
 
-  const openBoardingWindowInfo = (index) => {
+  const openBoardingWindowInfo = () => {
     let idx = 0;
-    console.log(index);
-    if (
-      index == 4 ||
-      index == 5 ||
-      index == 13 ||
-      index == 44 ||
-      index == 116 ||
-      index == 120 ||
-      (index > 50 && index < 101)
-    ) {
-      alert("존재하지 않는 탑승구입니다.");
-      return;
-    }
-    if (index < 4) {
-      idx = index - 1;
-    } else if (index > 5 && index < 13) {
-      idx = index - 3;
-    } else if (index < 44) {
-      idx = index - 4;
-    } else if (index < 51) {
-      idx = index - 5;
-    } else if (index < 116 && index > 100) {
-      idx = index - 55;
-    } else if (index < 120) {
-      idx = index - 56;
-    } else if (index <= 132) {
-      idx = index - 57;
-    } else {
-      alert("존재하지 않는 탑승구입니다.");
-      return;
-    }
     boardingInfoWindows[idx].open(map, boardingMarkers[idx]);
-  };
-  const showGateCongestion = () => {
-    const allAreadata = DataService.getAllAreas();
-    const areadata = [];
-    allAreadata.forEach((area, idx) => {
-      if (idx != 0 && idx < 9) {
-        areadata.push(area);
-      }
-    });
-
-    const contentsEl = document.getElementsByClassName("eastWest");
-
-    setTimeout(() => {
-      areadata.forEach((conData, index) => {
-        let gaugeColor;
-        let border;
-        let textColor;
-        let congestion;
-        switch (conData.congestion) {
-          case "none":
-            gaugeColor = "#999";
-            border = "1px solid #999";
-            textColor = "#99999";
-            congestion = language["none"];
-          case "low":
-            gaugeColor = "#EBF6FF";
-            border = "1px solid #E8E8E8";
-            textColor = "#32A1FF";
-            congestion = language["low"];
-            break;
-          case "medium":
-            gaugeColor = "#E6FAEC";
-            border = "1px solid #E8E8E8";
-            textColor = "#00C73C";
-            congestion = language["medium"];
-            break;
-          case "high":
-            gaugeColor = "#FFF3EC";
-            border = "1px solid #E8E8E8";
-            textColor = "#FF823F";
-            congestion = language["high"];
-            break;
-          case "veryhigh":
-            gaugeColor = "#FFEFEF";
-            border = "1px solid #E8E8E8";
-            textColor = "#FF5959";
-            congestion = language["veryhigh"];
-            break;
-          default:
-            gaugeColor = "#4CAF50";
-        }
-        if (countE == 4) {
-          countE = 0;
-        }
-        if (countW == 4) {
-          countW = 0;
-        }
-        if (index % 2 == 1) {
-          var htmlcontents =
-            '<div style = "text-align: center;border:' +
-            border +
-            '"><p class ="gatePoint">' +
-            language["east"] +
-            '</p><h4 style = "color:' +
-            textColor +
-            '">' +
-            congestion +
-            "</h4></div>";
-          contentsEl[index].innerHTML = htmlcontents;
-        } else {
-          var htmlcontents =
-            '<div style = "text-align: center;border:' +
-            border +
-            '"><p class ="gatePoint">' +
-            language["west"] +
-            '</p><h4 style = "color:' +
-            textColor +
-            '">' +
-            congestion +
-            "</h4></div>";
-          contentsEl[index].innerHTML = htmlcontents;
-        }
-      });
-    }, 200);
-  };
-
-  const createDepartureMarker = (areaData, index) => {
-    const area = areaData.area || areaData;
-    area.floorInfo = getDistance(area);
-    const marker = new naver.maps.Marker({
-      position: new naver.maps.LatLng(area.position.lat, area.position.lng),
-      map: null,
-      title: areaData.name,
-      icon: {
-        content: getMarkerIcon(areaData, index),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(15, 10),
-      },
-    });
-    const infoWindow = new naver.maps.InfoWindow({
-      content: getInfoWindowContent(areaData),
-      maxWidth: 300,
-      backgroundColor: "#fff",
-      borderColor: congestionColor(area),
-      disableAutopan: true,
-      borderWidth: 2,
-      borderRadius: 5,
-      disableAnchor: false,
-    });
-
-    naver.maps.Event.addListener(marker, "click", () => {
-      if (selectedMarker == null) {
-        selectedMarker = marker;
-      } else {
-        selectedMarker = null;
-      }
-
-      replaceMarkerIcon(marker);
-      if (selectedInfowindow == null) {
-        selectedInfowindow = infoWindow;
-      } else {
-        selectedInfowindow = null;
-      }
-      if (infoWindow.getMap()) {
-        infoWindow.close();
-      } else {
-        infoWindows.forEach((iw) => {
-          iw.close();
-        });
-
-        infoWindow.open(map, marker);
-      }
-    });
-    markers.push(marker);
-    infoWindows.push(infoWindow);
-
-    return markers;
-  };
-
-  const createBoardingMarker = (areaData) => {
-    const area = areaData.area || areaData;
-    area.floorInfo = getDistance(area);
-    const marker = new naver.maps.Marker({
-      position: new naver.maps.LatLng(area.position.lat, area.position.lng),
-      map: null,
-      title: areaData.name,
-      icon: {
-        content:
-          '<img src="./images/user_Location.png" style="width:15px; height = 15px;">',
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(7, 10),
-      },
-    });
-
-    const infoWindow = new naver.maps.InfoWindow({
-      content: getBoardingInfoWindowContent(areaData),
-      maxWidth: 300,
-      backgroundColor: "#fff",
-      borderColor: congestionColor(area),
-      disableAutopan: true,
-      borderWidth: 3,
-      borderRadius: 12,
-      disableAnchor: false,
-    });
-
-    naver.maps.Event.addListener(marker, "click", () => {
-      if (infoWindow.getMap()) {
-        infoWindow.close();
-      } else {
-        infoWindows.forEach((iw) => {
-          iw.close();
-        });
-
-        selectedInfowindow = infoWindow;
-        infoWindow.open(map, marker);
-      }
-    });
-    boardingMarkers.push(marker);
-    boardingInfoWindows.push(infoWindow);
-
-    return boardingMarkers;
-  };
-  const replaceAllMarkerIcon = () => {
-    let newIcon;
-    markers.forEach((marker) => {
-      newIcon = {
-        content: marker
-          .getIcon()
-          ["content"].replace("white", "blue")
-          .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(15, 10),
-      };
-      marker.setIcon(newIcon);
-    });
-    selectedMarker = null;
-  };
-  const replaceMarkerIcon = (selectMarker) => {
-    let newIcon;
-    if (selectedMarker == null) {
-      newIcon = {
-        content: selectMarker
-          .getIcon()
-          ["content"].replace("white", "blue")
-          .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(15, 10),
-      };
-    } else {
-      newIcon = {
-        content: selectMarker
-          .getIcon()
-          ["content"].replace("blue", "white")
-          .replace("color:#056CFE", "color:#fff")
-          .replace("background-color:#fff", "background-color:#056CFE"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(15, 10),
-      };
-    }
-    selectMarker.setIcon(newIcon);
-  };
-  const getMarkerIcon = (area, index) => {
-    const congestionInfo = DataService.getCongestionInfo(area.congestion);
-    const color = congestionInfo ? congestionInfo.color : "#32A1FF";
-    let departure = area.name.replace("출국장", "").split(" ");
-    let eastWest;
-    if (departure[1] == "서편") {
-      eastWest = language["west"];
-    } else if (departure[1] == "동편") {
-      eastWest = language["east"];
-    } else {
-      console.log("eastwest error");
-    }
-    let departureTag =
-      language["departurehall"] + departure[0] + " " + eastWest;
-    if (index % 2 == 1) {
-      return (
-        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2rem; height: 2.2rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 8px 0px 0px 8px;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem">' +
-        departure[0] +
-        '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
-        departureTag +
-        "</span></div>"
-      );
-    } else {
-      return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2rem; height: 2.2rem;padding-top:2px;flex-direction: column; border-radius: 0px 8px 8px 0px;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem">' +
-        departure[0] +
-        '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
-        departureTag +
-        "</span></div>"
-      );
-    }
-  };
-  const getBoardingInfoWindowContent = (areaData) => {
-    let distance = getDistance(areaData);
-    return (
-      '<div class="info-window boardingGate' +
-      '">' +
-      "<h3>" +
-      language["nthGate"].replace("{{number}}", boardingGateNum) +
-      "</h3>" +
-      "<p>" +
-      language["distance"] +
-      ": " +
-      distance +
-      "</p>" +
-      "</div>"
-    );
-  };
-  const getInfoWindowContent = (areaData) => {
-    let gaugeColor;
-    let distance = getDistance(areaData);
-    let conLevel;
-    switch (areaData.congestion) {
-      case "none":
-        gaugeColor = "#999";
-        conLevel = language["none"];
-        break;
-      case "low":
-        gaugeColor = "#EBF6FF";
-        conLevel = language["low"];
-        break;
-      case "medium":
-        gaugeColor = "#E6FAEC";
-        conLevel = language["medium"];
-        break;
-      case "high":
-        gaugeColor = "#FFF3EC";
-        conLevel = language["high"];
-        break;
-      case "veryhigh":
-        gaugeColor = "#FFEFEF";
-        conLevel = language["veryhigh"];
-        break;
-      default:
-        gaugeColor = "#4CAF50";
-    }
-    const translatedName = translateAreaName(areaData.name, language);
-    return (
-      '<div class="info-window ' +
-      areaData.congestion +
-      '">' +
-      "<h3>" +
-      translatedName +
-      "</h3>" +
-      '<p><span class="status ' +
-      areaData.congestion +
-      '"></span>' +
-      conLevel +
-      "</p>" +
-      '<p style = "color:#21212280">' +
-      language["distance"] +
-      ": " +
-      distance +
-      "</p>" +
-      "</div>"
-    );
-  };
-
-  const updateMarkers = () => {
-    if (!areas.length) return;
-
-    areas.forEach((areaData, index) => {
-      areaData.floorInfo = getDistance(areaData);
-      const updatedArea = DataService.getAreaData(areaData.id);
-      if (!updatedArea) return;
-      if (index < 10) {
-        markers[index].setIcon({
-          content: getMarkerIcon(updatedArea.congestion),
-          size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(7, 10),
-        });
-        infoWindows[index].setContent(getInfoWindowContent(updatedArea));
-      } else {
-        return;
-      }
-
-      let color = congestionColor(areaData);
-      infoWindows[index].setOptions({ borderColor: color });
-      areas[index] = updatedArea;
-    });
-  };
-
-  const getCurrentPosition = (successCallback, errorCallback) => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const userLocation = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-          };
-          if (successCallback) successCallback(userLocation);
-        },
-        (error) => {
-          console.error("위치 정보 가져오기 실패", error);
-          if (errorCallback) errorCallback(error);
-        },
-        {
-          enableHighAccuracy: true,
-          timeout: 5000,
-          maximumAge: 0,
-        }
-      );
-    } else {
-      console.error("Geolocation is not supported by this browser.");
-      if (errorCallback) errorCallback(new Error("Geolocation not supported"));
-    }
   };
 
   return {
-    init: () => {
+    init: async () => {
       console.log("MapService 초기화 시작");
 
       const mapElement = document.getElementById("map");
@@ -908,7 +863,6 @@ const MapService = (() => {
         console.log("지도 초기화 시도...");
 
         map = initMap();
-
         return map;
       } catch (error) {
         console.error("지도 초기화 중 오류 발생: ", error);
@@ -916,62 +870,67 @@ const MapService = (() => {
         return null;
       }
     },
-    setting: () => {
-      let lang = sessionStorage.getItem("language");
-      console.log("setting 시작");
-      DataService.initData();
-
-      firstlang = lang;
-      if (lang == null) {
-        languageText = "Language";
-        lang = "ko";
-        language = loadTranslateData(lang);
-      } else {
-        language = loadTranslateData(lang);
-        languageText = language[lang];
-      }
-      ampm = language["am"];
-      BottomSheet.changeMenu();
-      BottomSheet.translateMenu();
-      BottomSheet.recoGate();
-      MapService.createCustomControl();
-      console.log("customControl 생성");
-      MapService.customControlEvent();
-      MapService.customControlSetMap();
-
-      boardingGateNum = sessionStorage.getItem("boardingGate");
-      naver.maps.Event.addListener(map, "click", function () {
-        console.log("mapclick");
-
-        replaceAllMarkerIcon();
-
-        if (selectedInfowindow != null) {
-          selectedInfowindow.close();
-          selectedInfowindow = null;
-        }
-      });
+    setting: async () => {
       try {
+        let lang = sessionStorage.getItem("language");
+        console.log("setting 시작");
+        DataService.initData();
+        boardingGateNum = sessionStorage.getItem("boardingGate");
+        console.log("boardingGateNum :", boardingGateNum);
+        firstlang = lang;
+        if (lang == null) {
+          languageText = "Language";
+          lang = "ko";
+          language = await loadTranslateData(lang);
+        } else {
+          language = await loadTranslateData(lang);
+          languageText = language[lang];
+        }
         const data = DataService.initData();
         if (!data) {
           console.log("데이터 초기화 실패", "error");
           return map;
         }
         const allAreas = DataService.getAllAreas();
+        allMarkerDelete();
         markers = [];
         boardingMarkers = [];
         infoWindows = [];
         boardingInfoWindows = [];
-        allAreas.forEach((area, index) => {
+        console.log("BoardingMarker 생성");
+        if (boardingGateNum != null) {
+          await createBoardingMarker();
+        }
+        for (let index = 0; index < allAreas.length; index++) {
+          const area = allAreas[index];
+          areas.push(area);
           areas.push(area);
           if (index < 10) {
             console.log("DepartureMarker 생성");
-            createDepartureMarker(area, index);
-          } else {
-            console.log("BoardingMarker 생성");
-            createBoardingMarker(area, index);
+            await createDepartureMarker(area, index);
           }
-          MapService.showBScongestion();
+        }
+
+        ampm = language["am"];
+        await BottomSheet.changeMenu();
+        await BottomSheet.translateMenu();
+        await BottomSheet.recoGate();
+        createCustomControl();
+        console.log("customControl 생성");
+        customControlEvent();
+        customControlSetMap();
+
+        naver.maps.Event.addListener(map, "click", function () {
+          console.log("mapclick");
+          replaceAllMarkerIcon();
+          if (selectedInfowindow != null) {
+            selectedInfowindow.close();
+            selectedInfowindow = null;
+          }
         });
+
+        await BottomSheet.showGateCongestion();
+        console.log("setting 완료");
       } catch (error) {
         console.error("data를 가져오는 도중 error발생 : ", error);
       }
@@ -981,10 +940,12 @@ const MapService = (() => {
         if (index == 0 || index == 9) return;
         marker.setMap(map);
       });
+      console.log("showMarker에서 boardingGateNum : ", boardingGateNum);
+      console.log("Markers : ", markers);
+      console.log("boardingMarkers : ", boardingMarkers);
       if (boardingGateNum != null) {
-        const idx = boardingGateNum;
-        let boardingIdx = getBoardingGateIdx(idx);
-        boardingMarkers[boardingIdx].setMap(map);
+        console.log("boardingMarkers[0] : ", boardingMarkers[0]);
+        boardingMarkers[0].setMap(map);
       }
     },
     createCustomControl: () => {
@@ -997,73 +958,11 @@ const MapService = (() => {
       console.log("custom : 작동함");
       customControlSetMap();
     },
-    moveToUserLocation: () => {
-      getCurrentPosition(
-        (userLocation) => {
-          if (limitLocation(userLocation)) {
-            map.setCenter(
-              new naver.maps.LatLng(userLocation.lat, userLocation.lng)
-            );
-            console.log("사용자 위치로 이동했습니다.", "success");
-            console.log(
-              `현재 사용자 좌표 : Lat(${userLocation.lat}), Lng(${userLocation.lng})`
-            );
-
-            const userMarker = new naver.maps.Marker({
-              position: new naver.maps.LatLng(
-                userLocation.lat,
-                userLocation.lng
-              ),
-              map,
-              title: "현재 위치",
-              icon: {
-                content:
-                  '<div style="background-color: #4285F4; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #fff;"></div>',
-                size: new naver.maps.Size(18, 18),
-                anchor: new naver.maps.Point(9, 9),
-              },
-            });
-            setTimeout(() => {
-              userMarker.setMap(null);
-            }, 10000);
-          } else {
-            alert("이 기능은 인천공항 내에서만 사용가능한 기능입니다.");
-          }
-        },
-        (error) => {
-          alert(
-            "위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요."
-          );
-          console.log("위치 권한 오류: " + error.message, "error");
-        }
-      );
+    moveToUserLocation: async () => {
+      await moveToUserLocation();
     },
-
-    createMoveBtn: () => {
-      createButtonTag();
-    },
-    savedLocation: () => {
-      return new Promise((resolve, reject) => {
-        ``;
-        if (!navigator.geolocation) {
-          console.log("이 브라우저는 위치 기능을 지원하지 않습니다.");
-          return reject(new Error("Geolocation not supported"));
-        }
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const locationData = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            sessionStorage.setItem("myLocation", JSON.stringify(locationData));
-            resolve();
-          },
-          (error) => {
-            console.error("위치 정보를 가져올 수 없습니다:", error);
-            reject(error);
-          }
-        );
-      });
+    savedLocation: async () => {
+      return await savedLocation();
     },
 
     moveGate: (index) => {
@@ -1120,9 +1019,6 @@ const MapService = (() => {
       );
     },
 
-    updateMarkers: () => {
-      updateMarkers();
-    },
     openWindowInfo: (index) => {
       let idx = 0;
       if (index !== 9 && index !== 10) {
@@ -1136,12 +1032,11 @@ const MapService = (() => {
       infoWindows[idx].open(map, markers[idx]);
     },
 
-    showBScongestion: () => {
-      showGateCongestion(0);
-    },
-
     languageReturn: () => {
       return language;
+    },
+    boardingGateIdx: (idx) => {
+      return getBoardingGateIdx(idx);
     },
     alertGateNumCheck: () => {
       alert(language["checkNum"]);
@@ -1149,8 +1044,11 @@ const MapService = (() => {
     getDistance: (area) => {
       return getDistance(area);
     },
-    getBoardingDistance: (area) => {
-      return getBoardingDistance(area);
+    getBoardingDistance: async (area) => {
+      return await getBoardingDistance(area);
+    },
+    customControlAllDelete: () => {
+      customControlAllDelete();
     },
   };
 })();
