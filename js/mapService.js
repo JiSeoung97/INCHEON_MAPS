@@ -528,7 +528,7 @@ const MapService = (() => {
         '<div id="moveBoardingGate" style="display: none ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     }
     const selectLang =
-      '<div id="selectLang" style="height:3vh; width:14vh; display: flex; justify-content: center; align-items: center;' +
+      '<div id="selectLang" style="height:30px; width:14vh; display: flex; justify-content: center; align-items: center;' +
       'background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1.5vh;">' +
       '<div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left; ' +
       'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">' +
@@ -539,19 +539,19 @@ const MapService = (() => {
       "</div>";
     let languageList = {
       ko:
-        '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">한국어(' +
+        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center">한국어(' +
         language["korean"] +
         ")</div>",
       en:
-        '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">English(' +
+        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center">English(' +
         language["english"] +
         ")</div>",
       ja:
-        '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">日本語(' +
+        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center">日本語(' +
         language["japenese"] +
         ")</div>",
       zh:
-        '<div class = "mapLang" style="width : 100% ; height:3vh; display: flex; align-items: center">简体中文(' +
+        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center">简体中文(' +
         language["chinese"] +
         ")</div>",
     };

@@ -699,7 +699,7 @@ const BottomSheet = (() => {
     const hiddenHeight = sheetHeight - peekHeight;
     const closedRem = -pxToRem(hiddenHeight);
 
-    POSITIONS.CLOSED = Math.max(closedRem, -19);
+    POSITIONS.CLOSED = Math.max(closedRem, -4);
     POSITIONS.OPEN = 0;
 
     console.log("Sheet Height:", sheetHeight);
@@ -757,10 +757,11 @@ const BottomSheet = (() => {
 
     let targetPosition = POSITIONS.CLOSED;
     let minDistance = Math.abs(currentBottom - POSITIONS.CLOSED);
-
     for (const [key, position] of Object.entries(POSITIONS)) {
+      console.log(position);
       const distance = Math.abs(currentBottom - position);
       if (distance < minDistance) {
+        console.log("min,distance : ", distance);
         minDistance = distance;
         targetPosition = position;
       }

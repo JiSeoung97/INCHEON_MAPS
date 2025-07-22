@@ -43,7 +43,7 @@ body {
 
 #controls {
   width: 100%;
-  min-height: 25vh;
+  min-height: 30vh;
   margin-bottom: 20px;
   padding: 5px;
   background-color: #ffffff;
@@ -389,7 +389,7 @@ table th:nth-child(3) {
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
-  min-height: 43vh;
+  min-height: 50vh;
   max-width: 430px;
   align-self: center;
   background: white;

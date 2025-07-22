@@ -180,9 +180,9 @@ $(document).ready(async () => {
       }
     });
 
-    $("#reco").click(() => {
-      window.open("https://test.drarr0cp4471y.amplifyapp.com/@incheon_airport");
-    });
+    // $("#reco").click(() => {
+    //   window.open("https://test.drarr0cp4471y.amplifyapp.com/@incheon_airport");
+    // });
   };
   const setupGateClickEvents = () => {
     const moveGate = document.getElementsByClassName("eastWest");
