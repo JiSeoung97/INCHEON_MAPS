@@ -15,9 +15,9 @@ $(document).ready(async () => {
       }
       MapService.setting();
       console.log("MapService 설정 완료");
-
-      await Promise.all([initBottomSheet, initModalService]);
-
+      initBottomSheet();
+      await Promise.all([initModalService]);
+      console.log("map, modal init 완료");
       return { success: true, hasLocation: true };
     } catch (error) {
       console.warn("위치 권한 없음 : ", error);
@@ -30,6 +30,7 @@ $(document).ready(async () => {
         console.log("MapService 설정 완료");
 
         await Promise.all([initBottomSheet, initModalService]);
+        console.log("map, modal init 완료");
 
         return { success: true, hasLocation: false };
       } catch (criticalError) {
@@ -38,16 +39,13 @@ $(document).ready(async () => {
       }
     }
   };
-  const initBottomSheet = async () => {
-    return new Promise((resolve) => {
-      try {
-        BottomSheet.init();
-        resolve();
-      } catch (error) {
-        console.error("bottomSheet init fail : ", error);
-        resolve();
-      }
-    });
+  const initBottomSheet = () => {
+    try {
+      console.log("bottomSheet init");
+      BottomSheet.init();
+    } catch (error) {
+      console.error("bottomSheet init fail : ", error);
+    }
   };
   const initModalService = async () => {
     return new Promise((resolve) => {
@@ -60,21 +58,7 @@ $(document).ready(async () => {
       }
     });
   };
-  const isValidBoardingGate = (gateNum) => {
-    const invalidGates = [4, 5, 44];
-    const invalidRanges = [
-      { min: 51, max: 100 },
-      { min: 133, max: Infinity },
-    ];
 
-    if (gateNum == null || invalidGates.includes(Number(gateNum))) {
-      return false;
-    }
-
-    return !invalidRanges.some(
-      (range) => Number(gateNum) > range.min && Number(gateNum) < range.max
-    );
-  };
   const handleMarkerDisplay = async () => {
     try {
       setTimeout(async () => {
