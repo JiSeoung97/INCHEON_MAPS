@@ -498,9 +498,11 @@ const MapService = (() => {
     }
   };
   const deletecustomControl = () => {
+    const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
     positions.forEach((position) => {
       map.controls[position].clear();
     });
+    map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
   };
   const createCustomControl = () => {
     const locationBtnHtml =
