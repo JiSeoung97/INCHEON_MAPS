@@ -695,17 +695,19 @@ const BottomSheet = (() => {
   function calculatePositions() {
     const sheetHeight = bottomSheet.offsetHeight;
     const peekHeight = calculatePeekHeight();
-
+    const viewportHight = window.innerHeight;
     const hiddenHeight = sheetHeight - peekHeight;
     const closedRem = -pxToRem(hiddenHeight);
-    console.log("closedRem : ", closedRem);
-    POSITIONS.CLOSED = Math.max(closedRem, -20);
+    if (closedRem > 0) {
+      POSITIONS.CLOSED = -2;
+    } else {
+      const maxHiddenRem = -pxToRem(viewportHight);
+      POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
+    }
     POSITIONS.OPEN = 0;
-
-    console.log("Sheet Height:", sheetHeight);
-    console.log("Peek Height:", peekHeight);
-    console.log("Hidden Height:", hiddenHeight);
-    console.log("Closed Position (rem):", POSITIONS.CLOSED);
+    if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
+      POSITIONS.CLOSED = -10;
+    }
 
     return POSITIONS;
   }
@@ -739,7 +741,10 @@ const BottomSheet = (() => {
     const deltaRem = pxToRem(deltaY);
     let newBottom = startBottom - deltaRem;
     // 경계 제한
-    newBottom = Math.max(-28, Math.min(0, newBottom));
+    const minPosition = Math.max(POSITIONS.CLOSED - 3, -25); // 안전한 최소값
+    const maxPosition = Math.min(POSITIONS.OPEN + 1, 2); // 안전한 최대값
+
+    newBottom = Math.max(minPosition, Math.min(maxPosition, newBottom));
     updatePosition(newBottom);
 
     e.preventDefault();
@@ -896,6 +901,5 @@ const BottomSheet = (() => {
         }, 300);
       });
     },
-
   };
 })();
