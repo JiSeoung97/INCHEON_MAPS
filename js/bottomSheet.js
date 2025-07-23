@@ -556,7 +556,7 @@ const BottomSheet = (() => {
       // 홀까지 이동 시간
       const distanceStr = await MapService.getDistance(foundData);
       const distance = Number(distanceStr.replace("M", "").replace(",", ""));
-      const hallTime = Math.floor(distance / 70);
+      const hallTime = Math.floor(distance / 60);
       totalTime += hallTime;
 
       const hallWaiting =
@@ -568,7 +568,7 @@ const BottomSheet = (() => {
 
       // 탑승구까지 이동 시간
       const boardingDistance = await MapService.getBoardingDistance(foundData);
-      const boardingTime = Math.floor(boardingDistance / 70);
+      const boardingTime = Math.floor(boardingDistance / 60);
       totalTime += boardingTime;
 
       const boardingTimeStr =
@@ -698,8 +698,8 @@ const BottomSheet = (() => {
 
     const hiddenHeight = sheetHeight - peekHeight;
     const closedRem = -pxToRem(hiddenHeight);
-
-    POSITIONS.CLOSED = Math.max(closedRem, -4);
+    console.log("closedRem : ", closedRem);
+    POSITIONS.CLOSED = Math.max(closedRem, -20);
     POSITIONS.OPEN = 0;
 
     console.log("Sheet Height:", sheetHeight);
@@ -895,31 +895,6 @@ const BottomSheet = (() => {
           resolve();
         }, 300);
       });
-    },
-
-    // 리소스 정리 함수
-    destroy: () => {
-      try {
-        if (handle) {
-          handle.removeEventListener("mousedown", startDrag);
-          handle.removeEventListener("touchstart", startDrag);
-        }
-
-        document.removeEventListener("mousemove", drag);
-        document.removeEventListener("mouseup", endDrag);
-        document.removeEventListener("touchmove", drag);
-        document.removeEventListener("touchend", endDrag);
-
-        // 변수 초기화
-        bottomSheet = null;
-        handle = null;
-        peekElement = null;
-        isDragging = false;
-
-        console.log("BottomSheet 리소스 정리 완료");
-      } catch (error) {
-        console.error("BottomSheet 리소스 정리 실패:", error);
-      }
     },
   };
 })();
