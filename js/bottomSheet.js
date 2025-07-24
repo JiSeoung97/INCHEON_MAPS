@@ -730,7 +730,7 @@ const BottomSheet = (() => {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    POSITIONS.OPEN = 0;
+    POSITIONS.OPEN = 2;
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
     }
@@ -808,9 +808,9 @@ const BottomSheet = (() => {
     }
 
     calculatePositions();
-    currentBottom = POSITIONS.CLOSED;
-    updatePosition(POSITIONS.CLOSED);
-    currentPosition = POSITIONS.CLOSED;
+    currentBottom = POSITIONS.OPEN;
+    updatePosition(POSITIONS.OPEN);
+    currentPosition = POSITIONS.OPEN;
   }
   function getElement() {
     bottomSheet = document.getElementById("bottomSheet");
