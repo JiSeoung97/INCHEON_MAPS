@@ -7,7 +7,7 @@ const CustomControl = (() => {
   let boardingInfoWindows = [];
   let infoWindows = [];
   let boardingGateNum;
-  let languageText = "language";
+  let languageText = null;
   let selectedLangArray = [];
   let firstlang;
   let locaCon;
@@ -44,7 +44,6 @@ const CustomControl = (() => {
       markers = [];
       boardingInfoWindows = [];
       infoWindows = [];
-
       // 재설정
       await MapService.setting();
       await MapService.showMarkers();
@@ -60,8 +59,14 @@ const CustomControl = (() => {
     map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
   };
   const createCustomControl = () => {
+    const selectedLang = sessionStorage.getItem("language");
+    if (languageText == null) {
+      languageText = "language";
+    } else {
+      languageText = language[selectedLang];
+    }
     const locationBtnHtml =
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-top:5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:3rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
     let boarding;
     let moveGateBtn;
 
@@ -110,7 +115,7 @@ const CustomControl = (() => {
         language["chinese"] +
         ")</div>",
     };
-    const selectedLang = sessionStorage.getItem("language");
+
     selectedLangArray = [];
     langArray.forEach((lang) => {
       if (lang == selectedLang) {

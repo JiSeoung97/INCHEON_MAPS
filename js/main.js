@@ -118,7 +118,7 @@ $(document).ready(async () => {
         } else {
           console.log("유효한 탑승구로 설정");
           sessionStorage.setItem("boardingGate", boardingGate);
-          MapService.customControlAllDelete();
+          CustomControl.customControlAllDelete();
           // 서비스 재초기화
           await MapService.setting();
           BottomSheet.changeMenu(1);
