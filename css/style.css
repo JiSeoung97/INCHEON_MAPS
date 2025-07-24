@@ -211,6 +211,7 @@ div p {
 
 #contents tr th:nth-child(1) {
   width: 30%;
+  font-size: 0.8rem;
 }
 #contents tr {
   height: 3rem;
@@ -258,7 +259,10 @@ table th:nth-child(3) {
 #menu {
   width: 100%;
   text-align: center;
-  min-height: 5vh;
+  min-height: 4vh;
+}
+.menuBtn {
+  font-size: 0.9rem;
 }
 .menuBtn {
   font-size: 0.9rem;
@@ -382,7 +386,7 @@ table th:nth-child(3) {
 }
 #handle {
   width: 100%;
-  height: 10px;
+  height: 20px;
   border-radius: 1vh 1vh 0vh 0vh;
   text-align: center;
 }

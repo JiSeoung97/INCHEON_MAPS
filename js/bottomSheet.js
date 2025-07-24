@@ -157,6 +157,33 @@ const BottomSheet = (() => {
       <h4 style="color:${congestionInfo.textColor}">${congestionInfo.text}</h4>
     </div>`;
   };
+  const changeBorderColor = async (index) => {
+    try {
+      const allareas = DataService.getAllAreas();
+      let idx = 0;
+
+      idx = index + 1;
+      const div = document.querySelectorAll(".eastWest div");
+      div.forEach((divBox, boxIndex) => {
+        if (index == boxIndex) {
+          divBox.style.setProperty(
+            "border-color",
+            MapService.congestionColor(allareas[idx])
+          );
+        } else {
+          divBox.style.setProperty("border-color", "#E8E8E8");
+        }
+      });
+    } catch (error) {
+      console.error("error :", error);
+    }
+  };
+  const resetAllBorderColor = () => {
+    const div = document.querySelectorAll(".eastWest div");
+    div.forEach((divBox, boxIndex) => {
+      divBox.style.setProperty("border-color", "#E8E8E8");
+    });
+  };
   const setupGateEventListeners = async () => {
     try {
       const moveGate = document.getElementsByClassName("eastWest");
@@ -170,7 +197,6 @@ const BottomSheet = (() => {
         const newGate = gate.cloneNode(true);
         gate.parentNode.replaceChild(newGate, gate);
       });
-
       // 새로운 이벤트 리스너 추가
       const updatedGates = document.getElementsByClassName("eastWest");
       Array.from(updatedGates).forEach((gate, index) => {
@@ -178,7 +204,7 @@ const BottomSheet = (() => {
           try {
             MapService.moveMap(index);
             MapService.openWindowInfo(index);
-            MapService.changeBorderColor(index);
+            await changeBorderColor(index);
           } catch (error) {
             console.error(`게이트 ${index} 클릭 처리 오류:`, error);
           }
@@ -520,7 +546,7 @@ const BottomSheet = (() => {
           if (index === selectedIdx) {
             recoRanks[
               index
-            ].innerHTML = `<div style="display:flex; align-items: center;justify-content: center">${departurehall[index]} <small>(${ranks[index]})</small><img src="./images/check.svg" style="height:1.25rem;width:1.25rem"></div>`;
+            ].innerHTML = `<div style="display:flex; align-items: center;justify-content: center">${departurehall[index]} <small>(${ranks[index]})</small><img src="./images/check.svg" style="height:1.25rem;width:1.25rem; margin-left:auto"></div>`;
           } else {
             recoRanks[
               index
@@ -572,7 +598,7 @@ const BottomSheet = (() => {
       totalTime += boardingTime;
 
       const boardingTimeStr =
-        boardingTime > 10
+        boardingGateNum > 100
           ? `${boardingTime - 10}${language["minute"]}`
           : `${boardingTime}${language["minute"]}`;
 
@@ -695,17 +721,19 @@ const BottomSheet = (() => {
   function calculatePositions() {
     const sheetHeight = bottomSheet.offsetHeight;
     const peekHeight = calculatePeekHeight();
-
+    const viewportHight = window.innerHeight;
     const hiddenHeight = sheetHeight - peekHeight;
     const closedRem = -pxToRem(hiddenHeight);
-    console.log("closedRem : ", closedRem);
-    POSITIONS.CLOSED = Math.max(closedRem, -20);
+    if (closedRem > 0) {
+      POSITIONS.CLOSED = -2;
+    } else {
+      const maxHiddenRem = -pxToRem(viewportHight);
+      POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
+    }
     POSITIONS.OPEN = 0;
-
-    console.log("Sheet Height:", sheetHeight);
-    console.log("Peek Height:", peekHeight);
-    console.log("Hidden Height:", hiddenHeight);
-    console.log("Closed Position (rem):", POSITIONS.CLOSED);
+    if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
+      POSITIONS.CLOSED = -10;
+    }
 
     return POSITIONS;
   }
@@ -739,7 +767,10 @@ const BottomSheet = (() => {
     const deltaRem = pxToRem(deltaY);
     let newBottom = startBottom - deltaRem;
     // 경계 제한
-    newBottom = Math.max(-28, Math.min(0, newBottom));
+    const minPosition = Math.max(POSITIONS.CLOSED - 3, -25); // 안전한 최소값
+    const maxPosition = Math.min(POSITIONS.OPEN + 1, 2); // 안전한 최대값
+
+    newBottom = Math.max(minPosition, Math.min(maxPosition, newBottom));
     updatePosition(newBottom);
 
     e.preventDefault();
@@ -884,7 +915,12 @@ const BottomSheet = (() => {
       updatePosition(POSITIONS.CLOSED);
     },
 
-    // 애니메이션과 함께 위치 변경
+    changeBorderColor: (index) => {
+      changeBorderColor();
+    },
+    resetAllBorderColor: () => {
+      resetAllBorderColor();
+    },
     animateToPosition: (position) => {
       return new Promise((resolve) => {
         bottomSheet.style.transition = "bottom 0.3s ease";
@@ -896,6 +932,5 @@ const BottomSheet = (() => {
         }, 300);
       });
     },
-
   };
 })();
