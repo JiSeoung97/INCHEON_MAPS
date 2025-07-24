@@ -546,7 +546,12 @@ const MapService = (() => {
     console.log("map객체 생성완료");
     return map;
   };
-
+  const openWindowInfo = (index) => {
+    const areas = DataService.getAllAreas();
+    let idx = index + 1;
+    console.log(areas[idx]);
+    infoWindows[idx].open(map, markers[idx]);
+  };
   const openBoardingWindowInfo = () => {
     let idx = 0;
     boardingInfoWindows[idx].open(map, boardingMarkers[idx]);
@@ -705,8 +710,11 @@ const MapService = (() => {
 
       map.panTo(markers[idx].position, transition);
     },
-    openWindowInfo: () => {
+    openBoardingWindowInfo: () => {
       openBoardingWindowInfo();
+    },
+    openWindowInfo: (index) => {
+      openWindowInfo(index);
     },
     congestionColor: (area) => {
       return congestionColor(area);
