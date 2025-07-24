@@ -731,6 +731,7 @@ const BottomSheet = (() => {
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
     POSITIONS.OPEN = 2;
+
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
     }
