@@ -264,9 +264,6 @@ table th:nth-child(3) {
 .menuBtn {
   font-size: 0.9rem;
 }
-.menuBtn {
-  font-size: 0.9rem;
-}
 .menuBtn:nth-child(1),
 .menuBtn:nth-child(2) {
   width: 50%;
@@ -388,6 +385,7 @@ table th:nth-child(3) {
   width: 100%;
   height: 20px;
   border-radius: 1vh 1vh 0vh 0vh;
+
   text-align: center;
 }
 #bottomSheet {

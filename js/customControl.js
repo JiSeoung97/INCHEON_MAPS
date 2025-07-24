@@ -61,13 +61,13 @@ const CustomControl = (() => {
   };
   const createCustomControl = () => {
     const locationBtnHtml =
-      '<div id="requestLocation" style="height:40px;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:20px 20px 20px 20px ;width:40px;margin-right:10px;margin-top:5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:25px; width:25px;display:none;" ></div>';
+      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-top:5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
     let boarding;
     let moveGateBtn;
 
     if (boardingGateNum != null) {
       moveGateBtn =
-        '<div id ="boardingInfo" style="display:flex ; height : 30px;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >' +
+        '<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >' +
         '<img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px">' +
         '<img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px">' +
         language["boardingGate"] +
@@ -75,15 +75,15 @@ const CustomControl = (() => {
         boardingGateNum +
         "</div>";
       boarding =
-        '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+        '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     } else {
       moveGateBtn =
-        '<div id ="boardingInfo-none" style="display:flex;height : 30px ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">탑승구 : </div>';
+        '<div id ="boardingInfo-none" style="display:flex;height : 2rem ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">탑승구 : </div>';
       boarding =
-        '<div id="moveBoardingGate" style="display: none ;z-index:900;height:30px; width:30px;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+        '<div id="moveBoardingGate" style="display: none ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     }
     const selectLang =
-      '<div id="selectLang" style="height:30px; width:14vh; display: flex; justify-content: center; align-items: center;' +
+      '<div id="selectLang" style="height:2rem; width:10rem; display: flex; justify-content: center; align-items: center;' +
       'background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1.5vh;">' +
       '<div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left; ' +
       'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">' +
@@ -94,19 +94,19 @@ const CustomControl = (() => {
       "</div>";
     let languageList = {
       ko:
-        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center;padding-left:5px">한국어(' +
+        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">한국어(' +
         language["korean"] +
         ")</div>",
       en:
-        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center;padding-left:5px">English(' +
+        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">English(' +
         language["english"] +
         ")</div>",
       ja:
-        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center;padding-left:5px">日本語(' +
+        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">日本語(' +
         language["japenese"] +
         ")</div>",
       zh:
-        '<div class = "mapLang" style="width : 100% ; height:30px; display: flex; align-items: center;padding-left:5px">简体中文(' +
+        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">简体中文(' +
         language["chinese"] +
         ")</div>",
     };
@@ -138,7 +138,7 @@ const CustomControl = (() => {
       });
     });
     const languageChange =
-      '<div style = "height: 12vh ;width :14vh; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem">' +
+      '<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem">' +
       langChan +
       "</div>";
     locaCon = new naver.maps.CustomControl(locationBtnHtml, {
