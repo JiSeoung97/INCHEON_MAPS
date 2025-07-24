@@ -67,6 +67,7 @@ const CustomControl = (() => {
     }
     const locationBtnHtml =
       '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:3rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+
     let boarding;
     let moveGateBtn;
 
