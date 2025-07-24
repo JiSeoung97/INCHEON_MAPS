@@ -710,7 +710,8 @@ const BottomSheet = (() => {
       marginTop +
       marginBottom +
       paddingTop +
-      paddingBottom;
+      paddingBottom +
+      250;
 
     console.log("Peek element height:", peekElement.offsetHeight);
     console.log("Margins:", marginTop, marginBottom);
@@ -725,12 +726,12 @@ const BottomSheet = (() => {
     const hiddenHeight = sheetHeight - peekHeight;
     const closedRem = -pxToRem(hiddenHeight);
     if (closedRem > 0) {
-      POSITIONS.CLOSED = -2;
+      POSITIONS.CLOSED = -4;
     } else {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    POSITIONS.OPEN = 5;
+    POSITIONS.OPEN = 7;
 
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
@@ -768,8 +769,8 @@ const BottomSheet = (() => {
     const deltaRem = pxToRem(deltaY);
     let newBottom = startBottom - deltaRem;
     // 경계 제한
-    const minPosition = Math.max(POSITIONS.CLOSED - 3, -25); // 안전한 최소값
-    const maxPosition = Math.min(POSITIONS.OPEN + 1, 2); // 안전한 최대값
+    const minPosition = Math.max(POSITIONS.CLOSED - 7, -25); // 안전한 최소값
+    const maxPosition = Math.min(POSITIONS.OPEN + 2, 7); // 안전한 최대값
 
     newBottom = Math.max(minPosition, Math.min(maxPosition, newBottom));
     updatePosition(newBottom);
