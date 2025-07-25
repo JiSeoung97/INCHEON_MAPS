@@ -725,6 +725,21 @@ const BottomSheet = (() => {
 
     console.log("Peek element height1:", peekElement[0].offsetHeight);
     console.log("Peek element height2:", peekElement[1].offsetHeight);
+    const style = window.getComputedStyle(peekElement);
+    const marginTop = parseInt(style.marginTop) || 0;
+    const marginBottom = parseInt(style.marginBottom) || 0;
+    const paddingTop = parseInt(style.paddingTop) || 0;
+    const paddingBottom = parseInt(style.paddingBottom) || 0;
+
+    const totalHeight =
+      peekElement.offsetHeight +
+      marginTop +
+      marginBottom +
+      paddingTop +
+      paddingBottom +
+      250;
+
+    console.log("Peek element height:", peekElement.offsetHeight);
     console.log("Margins:", marginTop, marginBottom);
     console.log("Total peek height:", totalHeight);
 
@@ -743,6 +758,7 @@ const BottomSheet = (() => {
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
     POSITIONS.OPEN = 0;
+
 
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
