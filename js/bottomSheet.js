@@ -698,7 +698,33 @@ const BottomSheet = (() => {
       console.error("peek 클래스 요소를 찾을 수 없습니다!");
       return 100; // 기본값
     }
+    let totalHeight = 0;
+    let marginTop;
+    let marginBottom;
+    let paddingTop;
+    let paddingBottom;
+    Array.from(peekElement).forEach((peek) => {
+      const style = window.getComputedStyle(peek);
+      marginTop = parseInt(style.marginTop) || 0;
+      marginBottom = parseInt(style.marginBottom) || 0;
+      paddingTop = parseInt(style.paddingTop) || 0;
+      paddingBottom = parseInt(style.paddingBottom) || 0;
+      console.log("marginTop", marginTop);
+      console.log("style", style);
+      console.log("paddingTop", paddingTop);
+      console.log("paddingBottom", paddingBottom);
+      console.log("marginBottom", marginBottom);
+      let height =
+        peek.offsetHeight +
+        marginTop +
+        marginBottom +
+        paddingTop +
+        paddingBottom;
+      totalHeight += height;
+    });
 
+    console.log("Peek element height1:", peekElement[0].offsetHeight);
+    console.log("Peek element height2:", peekElement[1].offsetHeight);
     const style = window.getComputedStyle(peekElement);
     const marginTop = parseInt(style.marginTop) || 0;
     const marginBottom = parseInt(style.marginBottom) || 0;
@@ -731,7 +757,8 @@ const BottomSheet = (() => {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    POSITIONS.OPEN = 7;
+    POSITIONS.OPEN = 0;
+
 
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
@@ -769,6 +796,7 @@ const BottomSheet = (() => {
     const deltaRem = pxToRem(deltaY);
     let newBottom = startBottom - deltaRem;
     // 경계 제한
+    console.log(POSITIONS);
     const minPosition = Math.max(POSITIONS.CLOSED - 7, -25); // 안전한 최소값
     const maxPosition = Math.min(POSITIONS.OPEN + 2, 7); // 안전한 최대값
 
@@ -791,6 +819,7 @@ const BottomSheet = (() => {
     let targetPosition = POSITIONS.CLOSED;
     let minDistance = Math.abs(currentBottom - POSITIONS.CLOSED);
     for (const [key, position] of Object.entries(POSITIONS)) {
+      console.log(POSITIONS);
       console.log(position);
       const distance = Math.abs(currentBottom - position);
       if (distance < minDistance) {
@@ -817,7 +846,7 @@ const BottomSheet = (() => {
   function getElement() {
     bottomSheet = document.getElementById("bottomSheet");
     handle = document.getElementById("handle");
-    peekElement = document.querySelector(".peek");
+    peekElement = document.getElementsByClassName("peek");
   }
   function bottomSheetEvent() {
     handle.addEventListener("mousedown", startDrag);
