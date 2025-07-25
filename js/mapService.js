@@ -539,7 +539,7 @@ const MapService = (() => {
       zoomControl: false,
       scrollWheel: true,
       maxZoom: 20,
-      minZoom: 17,
+      minZoom: 16,
     };
 
     map = new naver.maps.Map("map", mapOptions);

@@ -710,8 +710,7 @@ const BottomSheet = (() => {
       marginTop +
       marginBottom +
       paddingTop +
-      paddingBottom +
-      250;
+      paddingBottom;
 
     console.log("Peek element height:", peekElement.offsetHeight);
     console.log("Margins:", marginTop, marginBottom);
