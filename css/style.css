@@ -12,8 +12,6 @@ body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  width: 100%;
-  height: 100vh;
   position: relative;
 }
 
@@ -36,9 +34,8 @@ body {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
   z-index: 1;
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 #controls {
@@ -280,6 +277,7 @@ table th:nth-child(3) {
 }
 #contents {
   height: auto;
+  padding: auto;
   border-top: 1px solid #2121221a;
 }
 #nTime {
@@ -394,7 +392,7 @@ table th:nth-child(3) {
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
-  min-height: 40vh;
+  min-height: 30rem;
   max-width: 430px;
   align-self: center;
   background: white;
