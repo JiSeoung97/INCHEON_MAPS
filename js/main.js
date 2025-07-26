@@ -18,6 +18,7 @@ $(document).ready(async () => {
 
       initBottomSheet();
       await initCustomControl();
+
       await Promise.all([initModalService]);
       console.log("map, modal init 완료");
 
@@ -31,6 +32,7 @@ $(document).ready(async () => {
         }
         await MapService.setting();
         await initCustomControl();
+
         console.log("MapService 설정 완료");
 
         await Promise.all([initBottomSheet, initModalService]);
@@ -235,9 +237,9 @@ $(document).ready(async () => {
     sessionStorage.setItem("render", true);
   };
 
-  // if (sessionStorage.getItem("render")) {
-  //   ModalService.adModalOpen();
-  // }
+  if (sessionStorage.getItem("render")) {
+    ModalService.adModalOpen();
+  }
 
   try {
     console.log("애플리케이션 초기화 시작...");
