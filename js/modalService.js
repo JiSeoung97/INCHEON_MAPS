@@ -24,6 +24,7 @@ const ModalService = (() => {
   };
   const adModalClose = () => {
     const modal = document.getElementById("adModal");
+    console.log("modalClose");
     modal.style.setProperty("display", "none");
   };
   const boardingModalOpen = () => {
