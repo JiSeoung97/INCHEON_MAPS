@@ -719,15 +719,13 @@ const BottomSheet = (() => {
         marginTop +
         marginBottom +
         paddingTop +
-        paddingBottom;
+        paddingBottom +
+        50;
       totalHeight += height;
     });
 
     console.log("Peek element height1:", peekElement[0].offsetHeight);
     console.log("Peek element height2:", peekElement[1].offsetHeight);
-
-    console.log("Peek element height:", peekElement.offsetHeight);
-    console.log("Margins:", marginTop, marginBottom);
     console.log("Total peek height:", totalHeight);
 
     return totalHeight;
@@ -744,8 +742,7 @@ const BottomSheet = (() => {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    POSITIONS.OPEN = -11;
-
+    POSITIONS.OPEN = -5;
 
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;

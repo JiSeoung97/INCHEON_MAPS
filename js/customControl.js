@@ -338,10 +338,11 @@ const CustomControl = (() => {
 
   return {
     init: async () => {
+      console.log("customControl init");
       map = MapService.getMap();
       boardingGateNum = sessionStorage.getItem("boardingGate");
       language = MapService.languageReturn();
-      console.log("customControl init");
+      console.log(language);
       const markerArray = MapService.getAllMarkers();
       markers = markerArray[0];
       boardingMarkers = markerArray[1];
