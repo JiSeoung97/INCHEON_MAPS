@@ -599,6 +599,7 @@ const MapService = (() => {
           language = await loadTranslateData(lang);
           languageText = language[lang];
         }
+        console.log("------------------------------------------ langsetting ");
         const data = DataService.initData();
         if (!data) {
           console.log("데이터 초기화 실패", "error");
@@ -628,7 +629,6 @@ const MapService = (() => {
         await BottomSheet.changeMenu();
         await BottomSheet.translateMenu();
         await BottomSheet.recoGate();
-        await CustomControl.init();
 
         naver.maps.Event.addListener(map, "click", function () {
           console.log("mapclick");
@@ -648,7 +648,7 @@ const MapService = (() => {
     },
     showMarkers: () => {
       markers.forEach((marker, index) => {
-        if (index == 0 || index == 9) return;
+        if (index == 9) return;
         marker.setMap(map);
       });
       console.log("showMarker에서 boardingGateNum : ", boardingGateNum);

@@ -17,6 +17,7 @@ $(document).ready(async () => {
       console.log("MapService 설정 완료");
 
       initBottomSheet();
+      initCustomControl();
       await Promise.all([initModalService]);
       console.log("map, modal init 완료");
 
@@ -29,6 +30,7 @@ $(document).ready(async () => {
           throw new Error("지도 초기화 실패");
         }
         MapService.setting();
+        initCustomControl();
         console.log("MapService 설정 완료");
 
         await Promise.all([initBottomSheet, initModalService]);
@@ -47,6 +49,15 @@ $(document).ready(async () => {
       BottomSheet.init();
     } catch (error) {
       console.error("bottomSheet init fail : ", error);
+    }
+  };
+  const initCustomControl = async () => {
+    try {
+      setTimeout(() => {
+        CustomControl.init();
+      }, 100);
+    } catch (error) {
+      console.error("CustomControl init error", error);
     }
   };
   const initModalService = async () => {
@@ -217,12 +228,13 @@ $(document).ready(async () => {
     }
     sessionStorage.setItem("render", true);
   };
+
   if (sessionStorage.getItem("render")) {
     ModalService.adModalOpen();
   }
+
   try {
     console.log("애플리케이션 초기화 시작...");
-
     // 1. 서비스 초기화
     const initResult = await initializeServices();
 
