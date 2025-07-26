@@ -13,11 +13,11 @@ $(document).ready(async () => {
       if (!map) {
         throw new Error("지도 초기화 실패");
       }
-      MapService.setting();
+      await MapService.setting();
       console.log("MapService 설정 완료");
 
       initBottomSheet();
-      initCustomControl();
+      await initCustomControl();
       await Promise.all([initModalService]);
       console.log("map, modal init 완료");
 
@@ -29,8 +29,8 @@ $(document).ready(async () => {
         if (!map) {
           throw new Error("지도 초기화 실패");
         }
-        MapService.setting();
-        initCustomControl();
+        await MapService.setting();
+        await initCustomControl();
         console.log("MapService 설정 완료");
 
         await Promise.all([initBottomSheet, initModalService]);
@@ -52,13 +52,16 @@ $(document).ready(async () => {
     }
   };
   const initCustomControl = async () => {
-    try {
-      setTimeout(() => {
-        CustomControl.init();
-      }, 100);
-    } catch (error) {
-      console.error("CustomControl init error", error);
-    }
+    return new Promise((resolve) => {
+      try {
+        setTimeout(async () => {
+          await CustomControl.init();
+          resolve();
+        }, 100);
+      } catch (error) {
+        console.error("CustomControl init error", error);
+      }
+    });
   };
   const initModalService = async () => {
     return new Promise((resolve) => {
@@ -132,6 +135,7 @@ $(document).ready(async () => {
           CustomControl.customControlAllDelete();
           // 서비스 재초기화
           await MapService.setting();
+          await initCustomControl();
           BottomSheet.changeMenu(1);
           await MapService.showMarkers();
           BottomSheet.trainShow();
@@ -177,7 +181,8 @@ $(document).ready(async () => {
       await handleBoardingGateConfirm();
     });
 
-    $("#modalClose").click(() => {
+    $("#adClose").click(() => {
+      console.log("modalClose");
       ModalService.adModalClose();
     });
 
@@ -222,6 +227,7 @@ $(document).ready(async () => {
     if (sessionStorage.getItem("render")) {
       try {
         ModalService.adModalOpen();
+        console.log("admodalopen");
       } catch (error) {
         console.error("광고 모달 열기 실패:", error);
       }
@@ -229,9 +235,9 @@ $(document).ready(async () => {
     sessionStorage.setItem("render", true);
   };
 
-  if (sessionStorage.getItem("render")) {
-    ModalService.adModalOpen();
-  }
+  // if (sessionStorage.getItem("render")) {
+  //   ModalService.adModalOpen();
+  // }
 
   try {
     console.log("애플리케이션 초기화 시작...");

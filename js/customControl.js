@@ -47,6 +47,10 @@ const CustomControl = (() => {
       // 재설정
       await MapService.setting();
       await MapService.showMarkers();
+      customControlAllDelete();
+      createCustomControl();
+      customControlEvent();
+      customControlSetMap();
     } catch (error) {
       console.error("언어변경실패", error);
     }
@@ -60,11 +64,13 @@ const CustomControl = (() => {
   };
   const createCustomControl = () => {
     const selectedLang = sessionStorage.getItem("language");
+    language = MapService.languageReturn();
     if (languageText == null) {
       languageText = "language";
     } else {
       languageText = language[selectedLang];
     }
+
     const locationBtnHtml =
       '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:4.5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
     let boarding;
