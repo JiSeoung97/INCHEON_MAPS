@@ -475,7 +475,9 @@ const MapService = (() => {
       const data = DataService.getAllAreas();
       console.log(data[index].name);
       console.log(data[index - 1].name);
+
       const zoommarker = new naver.maps.Marker({
+
         position: calculateMidPoint(
           data[index].position,
           data[index - 1].position
@@ -495,6 +497,7 @@ const MapService = (() => {
       zoomOutMarkers.push(zoommarker);
 
       return { zoommarker };
+
     } catch (error) {
       console.error("탑승구 줌아웃 마커 생성 실패", error);
     }
