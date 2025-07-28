@@ -669,7 +669,7 @@ const MapService = (() => {
   };
   const openWindowInfo = (index) => {
     const areas = DataService.getAllAreas();
-    let idx = index + 1;
+    let idx = index;
     console.log(areas[idx]);
     infoWindows[idx].open(map, markers[idx]);
   };
@@ -811,17 +811,13 @@ const MapService = (() => {
       });
     },
     moveMap: (index) => {
-      let idx = 0;
+      let idx = index;
       var transition = {
         duration: 500,
         easing: "linear",
       };
-      if (index !== 9 && index !== 10) {
-        idx = index + 1;
-      } else if (index == 9) {
-        idx = 0;
-      } else {
-        idx = 9;
+      if (map.getZoom <= 17) {
+        map.setZoom(18);
       }
       if (selectedMarker != null) {
         replaceAllMarkerIcon();
