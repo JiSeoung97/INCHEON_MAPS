@@ -833,8 +833,8 @@ const MapService = (() => {
     moveMap: async (index) => {
       let idx = index;
       var transition = {
-        duration: 500,
-        easing: "linear",
+        duration: 800,
+        easing: "easeOutCubic",
       };
 
       if (selectedMarker != null) {
@@ -849,7 +849,7 @@ const MapService = (() => {
       );
       replaceMarkerIcon(markers[idx]);
       map.panTo(newPosition, transition);
-      await delay(500);
+      await delay(800);
       setTimeout(() => {
         if (map.getZoom() <= 17) {
           map.setZoom(18, true);
