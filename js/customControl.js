@@ -72,6 +72,7 @@ const CustomControl = (() => {
   const createCustomControl = () => {
     const selectedLang = sessionStorage.getItem("language");
     language = MapService.languageReturn();
+    languageText = language[selectedLang];
     if (languageText == null) {
       languageText = "language";
     } else {
@@ -79,8 +80,7 @@ const CustomControl = (() => {
     }
 
     const locationBtnHtml =
-
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:15rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:12rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
 
     let boarding;
     let moveGateBtn;
@@ -267,9 +267,12 @@ const CustomControl = (() => {
         };
         Array.from(areaData).forEach((area) => {
           if (area.name == "탑승게이트" + boardingGateNum) {
-            console.log(area.position);
-            movePosition = area.position;
-            map.panTo(area.position, transition);
+            console.log(area.position.lat);
+            movePosition = naver.maps.LatLng(
+              area.position.lat - 0.001,
+              area.position.lng
+            );
+            map.panTo(movePosition, transition);
           }
         });
         console.log(boardingGateNum);

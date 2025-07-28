@@ -18,8 +18,7 @@ $(document).ready(async () => {
 
       initBottomSheet();
       await initCustomControl();
-
-      await Promise.all([initModalService]);
+      initModalService();
       console.log("map, modal init 완료");
 
       return { success: true, hasLocation: true };
@@ -66,15 +65,7 @@ $(document).ready(async () => {
     });
   };
   const initModalService = async () => {
-    return new Promise((resolve) => {
-      try {
-        ModalService.init();
-        resolve();
-      } catch (error) {
-        console.error("ModalService 초기화 실패:", error);
-        resolve(); // 실패해도 계속 진행
-      }
-    });
+    await ModalService.init();
   };
 
   const handleMarkerDisplay = async () => {
@@ -186,16 +177,6 @@ $(document).ready(async () => {
     $("#adClose").click(() => {
       console.log("modalClose");
       ModalService.adModalClose();
-    });
-
-    $("#moveBoardingGate").click(async () => {
-      try {
-        let gateNum = sessionStorage.getItem("boardingGate");
-        await MapService.moveGate(gateNum);
-        MapService.openBoardingWindowInfo(gateNum);
-      } catch (error) {
-        console.error("탑승구 이동 오류 : ", error);
-      }
     });
 
     $("#reco").click(() => {
