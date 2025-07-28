@@ -53,6 +53,7 @@ const CustomControl = (() => {
       await MapService.setting();
       await MapService.showMarkers();
       MapService.getZoomEvent();
+
       customControlAllDelete();
       createCustomControl();
       customControlEvent();
