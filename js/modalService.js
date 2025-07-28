@@ -7,10 +7,10 @@ const ModalService = (() => {
     language = MapService.languageReturn();
   };
   const adModalLangChange = () => {
+    console.log(language);
     const tryMeal = document.getElementById("modalTryMeal");
     const modalTitle = document.getElementById("modalTitle");
     const modalBtn = document.getElementById("reco");
-
     tryMeal.innerText = language["tryMeal"];
     modalTitle.innerText = language["modalTitle"];
     modalBtn.innerHTML =
@@ -37,6 +37,7 @@ const ModalService = (() => {
   };
   return {
     init: () => {
+      console.log("modalService init");
       init();
       adModalLangChange();
       let modalHeader = document.getElementsByClassName("modal-header");

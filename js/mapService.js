@@ -352,7 +352,6 @@ const MapService = (() => {
       marker.setIcon(newIcon);
     });
     boardingMarkers[0].setIcon(boardingIcon);
-    selectedMarker = null;
   };
   const replaceBoardingMarkerIcon = (selectMarker) => {
     let newIcon;
@@ -383,6 +382,7 @@ const MapService = (() => {
   const replaceMarkerIcon = (selectMarker) => {
     let newIcon;
     replaceAllMarkerIcon();
+
     console.log("selectedMarker : ", selectedMarker);
     if (selectedMarker == null) {
       newIcon = {
@@ -477,7 +477,6 @@ const MapService = (() => {
       console.log(data[index - 1].name);
 
       const zoommarker = new naver.maps.Marker({
-
         position: calculateMidPoint(
           data[index].position,
           data[index - 1].position
@@ -497,7 +496,6 @@ const MapService = (() => {
       zoomOutMarkers.push(zoommarker);
 
       return { zoommarker };
-
     } catch (error) {
       console.error("탑승구 줌아웃 마커 생성 실패", error);
     }
@@ -640,7 +638,9 @@ const MapService = (() => {
     }
     return gaugeColor;
   };
-
+  function delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
   const initMap = () => {
     const mapOptions = {
       center: new naver.maps.LatLng(37.44703, 126.449211),
@@ -798,35 +798,31 @@ const MapService = (() => {
       return await savedLocation();
     },
 
-    moveGate: (index) => {
-      const allareas = DataService.getAllAreas();
-      var transition = {
-        duration: 500,
-        easing: "linear",
-      };
-      allareas.forEach((area) => {
-        if (area.name == "탑승게이트" + index) {
-          map.panTo(area.position, transition);
-        }
-      });
-    },
-    moveMap: (index) => {
+    moveMap: async (index) => {
       let idx = index;
       var transition = {
         duration: 500,
         easing: "linear",
       };
-      if (map.getZoom <= 17) {
-        map.setZoom(18);
-      }
+
       if (selectedMarker != null) {
         replaceAllMarkerIcon();
         selectedMarker = null;
       }
       selectedMarker = markers[idx];
-      replaceMarkerIcon(markers[idx]);
 
-      map.panTo(markers[idx].position, transition);
+      let newPosition = naver.maps.LatLng(
+        markers[idx].position._lat - 0.001,
+        markers[idx].position._lng
+      );
+      replaceMarkerIcon(markers[idx]);
+      map.panTo(newPosition, transition);
+      await delay(500);
+      setTimeout(() => {
+        if (map.getZoom() <= 17) {
+          map.setZoom(18, true);
+        }
+      }, 100);
     },
     openBoardingWindowInfo: () => {
       openBoardingWindowInfo();
