@@ -15,7 +15,7 @@ const MapService = (() => {
   let recoArray = [];
   let boardingGateNum;
   let selectedInfowindow = null;
-
+  let zoomOutMarkers = [];
   const loadTranslateData = async (lang) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -46,6 +46,18 @@ const MapService = (() => {
     }
 
     return areaName;
+  };
+  const calculateMidPoint = (positon1, position2) => {
+    let lat1 = positon1.lat;
+    let lat2 = position2.lat;
+    let lng1 = positon1.lng;
+    let lng2 = position2.lng;
+
+    let resultLat = Math.round(((lat1 + lat2) / 2) * 1000000) / 1000000;
+    let resultLng = Math.round(((lng1 + lng2) / 2) * 1000000) / 1000000;
+    console.log("resultLat : ", resultLat);
+    console.log("resultLng : ", resultLng);
+    return new naver.maps.LatLng(resultLat, resultLng);
   };
   const getCurrentPosition = () => {
     return new Promise((resolve, reject) => {
@@ -199,6 +211,7 @@ const MapService = (() => {
     try {
       const area = areaData.area || areaData;
       area.floorInfo = getDistance(area);
+      if (index == 0 || index == 9) return;
       const marker = new naver.maps.Marker({
         position: new naver.maps.LatLng(area.position.lat, area.position.lng),
         map: null,
@@ -267,9 +280,14 @@ const MapService = (() => {
         title: area.name,
         icon: {
           content:
-            '<img src="./images/user_Location.png" style="width:15px; height = 15px;">',
+            '<div style="font-size:0.7rem"><div class = "boarding-icon" style="display: flex;font-size:1.25rem;font-weight: Semibold;padding-top:0.3125rem;flex-direction:column;height:2rem;width:2.5rem; border-radius: 0.5rem 0.5rem 0 0;border: 1px solid #BDBDBD; background-color:#fff;color:#056CFE;justify-content:center;align-items:center;"><img src="./images/flight_blue.svg" style="width:10px; height = 10px;">' +
+            boardingGateNum +
+            '</div><span style ="display:flex;width:100%;text-align:center;justify-content:center;align-items:center;">' +
+            language["boardingGate"] +
+            boardingGateNum +
+            "</span></div>",
           size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(7, 10),
+          anchor: new naver.maps.Point(18, 10),
         },
       });
 
@@ -291,7 +309,12 @@ const MapService = (() => {
           infoWindows.forEach((iw) => {
             iw.close();
           });
-
+          if (selectedMarker == marker) {
+            selectedMarker == null;
+          } else {
+            selectedMarker = marker;
+          }
+          replaceBoardingMarkerIcon(marker);
           selectedInfowindow = infoWindow;
           infoWindow.open(map, marker);
         }
@@ -306,6 +329,7 @@ const MapService = (() => {
   };
   const replaceAllMarkerIcon = (selectMarker = null) => {
     let newIcon;
+    let boardingIcon;
     markers.forEach((marker) => {
       newIcon = {
         content: marker
@@ -316,26 +340,49 @@ const MapService = (() => {
         size: new naver.maps.Size(27, 35),
         anchor: new naver.maps.Point(15, 10),
       };
+      boardingIcon = {
+        content: boardingMarkers[0]
+          .getIcon()
+          ["content"].replace("white", "blue")
+          .replace("color:#fff", "color:#056CFE")
+          .replace("background-color:#056CFE", "background-color:#fff"),
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(18, 10),
+      };
       marker.setIcon(newIcon);
     });
+    boardingMarkers[0].setIcon(boardingIcon);
     selectedMarker = null;
+  };
+  const replaceBoardingMarkerIcon = (selectMarker) => {
+    let newIcon;
+    console.log("selectedMarker : ", selectedMarker);
+    if (selectedMarker == null) {
+      newIcon = {
+        content: selectMarker
+          .getIcon()
+          ["content"].replace("white", "blue")
+          .replace("color:#fff", "color:#056CFE")
+          .replace("background-color:#056CFE", "background-color:#fff"),
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(18, 10),
+      };
+    } else {
+      newIcon = {
+        content: selectMarker
+          .getIcon()
+          ["content"].replace("blue", "white")
+          .replace("color:#056CFE", "color:#fff")
+          .replace("background-color:#fff", "background-color:#056CFE"),
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(18, 10),
+      };
+    }
+    selectMarker.setIcon(newIcon);
   };
   const replaceMarkerIcon = (selectMarker) => {
     let newIcon;
-    markers.forEach((marker) => {
-      if (marker != selectMarker) {
-        newIcon = {
-          content: marker
-            .getIcon()
-            ["content"].replace("white", "blue")
-            .replace("color:#fff", "color:#056CFE")
-            .replace("background-color:#056CFE", "background-color:#fff"),
-          size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(15, 10),
-        };
-        marker.setIcon(newIcon);
-      }
-    });
+    replaceAllMarkerIcon();
     console.log("selectedMarker : ", selectedMarker);
     if (selectedMarker == null) {
       newIcon = {
@@ -372,25 +419,38 @@ const MapService = (() => {
     } else {
       console.log("eastwest error");
     }
-    let departureTag =
-      language["departurehall"] + departure[0] + " " + eastWest;
+
     if (index % 2 == 1) {
       return (
-        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2rem; height: 2.2rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 8px 0px 0px 8px;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
+        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto"><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
+        eastWest +
+        "</span>" +
+        '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.5rem; height: 2.5rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
         departure[0] +
-        '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
-        departureTag +
-        "</span></div>"
+        "</div></div>"
       );
     } else {
       return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2rem; height: 2.2rem;padding-top:2px;flex-direction: column; border-radius: 0px 8px 8px 0px;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
         departure[0] +
         '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
-        departureTag +
+        eastWest +
         "</span></div>"
       );
     }
+  };
+  const getZoomMarkerIcon = (area) => {
+    const congestionInfo = DataService.getCongestionInfo(area.congestion);
+    const color = congestionInfo ? congestionInfo.color : "#32A1FF";
+    let departure = area.name.replace("출국장", "").split(" ");
+
+    return (
+      '<div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+      departure[0] +
+      '</div><span style="display:flex;flex-direction:row;height:auto;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
+      language["departurehall"] +
+      "</span></div>"
+    );
   };
   const getBoardingInfoWindowContent = (areaData) => {
     let distance = getDistance(areaData);
@@ -408,6 +468,64 @@ const MapService = (() => {
       "</div>"
     );
   };
+  const createZoomOutMarker = async (index) => {
+    try {
+      if (index % 2 == 1 || index == 0) return;
+
+      const data = DataService.getAllAreas();
+      console.log(data[index].name);
+      console.log(data[index - 1].name);
+      const marker = new naver.maps.Marker({
+        position: calculateMidPoint(
+          data[index].position,
+          data[index - 1].position
+        ),
+        map: null,
+        title: null,
+        icon: {
+          content: getZoomMarkerIcon(data[index]),
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(18, 10),
+        },
+      });
+
+      naver.maps.Event.addListener(marker, "click", () => {
+        map.setZoom(map.getZoom() - 1);
+      });
+      zoomOutMarkers.push(marker);
+
+      return { marker };
+    } catch (error) {
+      console.error("탑승구 줌아웃 마커 생성 실패", error);
+    }
+  };
+  const zoomEvent = () => {
+    naver.maps.Event.addListener(map, "zoom_changed", () => {
+      console.log("zoomEvent 작동");
+      zoomMarkerEvent();
+    });
+  };
+  function zoomMarkerEvent() {
+    let currentZoom = Number(map.getZoom());
+    console.log(currentZoom);
+    if (currentZoom <= 17) {
+      console.log("markers 삭제 및 zoomoutMarker생성");
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      zoomOutMarkers.forEach((marker) => {
+        marker.setMap(map);
+      });
+    } else {
+      console.log("markers 생성 및 zoomoutMarker제거");
+      markers.forEach((marker) => {
+        marker.setMap(map);
+      });
+      zoomOutMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
+    }
+  }
   const getInfoWindowContent = (areaData) => {
     let gaugeColor;
     let distance = getDistance(areaData);
@@ -599,7 +717,6 @@ const MapService = (() => {
           language = await loadTranslateData(lang);
           languageText = language[lang];
         }
-        console.log("------------------------------------------ langsetting ");
         const data = DataService.initData();
         if (!data) {
           console.log("데이터 초기화 실패", "error");
@@ -611,6 +728,7 @@ const MapService = (() => {
         boardingMarkers = [];
         infoWindows = [];
         boardingInfoWindows = [];
+        zoomOutMarkers = [];
         console.log("BoardingMarker 생성");
         if (boardingGateNum != null) {
           await createBoardingMarker();
@@ -621,6 +739,7 @@ const MapService = (() => {
           areas.push(area);
           if (index < 10) {
             console.log("DepartureMarker 생성");
+            await createZoomOutMarker(index);
             await createDepartureMarker(area, index);
           }
         }
@@ -630,6 +749,7 @@ const MapService = (() => {
         await BottomSheet.translateMenu();
         await BottomSheet.recoGate();
 
+        zoomEvent();
         naver.maps.Event.addListener(map, "click", function () {
           console.log("mapclick");
           replaceAllMarkerIcon();
@@ -741,10 +861,13 @@ const MapService = (() => {
       customControlAllDelete();
     },
     getAllMarkers: () => {
-      return [markers, boardingMarkers];
+      return [markers, boardingMarkers, zoomOutMarkers];
     },
     getAllInfoWindows: () => {
       return [infoWindows, boardingInfoWindows];
+    },
+    getZoomEvent: () => {
+      zoomMarkerEvent();
     },
   };
 })();

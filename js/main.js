@@ -218,7 +218,7 @@ $(document).ready(async () => {
         try {
           MapService.moveMap(index);
           MapService.openWindowInfo(index);
-          MapService.changeBorderColor(index);
+          BottomSheet.changeBorderColor(index);
         } catch (error) {
           console.error(`게이트 ${index} 클릭 처리 오류:`, error);
         }

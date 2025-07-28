@@ -4,6 +4,7 @@ const CustomControl = (() => {
   let language = [];
   let markers = [];
   let boardingMarkers = [];
+  let zoomMarkers = [];
   let boardingInfoWindows = [];
   let infoWindows = [];
   let boardingGateNum;
@@ -28,7 +29,8 @@ const CustomControl = (() => {
   const changeLanguage = async (newLang) => {
     try {
       sessionStorage.setItem("language", newLang);
-
+      getMarker();
+      getInfoWindows();
       // 기존 마커들 제거
       boardingMarkers.forEach((e) => {
         e.setMap(null);
@@ -36,7 +38,9 @@ const CustomControl = (() => {
       markers.forEach((e) => {
         e.setMap(null);
       });
-
+      zoomMarkers.forEach((e) => {
+        e.setMap(null);
+      });
       deletecustomControl();
 
       // 배열 초기화
@@ -44,9 +48,12 @@ const CustomControl = (() => {
       markers = [];
       boardingInfoWindows = [];
       infoWindows = [];
+      zoomMarkers = [];
       // 재설정
       await MapService.setting();
       await MapService.showMarkers();
+      MapService.getZoomEvent();
+
       customControlAllDelete();
       createCustomControl();
       customControlEvent();
@@ -72,7 +79,7 @@ const CustomControl = (() => {
     }
 
     const locationBtnHtml =
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:4.5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:8rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
     let boarding;
     let moveGateBtn;
 
@@ -168,7 +175,17 @@ const CustomControl = (() => {
       position: naver.maps.Position.LEFT_TOP,
     });
   };
-
+  function getMarker() {
+    const markerArray = MapService.getAllMarkers();
+    markers = markerArray[0];
+    boardingMarkers = markerArray[1];
+    zoomMarkers = markerArray[2];
+  }
+  function getInfoWindows() {
+    const infoWindowArray = MapService.getAllInfoWindows();
+    infoWindows = infoWindowArray[0];
+    boardingInfoWindows = infoWindowArray[1];
+  }
   const customControlEvent = () => {
     let mapLangs;
 
@@ -349,12 +366,8 @@ const CustomControl = (() => {
       boardingGateNum = sessionStorage.getItem("boardingGate");
       language = MapService.languageReturn();
       console.log(language);
-      const markerArray = MapService.getAllMarkers();
-      markers = markerArray[0];
-      boardingMarkers = markerArray[1];
-      const infoWindowArray = MapService.getAllInfoWindows();
-      infoWindows = infoWindowArray[0];
-      boardingInfoWindows = infoWindowArray[1];
+      getInfoWindows();
+      getMarker();
       createCustomControl();
       customControlEvent();
       customControlSetMap();
