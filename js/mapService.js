@@ -475,7 +475,9 @@ const MapService = (() => {
       const data = DataService.getAllAreas();
       console.log(data[index].name);
       console.log(data[index - 1].name);
-      const marker = new naver.maps.Marker({
+
+      const zoommarker = new naver.maps.Marker({
+
         position: calculateMidPoint(
           data[index].position,
           data[index - 1].position
@@ -489,12 +491,13 @@ const MapService = (() => {
         },
       });
 
-      naver.maps.Event.addListener(marker, "click", () => {
+      naver.maps.Event.addListener(zoommarker, "click", () => {
         map.setZoom(map.getZoom() - 1);
       });
-      zoomOutMarkers.push(marker);
+      zoomOutMarkers.push(zoommarker);
 
-      return { marker };
+      return { zoommarker };
+
     } catch (error) {
       console.error("탑승구 줌아웃 마커 생성 실패", error);
     }
@@ -743,7 +746,6 @@ const MapService = (() => {
             await createDepartureMarker(area, index);
           }
         }
-
         ampm = language["am"];
         await BottomSheet.changeMenu();
         await BottomSheet.translateMenu();
