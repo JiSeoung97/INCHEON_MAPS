@@ -212,16 +212,32 @@ const MapService = (() => {
       const area = areaData.area || areaData;
       area.floorInfo = getDistance(area);
       if (index == 0 || index == 9) return;
-      const marker = new naver.maps.Marker({
-        position: new naver.maps.LatLng(area.position.lat, area.position.lng),
-        map: null,
-        title: areaData.name,
-        icon: {
-          content: getMarkerIcon(areaData, index),
-          size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(15, 10),
-        },
-      });
+      let marker;
+      if (index % 2 == 1) {
+        console.log("true , area.name : ", area.name);
+        marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(area.position.lat, area.position.lng),
+          map: null,
+          title: areaData.name,
+          icon: {
+            content: getMarkerIcon(areaData, index),
+            size: new naver.maps.Size(27, 35),
+            anchor: new naver.maps.Point(15, 10),
+          },
+        });
+      } else {
+        console.log("false , area.name : ", area.name);
+        marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(area.position.lat, area.position.lng),
+          map: null,
+          title: areaData.name,
+          icon: {
+            content: getMarkerIcon(areaData, index),
+            size: new naver.maps.Size(27, 35),
+            anchor: new naver.maps.Point(15, 10),
+          },
+        });
+      }
       const infoWindow = new naver.maps.InfoWindow({
         content: getInfoWindowContent(areaData),
         maxWidth: 300,
@@ -330,16 +346,29 @@ const MapService = (() => {
   const replaceAllMarkerIcon = (selectMarker = null) => {
     let newIcon;
     let boardingIcon;
-    markers.forEach((marker) => {
-      newIcon = {
-        content: marker
-          .getIcon()
-          ["content"].replace("white", "blue")
-          .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(15, 10),
-      };
+
+    markers.forEach((marker, index) => {
+      if (index % 2 == 1) {
+        newIcon = {
+          content: marker
+            .getIcon()
+            ["content"].replace("white", "blue")
+            .replace("color:#fff", "color:#056CFE")
+            .replace("background-color:#056CFE", "background-color:#fff"),
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(15, 10),
+        };
+      } else {
+        newIcon = {
+          content: marker
+            .getIcon()
+            ["content"].replace("white", "blue")
+            .replace("color:#fff", "color:#056CFE")
+            .replace("background-color:#056CFE", "background-color:#fff"),
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(15, 10),
+        };
+      }
       boardingIcon = {
         content: boardingMarkers[0]
           .getIcon()
@@ -491,7 +520,10 @@ const MapService = (() => {
       });
 
       naver.maps.Event.addListener(zoommarker, "click", () => {
-        map.setZoom(map.getZoom() - 1);
+        setTimeout(() => {
+          map.setZoom(map.getZoom() + 1, true);
+        }, 100);
+        console.log("zoomclick");
       });
       zoomOutMarkers.push(zoommarker);
 
