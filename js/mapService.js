@@ -16,6 +16,8 @@ const MapService = (() => {
   let boardingGateNum;
   let selectedInfowindow = null;
   let zoomOutMarkers = [];
+  let polylines = [];
+  let polylineOn = null;
   const loadTranslateData = async (lang) => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -222,7 +224,7 @@ const MapService = (() => {
           icon: {
             content: getMarkerIcon(areaData, index),
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(15, 10),
+            anchor: new naver.maps.Point(45, 20),
           },
         });
       } else {
@@ -234,7 +236,7 @@ const MapService = (() => {
           icon: {
             content: getMarkerIcon(areaData, index),
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(15, 10),
+            anchor: new naver.maps.Point(20, 21),
           },
         });
       }
@@ -249,7 +251,7 @@ const MapService = (() => {
         disableAnchor: false,
       });
 
-      naver.maps.Event.addListener(marker, "click", () => {
+      naver.maps.Event.addListener(marker, "click", async () => {
         if (selectedMarker == null) {
           selectedMarker = marker;
         } else {
@@ -268,7 +270,11 @@ const MapService = (() => {
           infoWindows.forEach((iw) => {
             iw.close();
           });
-
+          if (polylineOn == null) {
+            await viewPolyLine(index);
+          } else {
+            deletePolyLine();
+          }
           infoWindow.open(map, marker);
         }
       });
@@ -280,7 +286,43 @@ const MapService = (() => {
       console.error("출국장 마커 생성 실패 : ", error);
     }
   };
+  const createPolyline = () => {
+    for (let i = 0; i < markers.length; i += 2) {
+      console.log("createPolyline");
+      let polyline = new naver.maps.Polyline({
+        map: null,
+        path: [markers[i].position, markers[i + 1].position],
+        clickable: false,
+        strokeColor: "#056CFE1A",
+        strokeOpacity: 1,
+        strokeWeight: 50,
+        strokeLineCap: "round",
+        startIcon: "CIRCLE",
+        startIconSize: 50,
+      });
 
+      polylines.push(polyline);
+    }
+  };
+  const deletePolyLine = async () => {
+    try {
+      polylineOn.setMap(null);
+      polylineOn = null;
+    } catch (error) {
+      console.error("polyline setMap(null)실패 : ", error);
+    }
+  };
+  const viewPolyLine = async (index) => {
+    try {
+      let idx;
+      idx = Math.floor((index - 1) / 2);
+      console.log(idx);
+      polylines[idx].setMap(map);
+      polylineOn = polylines[idx];
+    } catch (error) {
+      console.error("polyline setMap(map)실패 : ", error);
+    }
+  };
   const createBoardingMarker = async () => {
     try {
       const data = DataService.getAllAreas();
@@ -346,29 +388,25 @@ const MapService = (() => {
   const replaceAllMarkerIcon = (selectMarker = null) => {
     let newIcon;
     let boardingIcon;
-
+    let newContent;
     markers.forEach((marker, index) => {
       if (index % 2 == 1) {
-        newIcon = {
-          content: marker
-            .getIcon()
-            ["content"].replace("white", "blue")
-            .replace("color:#fff", "color:#056CFE")
-            .replace("background-color:#056CFE", "background-color:#fff"),
-          size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(15, 10),
-        };
+        newContent = marker
+          .getIcon()
+          ["content"].replace("white", "blue")
+          .replace("color:#fff", "color:#056CFE")
+          .replace("background-color:#056CFE", "background-color:#fff");
       } else {
-        newIcon = {
-          content: marker
-            .getIcon()
-            ["content"].replace("white", "blue")
-            .replace("color:#fff", "color:#056CFE")
-            .replace("background-color:#056CFE", "background-color:#fff"),
-          size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(15, 10),
-        };
+        newContent = marker
+          .getIcon()
+          ["content"].replace("white", "blue")
+          .replace("color:#fff", "color:#056CFE")
+          .replace("background-color:#056CFE", "background-color:#fff");
       }
+      newIcon = {
+        ...marker.getIcon(),
+        content: newContent,
+      };
       boardingIcon = {
         content: boardingMarkers[0]
           .getIcon()
@@ -410,28 +448,32 @@ const MapService = (() => {
   };
   const replaceMarkerIcon = (selectMarker) => {
     let newIcon;
+    let idx;
+    markers.forEach((marker, index) => {
+      if (marker == selectMarker) {
+        idx = index;
+      }
+    });
     replaceAllMarkerIcon();
 
     console.log("selectedMarker : ", selectedMarker);
     if (selectedMarker == null) {
       newIcon = {
+        ...selectMarker.getIcon(),
         content: selectMarker
           .getIcon()
           ["content"].replace("white", "blue")
           .replace("color:#fff", "color:#056CFE")
           .replace("background-color:#056CFE", "background-color:#fff"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(15, 10),
       };
     } else {
       newIcon = {
+        ...selectMarker.getIcon(),
         content: selectMarker
           .getIcon()
           ["content"].replace("blue", "white")
           .replace("color:#056CFE", "color:#fff")
           .replace("background-color:#fff", "background-color:#056CFE"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(15, 10),
       };
     }
     selectMarker.setIcon(newIcon);
@@ -451,16 +493,16 @@ const MapService = (() => {
 
     if (index % 2 == 1) {
       return (
-        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto"><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
+        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto"><span style="display:flex;flex-direction:row;height:2rem;weight:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
         "</span>" +
-        '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.5rem; height: 2.5rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
+        '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.6rem; height: 2.6rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 1.3rem 1.3rem 1.3rem 1.3rem;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
         departure[0] +
         "</div></div>"
       );
     } else {
       return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.6rem; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 1.3rem 1.3rem 1.3rem 1.3rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
         departure[0] +
         '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
@@ -703,6 +745,7 @@ const MapService = (() => {
     const areas = DataService.getAllAreas();
     let idx = index;
     console.log(areas[idx]);
+    selectedInfowindow = infoWindows[idx];
     infoWindows[idx].open(map, markers[idx]);
   };
   const openBoardingWindowInfo = () => {
@@ -782,11 +825,15 @@ const MapService = (() => {
         await BottomSheet.changeMenu();
         await BottomSheet.translateMenu();
         await BottomSheet.recoGate();
-
+        createPolyline();
         zoomEvent();
         naver.maps.Event.addListener(map, "click", function () {
           console.log("mapclick");
+          selectedMarker = null;
           replaceAllMarkerIcon();
+          if (polylineOn != null) {
+            deletePolyLine();
+          }
           BottomSheet.resetAllBorderColor();
           if (selectedInfowindow != null) {
             selectedInfowindow.close();
@@ -833,8 +880,8 @@ const MapService = (() => {
     moveMap: async (index) => {
       let idx = index;
       var transition = {
-        duration: 500,
-        easing: "linear",
+        duration: 800,
+        easing: "easeOutCubic",
       };
 
       if (selectedMarker != null) {
@@ -844,12 +891,12 @@ const MapService = (() => {
       selectedMarker = markers[idx];
 
       let newPosition = naver.maps.LatLng(
-        markers[idx].position._lat - 0.001,
+        markers[idx].position._lat - 0.0003,
         markers[idx].position._lng
       );
       replaceMarkerIcon(markers[idx]);
       map.panTo(newPosition, transition);
-      await delay(500);
+      await delay(800);
       setTimeout(() => {
         if (map.getZoom() <= 17) {
           map.setZoom(18, true);
@@ -894,6 +941,24 @@ const MapService = (() => {
     },
     getZoomEvent: () => {
       zoomMarkerEvent();
+    },
+    moveBoardingGate: () => {
+      const areaData = DataService.getAllAreas();
+
+      var transition = {
+        duration: 800,
+        easing: "easeOutCubic",
+      };
+      Array.from(areaData).forEach((area) => {
+        if (area.name == "탑승게이트" + boardingGateNum) {
+          console.log(area.position.lat);
+          movePosition = naver.maps.LatLng(
+            area.position.lat - 0.0003,
+            area.position.lng
+          );
+          map.panTo(movePosition, transition);
+        }
+      });
     },
   };
 })();

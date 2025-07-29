@@ -80,7 +80,7 @@ const CustomControl = (() => {
     }
 
     const locationBtnHtml =
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:12rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:8rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
 
     let boarding;
     let moveGateBtn;
@@ -259,22 +259,7 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
-        const areaData = DataService.getAllAreas();
-
-        var transition = {
-          duration: 500,
-          easing: "linear",
-        };
-        Array.from(areaData).forEach((area) => {
-          if (area.name == "탑승게이트" + boardingGateNum) {
-            console.log(area.position.lat);
-            movePosition = naver.maps.LatLng(
-              area.position.lat - 0.001,
-              area.position.lng
-            );
-            map.panTo(movePosition, transition);
-          }
-        });
+        MapService.moveBoardingGate();
         console.log(boardingGateNum);
         MapService.openBoardingWindowInfo();
       } else {
