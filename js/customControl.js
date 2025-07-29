@@ -259,22 +259,7 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
-        const areaData = DataService.getAllAreas();
-
-        var transition = {
-          duration: 500,
-          easing: "linear",
-        };
-        Array.from(areaData).forEach((area) => {
-          if (area.name == "탑승게이트" + boardingGateNum) {
-            console.log(area.position.lat);
-            movePosition = naver.maps.LatLng(
-              area.position.lat - 0.001,
-              area.position.lng
-            );
-            map.panTo(movePosition, transition);
-          }
-        });
+        MapService.moveBoardingGate();
         console.log(boardingGateNum);
         MapService.openBoardingWindowInfo();
       } else {
