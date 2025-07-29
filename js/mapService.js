@@ -224,7 +224,7 @@ const MapService = (() => {
           icon: {
             content: getMarkerIcon(areaData, index),
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(45, 20),
+            anchor: new naver.maps.Point(55, 20),
           },
         });
       } else {
@@ -236,7 +236,7 @@ const MapService = (() => {
           icon: {
             content: getMarkerIcon(areaData, index),
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(20, 21),
+            anchor: new naver.maps.Point(21, 21),
           },
         });
       }
@@ -252,11 +252,6 @@ const MapService = (() => {
       });
 
       naver.maps.Event.addListener(marker, "click", async () => {
-        if (selectedMarker == null) {
-          selectedMarker = marker;
-        } else {
-          selectedMarker = null;
-        }
         replaceMarkerIcon(marker);
 
         if (selectedInfowindow == null) {
@@ -385,7 +380,7 @@ const MapService = (() => {
       console.error("탑승구 마커 생성 실패", error);
     }
   };
-  const replaceAllMarkerIcon = (selectMarker = null) => {
+  const replaceAllMarkerIcon = () => {
     let newIcon;
     let boardingIcon;
     let newContent;
@@ -457,7 +452,7 @@ const MapService = (() => {
     replaceAllMarkerIcon();
 
     console.log("selectedMarker : ", selectedMarker);
-    if (selectedMarker == null) {
+    if (selectedMarker != null) {
       newIcon = {
         ...selectMarker.getIcon(),
         content: selectMarker
@@ -466,6 +461,7 @@ const MapService = (() => {
           .replace("color:#fff", "color:#056CFE")
           .replace("background-color:#056CFE", "background-color:#fff"),
       };
+      selectedMarker = null;
     } else {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -475,6 +471,7 @@ const MapService = (() => {
           .replace("color:#056CFE", "color:#fff")
           .replace("background-color:#fff", "background-color:#056CFE"),
       };
+      selectedMarker = selectMarker;
     }
     selectMarker.setIcon(newIcon);
   };
@@ -493,16 +490,16 @@ const MapService = (() => {
 
     if (index % 2 == 1) {
       return (
-        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto"><span style="display:flex;flex-direction:row;height:2rem;weight:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
+        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
         "</span>" +
-        '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.6rem; height: 2.6rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 1.3rem 1.3rem 1.3rem 1.3rem;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
+        '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.6rem; height: 2.6rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 50%;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
         departure[0] +
         "</div></div>"
       );
     } else {
       return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.6rem; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 1.3rem 1.3rem 1.3rem 1.3rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.6rem; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
         departure[0] +
         '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
@@ -578,6 +575,18 @@ const MapService = (() => {
     naver.maps.Event.addListener(map, "zoom_changed", () => {
       console.log("zoomEvent 작동");
       zoomMarkerEvent();
+      if (map.getZoom() < 18) {
+        if (selectedMarker != null) {
+          console.log("selectedMarker not null");
+          replaceMarkerIcon(selectedMarker);
+        }
+        if (selectedInfowindow != null) {
+          selectedInfowindow.setMap(null);
+        }
+        if (polylineOn != null) {
+          deletePolyLine();
+        }
+      }
     });
   };
   function zoomMarkerEvent() {
