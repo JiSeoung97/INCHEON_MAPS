@@ -352,6 +352,7 @@ const MapService = (() => {
       });
 
       naver.maps.Event.addListener(marker, "click", () => {
+        selectedBoardingMarker = marker;
         if (infoWindow.getMap()) {
           infoWindow.close();
         } else {
