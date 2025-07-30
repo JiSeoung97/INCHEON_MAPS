@@ -225,7 +225,7 @@ const MapService = (() => {
           icon: {
             content: getMarkerIcon(areaData, index),
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(55, 20),
+            anchor: new naver.maps.Point(55, 30),
           },
         });
       } else {
@@ -237,7 +237,7 @@ const MapService = (() => {
           icon: {
             content: getMarkerIcon(areaData, index),
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(21, 21),
+            anchor: new naver.maps.Point(21, 30),
           },
         });
       }
@@ -261,11 +261,6 @@ const MapService = (() => {
           selectedInfowindow = null;
         }
 
-        if (polylineOn == null) {
-          await viewPolyLine(index);
-        } else {
-          deletePolyLine();
-        }
         if (infoWindow.getMap()) {
           infoWindow.close();
         } else {
@@ -303,19 +298,18 @@ const MapService = (() => {
   };
   const deletePolyLine = async () => {
     try {
-      polylineOn.setMap(null);
-      polylineOn = null;
+      polylines.forEach((polyline) => {
+        polyline.setMap(null);
+      });
     } catch (error) {
       console.error("polyline setMap(null)실패 : ", error);
     }
   };
-  const viewPolyLine = async (index) => {
+  const viewPolyLine = async () => {
     try {
-      let idx;
-      idx = Math.floor((index - 1) / 2);
-      console.log(idx);
-      polylines[idx].setMap(map);
-      polylineOn = polylines[idx];
+      polylines.forEach((polyline, index) => {
+        polyline.setMap(map);
+      });
     } catch (error) {
       console.error("polyline setMap(map)실패 : ", error);
     }
@@ -335,7 +329,7 @@ const MapService = (() => {
         title: area.name,
         icon: {
           content:
-            '<div style="font-size:0.7rem"><div class = "boarding-icon" style="display: flex;font-size:1.25rem;font-weight: Semibold;padding-top:0.3125rem;flex-direction:column;height:2rem;width:2.5rem; border-radius: 0.5rem 0.5rem 0 0;border: 1px solid #BDBDBD; background-color:#fff;color:#056CFE;justify-content:center;align-items:center;"><img src="./images/flight_blue.svg" style="width:10px; height = 10px;">' +
+            '<div style="font-size:0.7rem;display:flex ;justify-content:center;align-items:center;width:auto;flex-direction:column"><div class = "boarding-icon" style="display: flex;font-size:1.25rem;font-weight: Semibold;padding-top:0.3125rem;flex-direction:column;height:2rem;width:2.5rem; border-radius: 0.5rem 0.5rem 0 0;border: 1px solid #BDBDBD; background-color:#fff;color:#056CFE;justify-content:center;align-items:center;"><img src="./images/flight_blue.svg" style="width:10px; height = 10px;">' +
             boardingGateNum +
             '</div><span style ="display:flex;width:100%;text-align:center;justify-content:center;align-items:center;">' +
             language["boardingGate"] +
@@ -501,7 +495,7 @@ const MapService = (() => {
 
     if (index % 2 == 1) {
       return (
-        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
+        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto;margin-top:10px"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
         "</span>" +
         '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.6rem; height: 2.6rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 50%;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
@@ -510,7 +504,7 @@ const MapService = (() => {
       );
     } else {
       return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:cente;margin-top:10px"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
         departure[0] +
         '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
@@ -594,13 +588,12 @@ const MapService = (() => {
         if (selectedInfowindow != null) {
           selectedInfowindow.setMap(null);
         }
-        if (polylineOn != null) {
-          deletePolyLine();
-        }
+        deletePolyLine();
       } else {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
         });
+        viewPolyLine();
       }
     });
   };
@@ -916,17 +909,12 @@ const MapService = (() => {
         easing: "easeOutCubic",
       };
 
-      if (selectedMarker != null) {
-        replaceAllMarkerIcon();
-        selectedMarker = null;
-      }
       selectedMarker = markers[idx];
-
+      replaceMarkerIcon(markers[idx]);
       let newPosition = naver.maps.LatLng(
         markers[idx].position._lat - 0.0003,
         markers[idx].position._lng
       );
-      replaceMarkerIcon(markers[idx]);
       map.panTo(newPosition, transition);
       await delay(800);
       setTimeout(() => {
@@ -934,6 +922,7 @@ const MapService = (() => {
           map.setZoom(18, true);
         }
       }, 100);
+      replaceMarkerIcon(markers[idx]);
     },
     openBoardingWindowInfo: () => {
       openBoardingWindowInfo();
