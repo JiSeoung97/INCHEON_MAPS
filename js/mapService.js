@@ -225,7 +225,7 @@ const MapService = (() => {
           icon: {
             content: getMarkerIcon(areaData, index),
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(55, 20),
+            anchor: new naver.maps.Point(55, 30),
           },
         });
       } else {

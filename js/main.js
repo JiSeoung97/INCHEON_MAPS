@@ -234,7 +234,6 @@ $(document).ready(async () => {
     if (!initResult.hasLocation) {
       alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
     }
-
     // 2. 마커 표시
     await handleMarkerDisplay();
 
@@ -246,7 +245,7 @@ $(document).ready(async () => {
 
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();
-
+    BottomSheet.recoLikeIconView();
     console.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     console.log(
       "지도가 초기화되었습니다. '마커 추가하기' 버튼을 클릭하여 시작하세요."
