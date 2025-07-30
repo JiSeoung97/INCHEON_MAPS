@@ -352,7 +352,6 @@ const MapService = (() => {
       });
 
       naver.maps.Event.addListener(marker, "click", () => {
-        selectedBoardingMarker = marker;
         if (infoWindow.getMap()) {
           infoWindow.close();
         } else {
@@ -409,6 +408,7 @@ const MapService = (() => {
           anchor: new naver.maps.Point(18, 10),
         };
         selectedBoardingMarker.setIcon(boardingIcon);
+        selectedBoardingMarker = null;
       }
       marker.setIcon(newIcon);
     });
@@ -854,10 +854,10 @@ const MapService = (() => {
             deletePolyLine();
           }
           BottomSheet.resetAllBorderColor();
-          if (selectedInfowindow != null) {
-            selectedInfowindow.close();
-            selectedInfowindow = null;
-          }
+          boardingInfoWindows[0].close();
+          infoWindows.forEach((infoWindow) => {
+            infoWindow.close();
+          });
         });
 
         await BottomSheet.showGateCongestion();
@@ -970,6 +970,7 @@ const MapService = (() => {
         duration: 800,
         easing: "easeOutCubic",
       };
+      replaceBoardingMarkerIcon(boardingMarkers[0]);
       Array.from(areaData).forEach((area) => {
         if (area.name == "탑승게이트" + boardingGateNum) {
           console.log(area.position.lat);
