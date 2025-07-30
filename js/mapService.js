@@ -358,6 +358,7 @@ const MapService = (() => {
       });
 
       naver.maps.Event.addListener(marker, "click", () => {
+        selectedBoardingMarker = marker;
         if (infoWindow.getMap()) {
           infoWindow.close();
         } else {
@@ -381,6 +382,7 @@ const MapService = (() => {
     let newIcon;
     let boardingIcon;
     let newContent;
+    console.log(selectedBoardingMarker);
     markers.forEach((marker, index) => {
       if (index % 2 == 1) {
         newContent = marker
@@ -401,23 +403,26 @@ const MapService = (() => {
         ...marker.getIcon(),
         content: newContent,
       };
-      boardingIcon = {
-        content: boardingMarkers[0]
-          .getIcon()
-          ["content"].replace("white", "blue")
-          .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff")
-          .replace(";transform:scale(1.2);transform-origin:center;", ";"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(18, 10),
-      };
+      if (selectedBoardingMarker != null) {
+        boardingIcon = {
+          content: selectedBoardingMarker
+            .getIcon()
+            ["content"].replace("white", "blue")
+            .replace("color:#fff", "color:#056CFE")
+            .replace("background-color:#056CFE", "background-color:#fff")
+            .replace(";transform:scale(1.2);transform-origin:center;", ";"),
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(18, 10),
+        };
+        selectedBoardingMarker.setIcon(boardingIcon);
+      }
       marker.setIcon(newIcon);
     });
-    boardingMarkers[0].setIcon(boardingIcon);
   };
   const replaceBoardingMarkerIcon = (selectMarker) => {
     let newIcon;
     console.log("selectedMarker : ", selectedBoardingMarker);
+    console.log(selectMarker);
     if (selectedBoardingMarker != null) {
       newIcon = {
         content: selectMarker
@@ -592,6 +597,10 @@ const MapService = (() => {
         if (polylineOn != null) {
           deletePolyLine();
         }
+      } else {
+        zoomOutMarkers.forEach((marker) => {
+          marker.setMap(null);
+        });
       }
     });
   };
