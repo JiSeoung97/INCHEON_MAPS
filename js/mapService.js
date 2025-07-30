@@ -9,6 +9,7 @@ const MapService = (() => {
   let areas = [];
   let language;
   let selectedMarker = null;
+  let selectedBoardingMarker = null;
   let firstlang;
   let languageText;
   let ampm;
@@ -259,17 +260,18 @@ const MapService = (() => {
         } else {
           selectedInfowindow = null;
         }
+
+        if (polylineOn == null) {
+          await viewPolyLine(index);
+        } else {
+          deletePolyLine();
+        }
         if (infoWindow.getMap()) {
           infoWindow.close();
         } else {
           infoWindows.forEach((iw) => {
             iw.close();
           });
-          if (polylineOn == null) {
-            await viewPolyLine(index);
-          } else {
-            deletePolyLine();
-          }
           infoWindow.open(map, marker);
         }
       });
@@ -290,7 +292,7 @@ const MapService = (() => {
         clickable: false,
         strokeColor: "#056CFE1A",
         strokeOpacity: 1,
-        strokeWeight: 50,
+        strokeWeight: 40,
         strokeLineCap: "round",
         startIcon: "CIRCLE",
         startIconSize: 50,
@@ -362,15 +364,10 @@ const MapService = (() => {
           infoWindows.forEach((iw) => {
             iw.close();
           });
-          if (selectedMarker == marker) {
-            selectedMarker == null;
-          } else {
-            selectedMarker = marker;
-          }
-          replaceBoardingMarkerIcon(marker);
           selectedInfowindow = infoWindow;
           infoWindow.open(map, marker);
         }
+        replaceBoardingMarkerIcon(marker);
       });
       boardingMarkers.push(marker);
       boardingInfoWindows.push(infoWindow);
@@ -390,13 +387,15 @@ const MapService = (() => {
           .getIcon()
           ["content"].replace("white", "blue")
           .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff");
+          .replace("background-color:#056CFE", "background-color:#fff")
+          .replace(";transform:scale(1.2);transform-origin:center;", ";");
       } else {
         newContent = marker
           .getIcon()
           ["content"].replace("white", "blue")
           .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff");
+          .replace("background-color:#056CFE", "background-color:#fff")
+          .replace(";transform:scale(1.2);transform-origin:center;", ";");
       }
       newIcon = {
         ...marker.getIcon(),
@@ -407,7 +406,8 @@ const MapService = (() => {
           .getIcon()
           ["content"].replace("white", "blue")
           .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff"),
+          .replace("background-color:#056CFE", "background-color:#fff")
+          .replace(";transform:scale(1.2);transform-origin:center;", ";"),
         size: new naver.maps.Size(27, 35),
         anchor: new naver.maps.Point(18, 10),
       };
@@ -417,27 +417,31 @@ const MapService = (() => {
   };
   const replaceBoardingMarkerIcon = (selectMarker) => {
     let newIcon;
-    console.log("selectedMarker : ", selectedMarker);
-    if (selectedMarker == null) {
+    console.log("selectedMarker : ", selectedBoardingMarker);
+    if (selectedBoardingMarker != null) {
       newIcon = {
         content: selectMarker
           .getIcon()
           ["content"].replace("white", "blue")
           .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff"),
+          .replace("background-color:#056CFE", "background-color:#fff")
+          .replace(";transform:scale(1.2);transform-origin:center;", ";"),
         size: new naver.maps.Size(27, 35),
         anchor: new naver.maps.Point(18, 10),
       };
+      selectedBoardingMarker = null;
     } else {
       newIcon = {
         content: selectMarker
           .getIcon()
           ["content"].replace("blue", "white")
           .replace("color:#056CFE", "color:#fff")
-          .replace("background-color:#fff", "background-color:#056CFE"),
+          .replace("background-color:#fff", "background-color:#056CFE")
+          .replace(";", ";transform:scale(1.2);transform-origin:center;"),
         size: new naver.maps.Size(27, 35),
         anchor: new naver.maps.Point(18, 10),
       };
+      selectedBoardingMarker = selectMarker;
     }
     selectMarker.setIcon(newIcon);
   };
@@ -459,7 +463,8 @@ const MapService = (() => {
           .getIcon()
           ["content"].replace("white", "blue")
           .replace("color:#fff", "color:#056CFE")
-          .replace("background-color:#056CFE", "background-color:#fff"),
+          .replace("background-color:#056CFE", "background-color:#fff")
+          .replace(";transform:scale(1.2);transform-origin:center;", ";"),
       };
       selectedMarker = null;
     } else {
@@ -469,7 +474,8 @@ const MapService = (() => {
           .getIcon()
           ["content"].replace("blue", "white")
           .replace("color:#056CFE", "color:#fff")
-          .replace("background-color:#fff", "background-color:#056CFE"),
+          .replace("background-color:#fff", "background-color:#056CFE")
+          .replace(";", ";transform:scale(1.2);transform-origin:center;"),
       };
       selectedMarker = selectMarker;
     }
@@ -498,8 +504,8 @@ const MapService = (() => {
         "</div></div>"
       );
     } else {
-      return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.6rem; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+      return 
+        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:center"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
         departure[0] +
         '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
@@ -816,9 +822,11 @@ const MapService = (() => {
         infoWindows = [];
         boardingInfoWindows = [];
         zoomOutMarkers = [];
-        console.log("BoardingMarker 생성");
         if (boardingGateNum != null) {
+          console.log("BoardingMarker 생성");
           await createBoardingMarker();
+        } else {
+          console.error("boardingMarker 생성 실패");
         }
         for (let index = 0; index < allAreas.length; index++) {
           const area = allAreas[index];
@@ -857,13 +865,19 @@ const MapService = (() => {
       }
     },
     showMarkers: () => {
-      markers.forEach((marker, index) => {
-        if (index == 9) return;
-        marker.setMap(map);
-      });
-      console.log("showMarker에서 boardingGateNum : ", boardingGateNum);
-      console.log("Markers : ", markers);
-      console.log("boardingMarkers : ", boardingMarkers);
+      if (map.getZoom() < 18) {
+        zoomOutMarkers.forEach((marker) => {
+          marker.setMap(map);
+        });
+      } else {
+        markers.forEach((marker, index) => {
+          if (index == 9) return;
+          marker.setMap(map);
+        });
+        console.log("showMarker에서 boardingGateNum : ", boardingGateNum);
+        console.log("Markers : ", markers);
+        console.log("boardingMarkers : ", boardingMarkers);
+      }
       if (boardingGateNum != null) {
         console.log("boardingMarkers[0] : ", boardingMarkers[0]);
         boardingMarkers[0].setMap(map);
@@ -961,7 +975,7 @@ const MapService = (() => {
       Array.from(areaData).forEach((area) => {
         if (area.name == "탑승게이트" + boardingGateNum) {
           console.log(area.position.lat);
-          movePosition = naver.maps.LatLng(
+          let movePosition = naver.maps.LatLng(
             area.position.lat - 0.0003,
             area.position.lng
           );
