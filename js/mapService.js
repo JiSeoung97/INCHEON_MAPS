@@ -279,8 +279,8 @@ const MapService = (() => {
     }
   };
   const createPolyline = () => {
+    console.log("createPolyline");
     for (let i = 0; i < markers.length; i += 2) {
-      console.log("createPolyline");
       let polyline = new naver.maps.Polyline({
         map: null,
         path: [markers[i].position, markers[i + 1].position],
@@ -840,7 +840,9 @@ const MapService = (() => {
         await BottomSheet.changeMenu();
         await BottomSheet.translateMenu();
         await BottomSheet.recoGate();
-        createPolyline();
+        if (polylines[0] == null) {
+          createPolyline();
+        }
         zoomEvent();
         naver.maps.Event.addListener(map, "click", function () {
           console.log("mapclick");
