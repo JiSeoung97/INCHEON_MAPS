@@ -586,7 +586,6 @@ const MarkerService = (() => {
       }
     },
 
-    // 🎉 Before: 45줄 → After: 10줄
     createBoardingMarker: async () => {
       try {
         const data = DataService.getAllAreas();
@@ -604,7 +603,6 @@ const MarkerService = (() => {
           boardingGateNum
         );
 
-        // ✨ 45줄의 복잡한 로직이 한 줄로!
         const result = markerFactory.createMarker("boarding", area);
 
         if (result.marker) {
@@ -620,7 +618,6 @@ const MarkerService = (() => {
       }
     },
 
-    // 🎉 Before: 30줄 → After: 8줄
     createZoomOutMarker: async (index) => {
       try {
         if (index % 2 === 1 || index === 0) return;

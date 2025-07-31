@@ -54,6 +54,8 @@ const languageData = {
     tryMeal: "출국 전 든든한 한 끼 어떠신가요?",
     modalTitle: "인천공항 맛집 BEST 10!",
     modalBtn: "인천공항 맛집 보러가기",
+    subTitle: "탑승구까지의 이동 예상 소요시간을 알려드려요",
+    confirmBtn: "확인",
   },
   ja: {
     terminal: "第1旅客ターミナル",
@@ -110,6 +112,8 @@ const languageData = {
     tryMeal: "ご出発前に、しっかりとお食事いかがですか?",
     modalTitle: "仁川空港のグルメおすすめ10選",
     modalBtn: "仁川空港のグルメを見る",
+    subTitle: "搭乗口までの移動にかかる予想所要時間をご案内します。",
+    confirmBtn: "確認",
   },
   zh: {
     update: "更新时间",
@@ -165,6 +169,8 @@ const languageData = {
     tryMeal: "出国前，来一顿丰盛的餐吧!",
     modalTitle: "仁川机场美食TOP 10!",
     modalBtn: "	查看仁川机场美食",
+    subTitle: "我们将为您提供前往登机口的预计所需时间。",
+    confirmBtn: "确认",
   },
   en: {
     terminal: "Passenger Terminal 1",
@@ -221,5 +227,8 @@ const languageData = {
     tryMeal: "How about a hearty meal before your flight?",
     modalTitle: "Top 10 Must-Try Eats at Incheon Airport!",
     modalBtn: "View Incheon Airport Eats",
+    subTitle:
+      "We will inform you of the estimated time it takes to reach the boarding gate.",
+    confirmBtn: "OK",
   },
 };
