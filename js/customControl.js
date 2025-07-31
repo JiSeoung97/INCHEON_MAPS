@@ -106,7 +106,7 @@ const CustomControl = (() => {
     }
     const selectLang =
       '<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;' +
-      'background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1.5vh;">' +
+      'background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">' +
       '<div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left; ' +
       'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">' +
       '<img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">' +
@@ -293,18 +293,11 @@ const CustomControl = (() => {
     });
   };
   const customControlSetMap = () => {
-    console.log("moveGateCon", moveGateCon);
-    console.log("boardingInfo", boardingInfo);
     setTimeout(() => {
-      console.log("locacon : ", locaCon);
       locaCon.setMap(map);
-      console.log("setMap2");
       boardingInfo.setMap(map);
-      console.log("setMap3");
       selectLangCon.setMap(map);
-      console.log("setMap4");
       moveGateCon.setMap(map);
-      console.log("setMap5");
     }, 50);
   };
   const customControlAllDelete = () => {

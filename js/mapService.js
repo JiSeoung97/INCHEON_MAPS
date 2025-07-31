@@ -289,8 +289,6 @@ const MapService = (() => {
         strokeOpacity: 1,
         strokeWeight: 40,
         strokeLineCap: "round",
-        startIcon: "CIRCLE",
-        startIconSize: 50,
       });
 
       polylines.push(polyline);
@@ -352,7 +350,6 @@ const MapService = (() => {
       });
 
       naver.maps.Event.addListener(marker, "click", () => {
-        selectedBoardingMarker = marker;
         if (infoWindow.getMap()) {
           infoWindow.close();
         } else {
@@ -409,6 +406,7 @@ const MapService = (() => {
           anchor: new naver.maps.Point(18, 10),
         };
         selectedBoardingMarker.setIcon(boardingIcon);
+        selectedBoardingMarker = null;
       }
       marker.setIcon(newIcon);
     });
@@ -481,8 +479,6 @@ const MapService = (() => {
     selectMarker.setIcon(newIcon);
   };
   const getMarkerIcon = (area, index) => {
-    const congestionInfo = DataService.getCongestionInfo(area.congestion);
-    const color = congestionInfo ? congestionInfo.color : "#32A1FF";
     let departure = area.name.replace("출국장", "").split(" ");
     let eastWest;
     if (departure[1] == "서편") {
@@ -854,10 +850,10 @@ const MapService = (() => {
             deletePolyLine();
           }
           BottomSheet.resetAllBorderColor();
-          if (selectedInfowindow != null) {
-            selectedInfowindow.close();
-            selectedInfowindow = null;
-          }
+          boardingInfoWindows[0].close();
+          infoWindows.forEach((infoWindow) => {
+            infoWindow.close();
+          });
         });
 
         await BottomSheet.showGateCongestion();
@@ -970,6 +966,7 @@ const MapService = (() => {
         duration: 800,
         easing: "easeOutCubic",
       };
+      replaceBoardingMarkerIcon(boardingMarkers[0]);
       Array.from(areaData).forEach((area) => {
         if (area.name == "탑승게이트" + boardingGateNum) {
           console.log(area.position.lat);

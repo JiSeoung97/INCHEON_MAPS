@@ -129,25 +129,5 @@ const DataService = (() => {
     updateCongestionData: () => {
       return updateCongestionRandomly();
     },
-
-    // 랜덤 시간마다 혼잡도 자동 업데이트 start
-
-    startAutomaticUpdates: (updateCallback) => {
-      const updateAndSchedule = () => {
-        const updatedData = updateCongestionRandomly();
-        if (updateCallback && typeof updateCallback === "function") {
-          updateCallback(updatedData);
-        }
-
-        const nextUpdateTime = 10000 + Math.random() * 20000; // 10초에서 30초 사이의 랜덤 시간
-        setTimeout(updateAndSchedule, nextUpdateTime);
-      };
-
-      updateAndSchedule();
-
-      if (Logger) {
-        Logger.log("자동 업데이트 시작됨");
-      }
-    },
   };
 })();
