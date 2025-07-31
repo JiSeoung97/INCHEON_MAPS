@@ -248,6 +248,7 @@ const CustomControl = (() => {
     mapLangs.forEach((mapLang, index) => {
       mapLang.addEventListener("click", async () => {
         await changeLanguage(selectedLangArray[index]);
+        await ModalService.langChange();
       });
     });
     mapLangs.forEach((mapLang) => {
