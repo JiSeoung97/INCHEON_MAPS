@@ -289,8 +289,6 @@ const MapService = (() => {
         strokeOpacity: 1,
         strokeWeight: 40,
         strokeLineCap: "round",
-        startIcon: "CIRCLE",
-        startIconSize: 50,
       });
 
       polylines.push(polyline);
@@ -481,8 +479,6 @@ const MapService = (() => {
     selectMarker.setIcon(newIcon);
   };
   const getMarkerIcon = (area, index) => {
-    const congestionInfo = DataService.getCongestionInfo(area.congestion);
-    const color = congestionInfo ? congestionInfo.color : "#32A1FF";
     let departure = area.name.replace("출국장", "").split(" ");
     let eastWest;
     if (departure[1] == "서편") {

@@ -264,10 +264,6 @@ const BottomSheet = (() => {
     departureAreas.forEach((departure, index) => {
       if (departure.name == recoArray[0].name) {
         idx = index;
-        console.log(
-          "-------------------------------------like view",
-          eastWest[idx]
-        );
       }
     });
     eastWest[idx]
@@ -398,16 +394,6 @@ const BottomSheet = (() => {
         <span class="flag">${language["Immigration"]}</span>
         <div class="segment-inner">
           <span>${language["waitingTime"]}<small></small></span>
-        </div>
-        <div class="time-info">
-          <span class="latingTime">-${language["minute"]}</span>
-        </div>
-      </div>
-      <div class="segment">
-        <img class="icon" src="./images/ticket.png" />
-        <span class="flag">${language["Immigration"]}</span>
-        <div class="segment-inner">
-          <span>${language["immigration"]}</span>
         </div>
         <div class="time-info">
           <span class="latingTime">-${language["minute"]}</span>
@@ -634,7 +620,8 @@ const BottomSheet = (() => {
           : foundApi.immigrationtime * foundApi.quelength;
       const immigrationMinutes = Math.floor(immigrationTotal / 60);
       totalTime += immigrationMinutes;
-
+      let estimatedTime =
+        immigrationMinutes + waitingMinutes + language["minute"];
       const immigration =
         immigrationTotal > 3600
           ? `${Math.floor(immigrationTotal / 3600)}${
@@ -654,7 +641,7 @@ const BottomSheet = (() => {
 
       return {
         total: strTotal,
-        times: [hallWaiting, waitingTime, immigration, boardingTimeStr],
+        times: [hallWaiting, estimatedTime, boardingTimeStr],
       };
     } catch (error) {
       console.error("시간 계산 실패:", error);

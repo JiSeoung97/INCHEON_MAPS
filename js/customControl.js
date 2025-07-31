@@ -293,18 +293,11 @@ const CustomControl = (() => {
     });
   };
   const customControlSetMap = () => {
-    console.log("moveGateCon", moveGateCon);
-    console.log("boardingInfo", boardingInfo);
     setTimeout(() => {
-      console.log("locacon : ", locaCon);
       locaCon.setMap(map);
-      console.log("setMap2");
       boardingInfo.setMap(map);
-      console.log("setMap3");
       selectLangCon.setMap(map);
-      console.log("setMap4");
       moveGateCon.setMap(map);
-      console.log("setMap5");
     }, 50);
   };
   const customControlAllDelete = () => {
