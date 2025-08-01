@@ -288,7 +288,7 @@ const MapService = (() => {
         strokeColor: "#056CFE1A",
         strokeOpacity: 1,
         strokeWeight: 40,
-        strokeLineCap: "round",
+        strokeLineCap: "butt",
       });
 
       polylines.push(polyline);
@@ -334,7 +334,7 @@ const MapService = (() => {
             boardingGateNum +
             "</span></div>",
           size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(18, 10),
+          anchor: new naver.maps.Point(10, 10),
         },
       });
 
@@ -500,7 +500,7 @@ const MapService = (() => {
       );
     } else {
       return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:cente;margin-top:10px"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:cente;margin-top:10px;width:5rem"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
         departure[0] +
         '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +

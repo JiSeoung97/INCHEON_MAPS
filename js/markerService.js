@@ -542,7 +542,7 @@ const MarkerService = (() => {
   // ===== 공개 API (기존 인터페이스 유지) =====
   return {
     // 🔧 초기화
-    init: (mapInstance, languageData, gateNumber, polylinesArray) => {
+    init: (mapInstance, languageData, gateNumber) => {
       map = mapInstance;
       language = languageData;
       boardingGateNum = gateNumber;
