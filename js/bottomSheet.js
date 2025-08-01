@@ -100,6 +100,7 @@ const BottomSheet = (() => {
 
         contentsEl[index].innerHTML = htmlContents;
       }
+      recoLikeIconView();
     } catch (error) {
       console.error("게이트 혼잡도 표시 실패:", error);
     }
@@ -261,14 +262,16 @@ const BottomSheet = (() => {
     const departureAreas = data.slice(1, 9);
     const eastWest = document.getElementsByClassName("eastWest");
     let idx;
+    console.log(recoArray[0].name);
+    console.log("---------------------------------");
     departureAreas.forEach((departure, index) => {
       if (departure.name == recoArray[0].name) {
         idx = index;
+        console.log(departure.name, idx);
       }
     });
-    eastWest[idx]
-      .getElementsByClassName("like-icon")[0]
-      .style.setProperty("display", "flex");
+    eastWest[idx].getElementsByClassName("like-icon")[0].style.display = "flex";
+    console.log(eastWest[idx].getElementsByClassName("like-icon")[0]);
   };
   const getAreaDistance = async (area) => {
     try {
@@ -307,7 +310,7 @@ const BottomSheet = (() => {
       menuBtn[1].style.setProperty("border-bottom", "1px solid #2121221A");
 
       controls.innerHTML = createFirstMenuHTML();
-
+      await showGateCongestion();
       await timereset();
       await setupGateEventListeners();
     } catch (error) {
