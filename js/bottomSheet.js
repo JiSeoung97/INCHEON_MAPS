@@ -1,3 +1,5 @@
+"use strict";
+
 const BottomSheet = (() => {
   let language;
   let bottomSheet;
@@ -9,6 +11,8 @@ const BottomSheet = (() => {
   let currentBottom = 0;
   let departurehall = [];
   let boardingGateNum = null;
+  let recoArray = [];
+  let currentPosition;
   const POSITIONS = {
     CLOSED: 0,
     OPEN: 0,
@@ -47,8 +51,8 @@ const BottomSheet = (() => {
         const year = now.getFullYear();
         const month = String(now.getMonth() + 1).padStart(2, "0");
         const day = String(now.getDate()).padStart(2, "0");
-        hour = now.getHours();
-        minute = String(now.getMinutes()).padStart(2, "0");
+        let hour = now.getHours();
+        let minute = String(now.getMinutes()).padStart(2, "0");
         const hourStr = String(hour).padStart(2, "0");
 
         time.innerHTML =
@@ -170,7 +174,7 @@ const BottomSheet = (() => {
         if (index == boxIndex) {
           divBox.style.setProperty(
             "border-color",
-            MapService.congestionColor(allareas[idx])
+            Utility.congestionColor(allareas[idx])
           );
         } else {
           divBox.style.setProperty("border-color", "#E8E8E8");
@@ -204,8 +208,8 @@ const BottomSheet = (() => {
       Array.from(updatedGates).forEach((gate, index) => {
         gate.addEventListener("click", async () => {
           try {
-            MapService.moveMap(index);
-            MapService.openWindowInfo(index);
+            Utility.moveGate(index);
+            Utility.openWindowInfo(index);
             await changeBorderColor(index);
           } catch (error) {
             console.error(`게이트 ${index} 클릭 처리 오류:`, error);
@@ -221,35 +225,28 @@ const BottomSheet = (() => {
       const areas = DataService.getAllAreas();
       const apiData = DataService.getApiData();
       recoArray = [];
+      for (let i = 0; i < areas.length; i++) {
+        if (i < 10 && areas[i].id !== "DG1" && areas[i].id !== "DG6") {
+          const distance = await getAreaDistance(areas[i]);
+          const apiDataForArea = apiData.find(
+            (api) => api.deskname === areas[i].id
+          );
 
-      const promises = areas.map(async (area, index) => {
-        if (index < 10 && area.id !== "DG1" && area.id !== "DG6") {
-          try {
-            const distance = await getAreaDistance(area);
-            const apiDataForArea = apiData.find(
-              (api) => api.deskname === area.id
+          if (apiDataForArea) {
+            const waitingTime = Math.round(
+              DataService.getTotalWaitTime(apiDataForArea) / 60
             );
 
-            if (apiDataForArea) {
-              const waitingTime = Math.round(
-                DataService.getTotalWaitTime(apiDataForArea) / 60
-              );
-
-              return {
-                name: area.name,
-                time: distance + waitingTime,
-                position: area.position,
-              };
-            }
-          } catch (error) {
-            console.error(`영역 ${area.name} 처리 실패:`, error);
+            recoArray.push({
+              name: areas[i].name,
+              time: distance + waitingTime,
+              position: areas[i].position,
+            });
           }
         }
-        return null;
-      });
+      }
 
-      const results = await Promise.all(promises);
-      recoArray = results.filter((result) => result !== null);
+      console.log("배열 타입:", Array.isArray(recoArray));
       recoArray.sort((a, b) => a.time - b.time);
 
       console.log("추천 게이트 계산 완료:", recoArray);
@@ -262,8 +259,6 @@ const BottomSheet = (() => {
     const departureAreas = data.slice(1, 9);
     const eastWest = document.getElementsByClassName("eastWest");
     let idx;
-    console.log(recoArray[0].name);
-    console.log("---------------------------------");
     departureAreas.forEach((departure, index) => {
       if (departure.name == recoArray[0].name) {
         idx = index;
@@ -275,7 +270,7 @@ const BottomSheet = (() => {
   };
   const getAreaDistance = async (area) => {
     try {
-      const distanceStr = await MapService.getDistance(area);
+      const distanceStr = await Utility.getDistance(area);
       return Math.round(
         Number(distanceStr.replace("M", "").replace(",", "")) / 70
       );
@@ -323,10 +318,10 @@ const BottomSheet = (() => {
       menuBtn[0].style.setProperty("border-bottom", "1px solid #2121221A");
 
       // 시간 처리
-      if (hour > 12) {
-        hour = hour - 12;
-        ampm = language["pm"];
-      }
+      // if (hour > 12) {
+      //   hour = hour - 12;
+      //   ampm = language["pm"];
+      // }
 
       // 출국장 이름들 번역
       departurehall = [];
@@ -718,11 +713,6 @@ const BottomSheet = (() => {
       marginBottom = parseInt(style.marginBottom) || 0;
       paddingTop = parseInt(style.paddingTop) || 0;
       paddingBottom = parseInt(style.paddingBottom) || 0;
-      console.log("marginTop", marginTop);
-      console.log("style", style);
-      console.log("paddingTop", paddingTop);
-      console.log("paddingBottom", paddingBottom);
-      console.log("marginBottom", marginBottom);
       let height =
         peek.offsetHeight +
         marginTop +

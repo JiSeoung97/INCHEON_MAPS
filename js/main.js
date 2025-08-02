@@ -71,7 +71,7 @@ $(document).ready(async () => {
   const handleMarkerDisplay = async () => {
     try {
       setTimeout(async () => {
-        await MapService.showMarkers();
+        await MarkerService.showMarkers();
       }, 100);
       console.log("마커 표시 완료");
     } catch (error) {
@@ -130,7 +130,7 @@ $(document).ready(async () => {
           await MapService.setting();
           await initCustomControl();
           BottomSheet.changeMenu(1);
-          await MapService.showMarkers();
+          await MarkerService.showMarkers();
           BottomSheet.trainShow();
 
           // UI 업데이트
@@ -197,8 +197,8 @@ $(document).ready(async () => {
     Array.from(updatedGates).forEach((gate, index) => {
       gate.addEventListener("click", async () => {
         try {
-          MapService.moveMap(index);
-          MapService.openWindowInfo(index);
+          Utility.moveGate(index);
+          Utility.openWindowInfo(index);
           BottomSheet.changeBorderColor(index);
         } catch (error) {
           console.error(`게이트 ${index} 클릭 처리 오류:`, error);
@@ -245,7 +245,7 @@ $(document).ready(async () => {
 
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();
-    BottomSheet.recoLikeIconView();
+    // BottomSheet.recoLikeIconView();
     console.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     console.log(
       "지도가 초기화되었습니다. '마커 추가하기' 버튼을 클릭하여 시작하세요."

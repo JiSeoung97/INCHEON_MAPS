@@ -29,15 +29,13 @@ const CustomControl = (() => {
   const changeLanguage = async (newLang) => {
     try {
       sessionStorage.setItem("language", newLang);
-      getMarker();
-      getInfoWindows();
+      markers = MarkerService.getMarkers();
+      infoWindows = InfoWindowService.getInfoWindows();
       // 기존 마커들 제거
-      boardingMarkers.forEach((e) => {
-        e.setMap(null);
-      });
       markers.forEach((e) => {
         e.setMap(null);
       });
+      zoomMarkers = MarkerService.getZoomMarker();
       zoomMarkers.forEach((e) => {
         e.setMap(null);
       });
@@ -51,8 +49,8 @@ const CustomControl = (() => {
       zoomMarkers = [];
       // 재설정
       await MapService.setting();
-      await MapService.showMarkers();
-      MapService.getZoomEvent();
+      await MarkerService.showMarkers();
+      MarkerService.getZoomEvent();
 
       customControlAllDelete();
       createCustomControl();
@@ -179,17 +177,6 @@ const CustomControl = (() => {
       position: naver.maps.Position.LEFT_TOP,
     });
   };
-  function getMarker() {
-    const markerArray = MapService.getAllMarkers();
-    markers = markerArray[0];
-    boardingMarkers = markerArray[1];
-    zoomMarkers = markerArray[2];
-  }
-  function getInfoWindows() {
-    const infoWindowArray = MapService.getAllInfoWindows();
-    infoWindows = infoWindowArray[0];
-    boardingInfoWindows = infoWindowArray[1];
-  }
   const customControlEvent = () => {
     let mapLangs;
 
@@ -264,7 +251,7 @@ const CustomControl = (() => {
       if (boardingGateNum != null) {
         MapService.moveBoardingGate();
         console.log(boardingGateNum);
-        MapService.openBoardingWindowInfo();
+        Utility.openBoardingWindowInfo();
       } else {
         ModalService.boardingModalOpen();
       }
@@ -351,9 +338,9 @@ const CustomControl = (() => {
       map = MapService.getMap();
       boardingGateNum = sessionStorage.getItem("boardingGate");
       language = MapService.languageReturn();
-      console.log(language);
-      getInfoWindows();
-      getMarker();
+      console.log("language : ", language);
+      InfoWindowService.getInfoWindows();
+      MarkerService.getMarkers();
       createCustomControl();
       customControlEvent();
       customControlSetMap();
