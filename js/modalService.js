@@ -6,12 +6,18 @@ const ModalService = (() => {
   const init = () => {
     language = MapService.languageReturn();
   };
-  const adModalLangChange = () => {
+  const modalLangChange = () => {
+    console.log(language);
     const tryMeal = document.getElementById("modalTryMeal");
     const modalTitle = document.getElementById("modalTitle");
+    const subtext = document.getElementsByClassName("subtext");
     const modalBtn = document.getElementById("reco");
-
+    const gateNum = document.getElementById("input-gateNum");
+    const confirmBtn = document.getElementsByClassName("confirm-btn");
     tryMeal.innerText = language["tryMeal"];
+    subtext[0].innerText = language["subTitle"];
+    gateNum.innerText = language["gateNum"];
+    confirmBtn[0].innerText = language["confirmBtn"];
     modalTitle.innerText = language["modalTitle"];
     modalBtn.innerHTML =
       language["modalBtn"] +
@@ -24,6 +30,7 @@ const ModalService = (() => {
   };
   const adModalClose = () => {
     const modal = document.getElementById("adModal");
+    console.log("modalClose");
     modal.style.setProperty("display", "none");
   };
   const boardingModalOpen = () => {
@@ -36,9 +43,10 @@ const ModalService = (() => {
   };
   return {
     init: () => {
+      console.log("modalService init");
       init();
-      adModalLangChange();
       let modalHeader = document.getElementsByClassName("modal-header");
+      modalLangChange();
       modalHeader.innerHTML = language["gateNum"];
       $(".confirm-btn").click(() => {
         const modal = document.getElementById("modal-background");
@@ -72,6 +80,10 @@ const ModalService = (() => {
           moveBoardingGate.style.display = "flex";
         }
       });
+    },
+    langChange: () => {
+      init();
+      modalLangChange();
     },
     adModalOpen: () => {
       adModalOpen();

@@ -2,33 +2,24 @@
 
 $(document).ready(async () => {
   let map;
-  let boardingGate;
-  try {
-    await MapService.savedLocation();
-    const urlParams = new URLSearchParams(window.location.search);
-    boardingGate = urlParams.get("boardingGate");
-    map = MapService.init();
-  } catch {
-    alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
-    map = MapService.init();
-  }
-  MapService.showBScongestion();
-
-  MapService.showMarkers();
-  MapService.timereset();
-  if (sessionStorage.getItem("render")) {
-    MapService.modalOpen();
-  }
-  // sessionStorage.setItem("render", true);
+  let boardingGate = sessionStorage.getItem("boardingGate");
   let btnIdx = 0;
-  $(".menuBtn").click((e) => {
-    btnIdx = Number(e.currentTarget.dataset.idx);
-    MapService.changeMenu(btnIdx);
-    if (btnIdx === 0) {
-      MapService.showBScongestion();
-      const moveGate = document.getElementsByClassName("eastWest");
+  const initializeServices = async () => {
+    try {
+      sessionStorage.setItem("render", true);
+      await MapService.savedLocation();
+      console.log("사용자 위치 저장 완료");
+      map = await MapService.init();
+      if (!map) {
+        throw new Error("지도 초기화 실패");
+      }
+      await MapService.setting();
+      console.log("MapService 설정 완료");
 
-      await Promise.all([initBottomSheet, initModalService]);
+      initBottomSheet();
+      await initCustomControl();
+      initModalService();
+      console.log("map, modal init 완료");
 
       return { success: true, hasLocation: true };
     } catch (error) {
@@ -38,10 +29,13 @@ $(document).ready(async () => {
         if (!map) {
           throw new Error("지도 초기화 실패");
         }
-        MapService.setting();
+        await MapService.setting();
+        await initCustomControl();
+
         console.log("MapService 설정 완료");
 
         await Promise.all([initBottomSheet, initModalService]);
+        console.log("map, modal init 완료");
 
         return { success: true, hasLocation: false };
       } catch (criticalError) {
@@ -49,70 +43,39 @@ $(document).ready(async () => {
         return { success: false, hasLocation: false, error: criticalError };
       }
     }
-  });
-  $("#modalClose").click(() => {
-    MapService.modalClose();
-  });
-  $("#moveBoardingGate").click(() => {
-    let gateNum = sessionStorage.getItem("boardingGate");
-    MapService.moveGate(gateNum);
-    MapService.openBoardingWindowInfo(gateNum);
-  });
-
-  $("#reco").click(() => {
-    window.open("http://www.naver.com");
-  });
-  $("#toggleCongestion").click(() => {
-    MapService.showBScongestion();
-  });
-  $("#showMenu").click(() => {
-    MapService.showBScongestion();
-  });
-  const moveGate = document.getElementsByClassName("eastWest");
-
-  Array.from(moveGate).forEach((gate, index) => {
-    gate.addEventListener("click", () => {
-      MapService.moveMap(index);
-      MapService.openWindowInfo(index);
-      MapService.changeBorderColor(index);
+  };
+  const initBottomSheet = () => {
+    try {
+      console.log("bottomSheet init");
+      BottomSheet.init();
+    } catch (error) {
+      console.error("bottomSheet init fail : ", error);
+    }
+  };
+  const initCustomControl = async () => {
+    return new Promise((resolve) => {
+      try {
+        setTimeout(async () => {
+          await CustomControl.init();
+          resolve();
+        }, 100);
+      } catch (error) {
+        console.error("CustomControl init error", error);
+      }
     });
   };
   const initModalService = async () => {
-    return new Promise((resolve) => {
-      try {
-        ModalService.init();
-        resolve();
-      } catch (error) {
-        console.error("ModalService 초기화 실패:", error);
-        resolve(); // 실패해도 계속 진행
-      }
-    });
+    await ModalService.init();
   };
-  const isValidBoardingGate = (gateNum) => {
-    const invalidGates = [4, 5, 44];
-    const invalidRanges = [
-      { min: 51, max: 100 },
-      { min: 133, max: Infinity },
-    ];
 
-    if (gateNum == null || invalidGates.includes(Number(gateNum))) {
-      return false;
-    }
-
-    return !invalidRanges.some(
-      (range) => Number(gateNum) > range.min && Number(gateNum) < range.max
-    );
-  };
   const handleMarkerDisplay = async () => {
-    if (isValidBoardingGate(boardingGate)) {
-      try {
-        setTimeout(async () => {
-          await MapService.showMarkers();
-        }, 100);
-        console.log("마커 표시 완료");
-      } catch (error) {
-        console.error("마커 표시 실패:", error);
-      }
+    try {
+      setTimeout(async () => {
+        await MarkerService.showMarkers();
+      }, 100);
+      console.log("마커 표시 완료");
+    } catch (error) {
+      console.error("마커 표시 실패:", error);
     }
   };
 
@@ -162,11 +125,12 @@ $(document).ready(async () => {
         } else {
           console.log("유효한 탑승구로 설정");
           sessionStorage.setItem("boardingGate", boardingGate);
-          MapService.customControlAllDelete();
+          CustomControl.customControlAllDelete();
           // 서비스 재초기화
           await MapService.setting();
+          await initCustomControl();
           BottomSheet.changeMenu(1);
-          await MapService.showMarkers();
+          await MarkerService.showMarkers();
           BottomSheet.trainShow();
 
           // UI 업데이트
@@ -210,22 +174,13 @@ $(document).ready(async () => {
       await handleBoardingGateConfirm();
     });
 
-    $("#modalClose").click(() => {
+    $("#adClose").click(() => {
+      console.log("modalClose");
       ModalService.adModalClose();
     });
 
-    $("#moveBoardingGate").click(async () => {
-      try {
-        let gateNum = sessionStorage.getItem("boardingGate");
-        await MapService.moveGate(gateNum);
-        MapService.openBoardingWindowInfo(gateNum);
-      } catch (error) {
-        console.error("탑승구 이동 오류 : ", error);
-      }
-    });
-
     $("#reco").click(() => {
-      window.open("https://test.drarr0cp4471y.amplifyapp.com/@incheon_airport");
+      window.open("https://test.drarr0cp4471y.amplifyapp.com/incheon_airport");
     });
   };
   const setupGateClickEvents = () => {
@@ -242,9 +197,9 @@ $(document).ready(async () => {
     Array.from(updatedGates).forEach((gate, index) => {
       gate.addEventListener("click", async () => {
         try {
-          MapService.moveMap(index);
-          MapService.openWindowInfo(index);
-          MapService.changeBorderColor(index);
+          Utility.moveGate(index);
+          Utility.openWindowInfo(index);
+          BottomSheet.changeBorderColor(index);
         } catch (error) {
           console.error(`게이트 ${index} 클릭 처리 오류:`, error);
         }
@@ -255,18 +210,20 @@ $(document).ready(async () => {
     if (sessionStorage.getItem("render")) {
       try {
         ModalService.adModalOpen();
+        console.log("admodalopen");
       } catch (error) {
         console.error("광고 모달 열기 실패:", error);
       }
     }
     sessionStorage.setItem("render", true);
   };
+
   if (sessionStorage.getItem("render")) {
     ModalService.adModalOpen();
   }
+
   try {
     console.log("애플리케이션 초기화 시작...");
-
     // 1. 서비스 초기화
     const initResult = await initializeServices();
 
@@ -277,7 +234,6 @@ $(document).ready(async () => {
     if (!initResult.hasLocation) {
       alert("위치 권한을 허용하지 않아 지도 기능이 일부 제한될 수 있습니다.");
     }
-
     // 2. 마커 표시
     await handleMarkerDisplay();
 
@@ -289,7 +245,7 @@ $(document).ready(async () => {
 
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();
-
+    // BottomSheet.recoLikeIconView();
     console.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     console.log(
       "지도가 초기화되었습니다. '마커 추가하기' 버튼을 클릭하여 시작하세요."
