@@ -259,6 +259,8 @@ const BottomSheet = (() => {
     const departureAreas = data.slice(1, 9);
     const eastWest = document.getElementsByClassName("eastWest");
     let idx;
+    console.log(recoArray[0].name);
+    console.log("---------------------------------");
     departureAreas.forEach((departure, index) => {
       if (departure.name == recoArray[0].name) {
         idx = index;
