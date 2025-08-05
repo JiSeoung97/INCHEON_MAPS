@@ -317,13 +317,6 @@ const BottomSheet = (() => {
       menuBtn[1].style.setProperty("border-bottom", "3px solid #212122");
       menuBtn[0].style.setProperty("border-bottom", "1px solid #2121221A");
 
-      // 시간 처리
-      // if (hour > 12) {
-      //   hour = hour - 12;
-      //   ampm = language["pm"];
-      // }
-
-      // 출국장 이름들 번역
       departurehall = [];
       const translationPromises = recoArray
         .slice(0, 3)
@@ -493,6 +486,7 @@ const BottomSheet = (() => {
       try {
         const train = document.getElementById("trainAlert");
         if (boardingGateNum > 100 && boardingGateNum < 133) {
+          console.log("train : ", train);
           train.style.display = "flex";
         }
         resolve();
@@ -865,7 +859,7 @@ const BottomSheet = (() => {
     },
     changeMenu: async (idx) => {
       try {
-        changeMenu(idx);
+        await changeMenu(idx);
       } catch (error) {
         console.error("메뉴 변경 실패 : ", error);
       }
