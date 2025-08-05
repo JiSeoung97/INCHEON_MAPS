@@ -4,7 +4,7 @@ const MarkerService = (() => {
   let markers = [];
   let infoWindows = [];
   let boardingInfoWindows = [];
-  let boardingMarker = [];
+  let boardingMarkers = [];
   let language;
   let areas = [];
   let map;
@@ -72,7 +72,6 @@ const MarkerService = (() => {
             anchor: new naver.maps.Point(21, 30),
           },
         });
-        boardingMarker = marker;
       }
       area.floorInfo = Utility.getDistance(area);
 
@@ -84,7 +83,7 @@ const MarkerService = (() => {
         markers.push(marker);
         infoWindows.push(infoWindow);
       } else {
-        boardingMarker = marker;
+        boardingMarkers.push(marker);
         boardingInfoWindows.push(infoWindow);
       }
 
@@ -264,6 +263,7 @@ const MarkerService = (() => {
       markers.forEach((marker) => {
         marker.setMap(map);
       });
+      console.log("markers : ", markers);
       zoomOutMarkers.forEach((marker) => {
         marker.setMap(null);
       });
@@ -322,7 +322,10 @@ const MarkerService = (() => {
       markers.forEach((marker) => {
         marker.setMap(null);
       });
-      // boardingMarker.setMap(null);
+      boardingMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      boardingMarkers = [];
     } catch (error) {
       console.error("marker가 존재하지 않음");
     }
@@ -333,8 +336,6 @@ const MarkerService = (() => {
       language = MapService.languageReturn();
       map = MapService.getMap();
       const allAreas = DataService.getAllAreas();
-      markers = [];
-      boardingMarker = null;
       for (let index = 0; index < allAreas.length; index++) {
         const area = allAreas[index];
         areas.push(area);
@@ -348,7 +349,7 @@ const MarkerService = (() => {
       return markers;
     },
     createBoardingMarker: (boardingGateNum) => {
-      boardingMarker = null;
+      boardingMarkers = [];
       createMarker(null, null, boardingGateNum);
     },
     allMarkerDelete: () => {
@@ -369,9 +370,9 @@ const MarkerService = (() => {
         boardingGateNum = sessionStorage.getItem("boardingGate");
         console.log("boardingGateNum : ", boardingGateNum);
         if (boardingGateNum != null) {
-          console.log("boardingMarkers : ", boardingMarker);
+          console.log("boardingMarkers : ", boardingMarkers);
           console.log(markers);
-          boardingMarker.setMap(map);
+          boardingMarkers[0].setMap(map);
         }
       } catch (error) {
         console.error("showMarker 실패 : ", error);
@@ -399,7 +400,7 @@ const MarkerService = (() => {
       replaceMarkerIcon(marker);
     },
     replaceBoardingMarkerIcon: () => {
-      replaceBoardingMarkerIcon(boardingMarker);
+      replaceBoardingMarkerIcon(boardingMarkers[0]);
     },
     getZoomMarker: () => {
       return zoomOutMarkers;

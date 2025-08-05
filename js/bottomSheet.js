@@ -577,9 +577,9 @@ const BottomSheet = (() => {
   const calculateAllTimes = async (foundData, foundApi) => {
     try {
       let totalTime = 0;
-
+      boardingGateNum = sessionStorage.getItem("boardingGate");
       // 홀까지 이동 시간
-      const distanceStr = await MapService.getDistance(foundData);
+      const distanceStr = await Utility.getDistance(foundData);
       const distance = Number(distanceStr.replace("M", "").replace(",", ""));
       const hallTime = Math.floor(distance / 60);
       totalTime += hallTime;
@@ -592,10 +592,20 @@ const BottomSheet = (() => {
           : `${hallTime}${language["minute"]}`;
 
       // 탑승구까지 이동 시간
-      const boardingDistance = await MapService.getBoardingDistance(foundData);
-      const boardingTime = Math.floor(boardingDistance / 60);
+      const boardingDistance = await Utility.getDistance(
+        foundData,
+        boardingGateNum
+      );
+      boardingDistance.replace("M", "");
+      console.log(
+        "boardingDistance : ",
+        Number(boardingDistance.replace("M", ""))
+      );
+      const boardingTime = Math.floor(
+        Number(boardingDistance.replace("M", "")) / 60
+      );
       totalTime += boardingTime;
-
+      console.log("boardingTime : ", boardingTime);
       const boardingTimeStr =
         boardingGateNum > 100
           ? `${boardingTime - 10}${language["minute"]}`
