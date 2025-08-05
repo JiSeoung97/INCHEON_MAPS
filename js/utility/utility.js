@@ -10,9 +10,11 @@ const Utility = (() => {
   }
   const getDistance = (area, boardingGateNum) => {
     try {
+      let startLocation = null;
       let targetLocation = null;
       if (boardingGateNum == null) {
         targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+        startLocation = area;
       } else {
         const areas = DataService.getAllAreas();
         areas.forEach((bArea) => {
@@ -20,8 +22,15 @@ const Utility = (() => {
             targetLocation = bArea.position;
           }
         });
+        startLocation = JSON.parse(sessionStorage.getItem("myLocation"));
       }
       if (targetLocation !== null) {
+        console.log(
+          "area : ",
+          area.position,
+          "targetLocation : ",
+          targetLocation
+        );
         const lng1 = area.position.lng;
         const lat1 = area.position.lat;
         const lng2 = targetLocation.lng;
@@ -43,6 +52,7 @@ const Utility = (() => {
           Math.round(
             earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
           ).toLocaleString() + "M";
+        console.log("distance : ", distance);
         return distance;
       }
     } catch (error) {

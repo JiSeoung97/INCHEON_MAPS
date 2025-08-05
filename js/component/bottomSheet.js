@@ -954,5 +954,8 @@ const BottomSheet = (() => {
         }, 300);
       });
     },
+    getRecoArray: () => {
+      return recoArray;
+    },
   };
 })();
