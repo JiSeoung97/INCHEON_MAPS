@@ -67,7 +67,7 @@ const Utility = (() => {
     selectedMarker = MarkerService.getSelectedMarker();
     markers = MarkerService.getMarkers();
     var transition = {
-      duration: 800,
+      duration: 1000,
       easing: "easeOutCubic",
     };
     MarkerService.replaceAllMarkerIcon();

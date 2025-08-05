@@ -213,6 +213,7 @@ const MarkerService = (() => {
     let newIcon;
     let boardingIcon;
     let newContent;
+    console.log("selectedBoardingMarker : ", selectedBoardingMarker);
     markers.forEach((marker, index) => {
       if (index % 2 == 1) {
         newContent = marker
@@ -233,9 +234,9 @@ const MarkerService = (() => {
         ...marker.getIcon(),
         content: newContent,
       };
-      if (selectedBoardingMarker != null) {
+      if (boardingMarkers[0] != null) {
         boardingIcon = {
-          content: selectedBoardingMarker
+          content: boardingMarkers[0]
             .getIcon()
             ["content"].replace("white", "blue")
             .replace("color:#fff", "color:#056CFE")
@@ -244,7 +245,7 @@ const MarkerService = (() => {
           size: new naver.maps.Size(27, 35),
           anchor: new naver.maps.Point(18, 10),
         };
-        selectedBoardingMarker.setIcon(boardingIcon);
+        boardingMarkers[0].setIcon(boardingIcon);
         selectedBoardingMarker = null;
       }
       marker.setIcon(newIcon);
@@ -328,7 +329,6 @@ const MarkerService = (() => {
       boardingMarkers.forEach((marker) => {
         marker.setMap(null);
       });
-      boardingMarkers = [];
     } catch (error) {
       console.error("marker가 존재하지 않음");
     }

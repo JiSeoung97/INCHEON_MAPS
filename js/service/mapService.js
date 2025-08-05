@@ -8,11 +8,9 @@ const MapService = (() => {
   let boardingInfoWindows = [];
   let areas = [];
   let language;
-  let selectedMarker = null;
-  let selectedBoardingMarker = null;
-  let firstlang;
-  let languageText;
-  let ampm;
+  let firstlang = null;
+  let languageText = null;
+  let ampm = null;
   let boardingGateNum;
   let selectedInfowindow = null;
   let zoomOutMarkers = [];
@@ -111,65 +109,17 @@ const MapService = (() => {
     }
   };
 
-  const getMarkerIcon = (area, index) => {
-    let departure = area.name.replace("출국장", "").split(" ");
-    let eastWest;
-    if (departure[1] == "서편") {
-      eastWest = language["west"];
-    } else if (departure[1] == "동편") {
-      eastWest = language["east"];
-    } else {
-      console.log("eastwest error");
-    }
-
-    if (index % 2 == 1) {
-      return (
-        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto;margin-top:10px"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
-        eastWest +
-        "</span>" +
-        '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.6rem; height: 2.6rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 50%;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
-        departure[0] +
-        "</div></div>"
-      );
-    } else {
-      return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:cente;margin-top:10px;width:5rem"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
-        departure[0] +
-        '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
-        eastWest +
-        "</span></div>"
-      );
-    }
-  };
-
-  const getBoardingInfoWindowContent = (areaData) => {
-    let distance = Utility.getDistance(areaData, boardingGateNum);
-    return (
-      '<div class="info-window boardingGate' +
-      '">' +
-      "<h3>" +
-      language["nthGate"].replace("{{number}}", boardingGateNum) +
-      "</h3>" +
-      "<p>" +
-      language["distance"] +
-      ": " +
-      distance +
-      "</p>" +
-      "</div>"
-    );
-  };
   const zoomEvent = () => {
     naver.maps.Event.addListener(map, "zoom_changed", () => {
       console.log("zoomEvent 작동");
+      selectedInfowindow = InfoWindowService.getInfoWindows();
+      console.log("selectedInfowindow : ", selectedInfowindow);
+      MarkerService.replaceAllMarkerIcon();
       MarkerService.getZoomEvent();
       if (map.getZoom() < 18) {
-        if (selectedMarker != null) {
-          console.log("selectedMarker not null");
-          replaceMarkerIcon(selectedMarker);
-        }
-        if (selectedInfowindow != null) {
-          selectedInfowindow.setMap(null);
-        }
+        selectedInfowindow.forEach((infoWindow) => {
+          infoWindow.setMap(null);
+        });
         PolylineService.deletePolyLine();
       } else {
         zoomOutMarkers.forEach((marker) => {
