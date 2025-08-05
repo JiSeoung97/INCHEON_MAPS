@@ -70,7 +70,7 @@ const Utility = (() => {
       duration: 800,
       easing: "easeOutCubic",
     };
-
+    MarkerService.replaceAllMarkerIcon();
     selectedMarker = markers[idx];
     let newPosition = naver.maps.LatLng(
       markers[idx].position._lat - 0.0003,

@@ -4,7 +4,7 @@ const MarkerService = (() => {
   let markers = [];
   let infoWindows = [];
   let boardingInfoWindows = [];
-  let boardingMarker;
+  let boardingMarker = [];
   let language;
   let areas = [];
   let map;
@@ -149,7 +149,7 @@ const MarkerService = (() => {
     replaceAllMarkerIcon();
 
     console.log("selectedMarker : ", selectedMarker);
-    if (selectedMarker != null) {
+    if (selectedMarker == selectMarker) {
       newIcon = {
         ...selectMarker.getIcon(),
         content: selectMarker
@@ -160,7 +160,6 @@ const MarkerService = (() => {
           .replace(";transform:scale(1.2);transform-origin:center;", ";"),
       };
       selectedMarker = null;
-      console.log("selectedMarker----------------------- : ", selectedMarker);
     } else {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -171,8 +170,10 @@ const MarkerService = (() => {
           .replace("background-color:#fff", "background-color:#056CFE")
           .replace(";", ";transform:scale(1.2);transform-origin:center;"),
       };
+
       selectedMarker = selectMarker;
     }
+
     selectMarker.setIcon(newIcon);
   };
   const replaceBoardingMarkerIcon = (selectMarker) => {
@@ -332,6 +333,8 @@ const MarkerService = (() => {
       language = MapService.languageReturn();
       map = MapService.getMap();
       const allAreas = DataService.getAllAreas();
+      markers = [];
+      boardingMarker = null;
       for (let index = 0; index < allAreas.length; index++) {
         const area = allAreas[index];
         areas.push(area);
@@ -345,26 +348,33 @@ const MarkerService = (() => {
       return markers;
     },
     createBoardingMarker: (boardingGateNum) => {
+      boardingMarker = null;
       createMarker(null, null, boardingGateNum);
     },
     allMarkerDelete: () => {
       allMarkerDelete();
     },
     showMarkers: () => {
-      if (map.getZoom() < 18) {
-        zoomOutMarkers.forEach((marker) => {
-          marker.setMap(map);
-        });
-      } else {
-        markers.forEach((marker, index) => {
-          if (index == 9) return;
-          marker.setMap(map);
-        });
-      }
-      boardingGateNum = sessionStorage.getItem("boardingGate");
-      if (boardingGateNum != null) {
-        console.log("boardingMarkers : ", boardingGateNum);
-        boardingMarker.setMap(map);
+      try {
+        if (map.getZoom() < 18) {
+          zoomOutMarkers.forEach((marker) => {
+            marker.setMap(map);
+          });
+        } else {
+          markers.forEach((marker, index) => {
+            if (index >= 9) return;
+            marker.setMap(map);
+          });
+        }
+        boardingGateNum = sessionStorage.getItem("boardingGate");
+        console.log("boardingGateNum : ", boardingGateNum);
+        if (boardingGateNum != null) {
+          console.log("boardingMarkers : ", boardingMarker);
+          console.log(markers);
+          boardingMarker.setMap(map);
+        }
+      } catch (error) {
+        console.error("showMarker 실패 : ", error);
       }
     },
     getZoomEvent: () => {
