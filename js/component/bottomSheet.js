@@ -292,8 +292,10 @@ const BottomSheet = (() => {
 
       if (idx === 0) {
         await handleFirstMenu(menuBtn, controls);
-      } else {
+      } else if (boardingGateNum != null) {
         await handleSecondMenu(menuBtn, controls);
+      } else {
+        ModalService.boardingModalOpen();
       }
     } catch (error) {
       console.error("메뉴 변경 실패:", error);

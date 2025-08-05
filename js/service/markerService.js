@@ -73,9 +73,12 @@ const MarkerService = (() => {
           },
         });
       }
-      area.floorInfo = Utility.getDistance(area);
+      area.floorInfo = Utility.getDistance(area, boardingGateNum);
 
-      const infoWindow = InfoWindowService.createInfoWindow(area);
+      const infoWindow = InfoWindowService.createInfoWindow(
+        area,
+        boardingGateNum
+      );
       naver.maps.Event.addListener(marker, "click", () => {
         markerEvent(marker, infoWindow);
       });

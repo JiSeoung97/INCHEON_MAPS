@@ -207,19 +207,11 @@ $(document).ready(async () => {
   };
   const handleAdModal = () => {
     if (sessionStorage.getItem("render")) {
-      try {
-        ModalService.adModalOpen();
-        console.log("admodalopen");
-      } catch (error) {
-        console.error("광고 모달 열기 실패:", error);
-      }
+      ModalService.adModalOpen();
+      console.log("admodalopen");
     }
     sessionStorage.setItem("render", true);
   };
-
-  if (sessionStorage.getItem("render")) {
-    ModalService.adModalOpen();
-  }
 
   try {
     console.log("애플리케이션 초기화 시작...");

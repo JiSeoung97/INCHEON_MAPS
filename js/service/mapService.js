@@ -181,7 +181,7 @@ const MapService = (() => {
   };
 
   const getBoardingGateIdx = (index) => {
-    return !(
+    return (
       (index > 50 && index < 101) ||
       index > 132 ||
       index == 4 ||
@@ -339,11 +339,11 @@ const MapService = (() => {
     boardingGateIdx: (idx) => {
       return getBoardingGateIdx(idx);
     },
-    alertGateNumCheck: () => {
-      alert(language["checkNum"]);
-    },
     getMap: () => {
       return map;
+    },
+    alertGateNumCheck: () => {
+      alert(language["checkNum"]);
     },
     moveBoardingGate: () => {
       const areaData = DataService.getAllAreas();
