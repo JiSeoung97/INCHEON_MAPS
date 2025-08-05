@@ -116,9 +116,9 @@ $(document).ready(async () => {
         console.log("입력된 탑승구:", boardingGate);
         console.log(
           "MapService.boardingGateIdx(boardingGate) : ",
-          !MapService.boardingGateIdx(boardingGate)
+          MapService.boardingGateIdx(boardingGate)
         );
-        if (!MapService.boardingGateIdx(boardingGate)) {
+        if (MapService.boardingGateIdx(boardingGate)) {
           console.log("유효하지 않은 탑승구");
           MapService.alertGateNumCheck();
           return;
@@ -128,6 +128,7 @@ $(document).ready(async () => {
           CustomControl.customControlAllDelete();
           // 서비스 재초기화
           await initCustomControl();
+          MarkerService.createBoardingMarker(boardingGate);
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
           BottomSheet.trainShow();
