@@ -1,2 +1,8 @@
 index.local.html
-congestion.local.html
+
+# gemini
+.gemini/
+.progress_text/
+congestion2.local.html
+mapService2.js
+test.txt

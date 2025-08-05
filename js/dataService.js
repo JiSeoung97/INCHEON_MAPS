@@ -2,40 +2,19 @@
 
 const DataService = (() => {
   let data = null;
+  let apiDatas = null;
+  let congestions = [];
 
-  const updateCongestionRandomly = () => {
+  const updateCongestion = () => {
     if (!data) return;
-
-    const congestionLevels = ["low", "medium", "high","veryhigh"];
+    Array.from(apiDatas).forEach((apiData) => {
+      congestions.push(calculateCongestionLevel(apiData));
+    });
 
     data.buildings.forEach((building) => {
-      building.areas.forEach((area,idx) => {
-        if(idx!==0&&idx!==9){
-          const randomLevel =
-            congestionLevels[Math.floor(Math.random() * congestionLevels.length)];
-            area.congestion = randomLevel;
-          switch (randomLevel) {
-            case "low":
-              area.count = Math.floor(
-                area.capacity * (Math.random() * 0.3)
-              );
-              break;
-            case "medium":
-              area.count = Math.floor(
-                area.capacity * (0.3 + Math.random() * 0.2)
-              );
-              break;
-            case "high":
-              area.count = Math.floor(
-                area.capacity * (0.4 + Math.random() * 0.3)
-              );
-            case "veryhigh":
-              area.count = Math.floor(
-                area.capacity * (0.5 + Math.random() * 0.2)
-              );
-              break;
-          }
-
+      building.areas.forEach((area, idx) => {
+        if (idx !== 0 && idx !== 9) {
+          area.congestion = congestions[idx];
         }
       });
     });
@@ -45,25 +24,55 @@ const DataService = (() => {
     return data;
   };
 
+  const calculateTotalWaitTime = (item) => {
+    const queueLength = parseInt(item.quelength) || 0;
+    const immigrationTime =
+      item.immigrationtime === "NA" ? 0 : parseInt(item.immigrationtime) || 0;
+    const expectedWaitTime =
+      item.espwaittime === "D" || item.espwaittime === "NA"
+        ? 0
+        : parseInt(item.espwaittime) || 0;
+
+    return queueLength * immigrationTime + expectedWaitTime;
+  };
+
+  // 총 대기시간 기준 혼잡도 계산
+  const calculateCongestionLevel = (item) => {
+    const totalWaitTime = calculateTotalWaitTime(item);
+    // 시간 기준 혼잡도 (초 단위)
+    if (totalWaitTime <= 600) return "low"; // 10분 이하
+    if (totalWaitTime <= 1800) return "medium"; // 30분 이하
+    if (totalWaitTime <= 3600) return "high"; // 1시간 이하
+    return "veryhigh"; // 1시간 초과
+  };
+
   return {
     initData: () => {
       data = window.mockData || null;
+      apiDatas = window.mockData2.data[0].response.body.items.item || null;
 
       if (!data) {
         console.error("모킹 데이터 로드 실패함");
         return null;
       }
-
+      updateCongestion();
       return data;
     },
 
     getAllData: () => {
       return data;
     },
-
+    getApiData: () => {
+      return apiDatas;
+    },
+    getTotalWaitTime: (item) => {
+      return calculateTotalWaitTime(item);
+    },
     getCompanyLocation: () => {
-      if (!data) return null;
-
+      if (!data) {
+        console.log("data", data);
+        return null;
+      }
       return data.companyLocation;
     },
 
@@ -97,8 +106,10 @@ const DataService = (() => {
     },
 
     getAllAreas: () => {
-      if (!data) return null;
-
+      if (!data) {
+        console.log(data);
+        return null;
+      }
       const allAreas = [];
       data.buildings.forEach((building) => {
         building.areas.forEach((area) => {
