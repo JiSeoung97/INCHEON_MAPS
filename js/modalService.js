@@ -48,38 +48,6 @@ const ModalService = (() => {
       let modalHeader = document.getElementsByClassName("modal-header");
       modalLangChange();
       modalHeader.innerHTML = language["gateNum"];
-      $(".confirm-btn").click(() => {
-        const modal = document.getElementById("modal-background");
-        modal.style.display = "none";
-        const gateNum = document.getElementsByClassName("gate-input")[0];
-        let boardingGate = gateNum.value;
-        console.log(boardingGate);
-
-        if (
-          (boardingGate < 101 && boardingGate > 50) ||
-          boardingGate > 132 ||
-          boardingGate == null ||
-          boardingGate == 4 ||
-          boardingGate == 5 ||
-          boardingGate == 44
-        ) {
-          MapService.alertGateNumCheck();
-        } else {
-          sessionStorage.setItem("boardingGate", boardingGate);
-          const boardingInfo = document.getElementById("boardingInfo");
-          const langSelect = document.getElementById("selectlang");
-          if (boardingInfo != null) {
-            boardingInfo.remove();
-          }
-          MapService.init();
-          BottomSheet.changeMenu(1);
-          MapService.showMarkers();
-          BottomSheet.trainShow();
-          const moveBoardingGate = document.getElementById("moveBoardingGate");
-
-          moveBoardingGate.style.display = "flex";
-        }
-      });
     },
     langChange: () => {
       init();
