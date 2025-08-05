@@ -298,9 +298,6 @@ const MapService = (() => {
         for (let index = 0; index < allAreas.length; index++) {
           const area = allAreas[index];
           areas.push(area);
-          if (index < 10) {
-            console.log("DepartureMarker 생성");
-          }
         }
 
         ampm = language["am"];

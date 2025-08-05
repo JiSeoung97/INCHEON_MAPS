@@ -127,7 +127,6 @@ $(document).ready(async () => {
           sessionStorage.setItem("boardingGate", boardingGate);
           CustomControl.customControlAllDelete();
           // 서비스 재초기화
-          await MapService.setting();
           await initCustomControl();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
