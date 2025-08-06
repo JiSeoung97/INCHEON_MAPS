@@ -15,12 +15,13 @@ const utLocation = (() => {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
-            if (limitLocation(userLocation)) {
-              resolve(userLocation);
-            } else {
-              alert("인천공항 내부에서만 이용할 수 있습니다.");
-              resolve();
-            }
+            // if (limitLocation(userLocation)) {
+            console.log("userLocation : ", userLocation);
+            resolve(userLocation);
+            // } else {
+            //   alert("인천공항 내부에서만 이용할 수 있습니다.");
+            //   resolve();
+            // }
           },
           (error) => {
             console.error("위치 정보 가져오기 실패", error);
@@ -35,9 +36,9 @@ const utLocation = (() => {
       }
     });
   };
-  const savedLocation = async () => {
+  const savedLocation = async (location) => {
     try {
-      const position = await getCurrentPosition();
+      const position = location;
       const locationData = {
         lat: position.lat,
         lng: position.lng,
@@ -71,8 +72,8 @@ const utLocation = (() => {
     getCurrentPosition: async () => {
       return await getCurrentPosition();
     },
-    savedLocation: async () => {
-      await savedLocation();
+    savedLocation: async (location) => {
+      await savedLocation(location);
     },
   };
 })();

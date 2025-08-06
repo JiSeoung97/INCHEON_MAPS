@@ -307,27 +307,34 @@ table th:nth-child(3) {
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 150px;
+  height: 100%;
   display: none; /* 숨김 상태 */
-  align-items: flex-start;
+  align-items: center;
+  background-color: #00000080;
   justify-content: center;
   z-index: 4000;
   padding-top: 20px;
 }
 .modal-content {
   background: #fff;
-  border-radius: 15px;
-  width: 80%;
-  max-width: 25rem;
-  min-height: 150px; /* 필요에 따라 조절 */
+  border-radius: 2rem;
+  width: 22rem;
+  height: 27.5rem; /* 필요에 따라 조절 */
+  padding: 1rem;
   position: relative;
 }
 #imgBox {
   display: inline-flex;
-  height: 120px;
-  width: 30%;
+  height: 8rem;
+  width: 100%;
   align-items: center;
   justify-content: center;
+}
+#modelImg {
+  height: 6rem;
+  width: 6rem;
+  border-radius: 50%;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 #modalClose {
   padding-top: 5px;
@@ -337,6 +344,7 @@ table th:nth-child(3) {
 }
 #modal-contents {
   display: flex;
+  flex-direction: column;
   align-items: center;
 }
 #modalText {

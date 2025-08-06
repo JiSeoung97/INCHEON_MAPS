@@ -260,8 +260,8 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
       try {
-        const userPos = await MapService.getCurrentPosition();
-        //JSON.parse(sessionStorage.getItem("myLocation"));
+        const userPos = await utLocation.getCurrentPosition();
+
         const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
         if (userPos) {
           map.getCenter();

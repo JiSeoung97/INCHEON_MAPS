@@ -88,7 +88,7 @@ const Utility = (() => {
     );
     console.log(map);
     map.panTo(newPosition, transition);
-    await delay(800);
+    await delay(1000);
     setTimeout(() => {
       if (map.getZoom() <= 17) {
         map.setZoom(18, true);
