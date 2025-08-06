@@ -357,6 +357,7 @@ const MarkerService = (() => {
         boardingMarkers = [];
       }
       createMarker(null, null, boardingGateNum);
+      return boardingMarkers[0];
     },
     allMarkerDelete: () => {
       allMarkerDelete();

@@ -19,6 +19,7 @@ const CustomControl = (() => {
   let langchangeCon;
   let map;
   let movePosition = null;
+  let userMarker = [];
   const positions = [
     naver.maps.Position.TOP_LEFT,
     naver.maps.Position.LEFT_TOP,
@@ -257,8 +258,9 @@ const CustomControl = (() => {
       }
     });
 
-    naver.maps.Event.addDOMListener(locaCon.getElement(), "click", () => {
-      const userPos = JSON.parse(sessionStorage.getItem("myLocation"));
+    naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
+      const userPos = await MapService.getCurrentPosition();
+      //JSON.parse(sessionStorage.getItem("myLocation"));
       const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
       if (userPos) {
         map.getCenter();
@@ -271,10 +273,20 @@ const CustomControl = (() => {
             content:
               '<img src="./images/user_Location.png" style="width:30px;height:30px">',
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(7, 10),
+            anchor: new naver.maps.Point(7, 14),
           },
         });
+        if (userMarker[0] != null) {
+          userMarker.forEach((uMarker) => {
+            uMarker.setMap(null);
+          });
+        }
         marker.setMap(map);
+        userMarker.push(marker);
+        const boardingPolyline = PolylineService.getBoardingPolyline();
+        if (boardingPolyline != null) {
+          PolylineService.updatePolyline();
+        }
       } else {
         alert("위치 정보가 없습니다.");
       }

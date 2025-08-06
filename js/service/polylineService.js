@@ -3,6 +3,8 @@
 const PolylineService = (() => {
   let polylines = [];
   let map;
+  let boardingMarker;
+  let boardingPolyline = null;
   const createPolyline = (markers) => {
     console.log("createPolyline");
     console.log("markers : ", markers);
@@ -19,6 +21,32 @@ const PolylineService = (() => {
       polylines.push(polyline);
     }
   };
+  const createBoardingPolyline = async (marker) => {
+    const userLocation = await MapService.getCurrentPosition();
+    boardingMarker = marker;
+    boardingPolyline = new naver.maps.Polyline({
+      map: null,
+      path: [userLocation, marker.position],
+      clickable: false,
+      strokeColor: "#2E90FA",
+      strokeOpacity: 1,
+      strokeWeight: 1,
+      strokeLineCap: "butt",
+      strokeStyle: "longdash",
+    });
+    console.log("boardingPolyline : ", boardingPolyline);
+  };
+
+  const updatePolyline = async () => {
+    const userLocation = await MapService.getCurrentPosition();
+    boardingPolyline.setPath(boardingMarker, userLocation);
+  };
+
+  const setPolyline = () => {
+    console.log(boardingPolyline);
+    boardingPolyline.setMap(map);
+  };
+
   const deletePolyLine = async () => {
     try {
       polylines.forEach((polyline) => {
@@ -51,6 +79,22 @@ const PolylineService = (() => {
     },
     viewPolyLine: () => {
       viewPolyLine();
+    },
+    createBoardingPolyline: async (boardingMarker) => {
+      if (boardingPolyline != null) {
+        boardingPolyline.setMap(null);
+        boardingPolyline = null;
+      }
+      await createBoardingPolyline(boardingMarker);
+    },
+    updatePolyline: () => {
+      updatePolyline();
+    },
+    setPolyline: () => {
+      setPolyline();
+    },
+    getBoardingPolyline: () => {
+      return boardingPolyline;
     },
   };
 })();

@@ -127,13 +127,16 @@ $(document).ready(async () => {
           sessionStorage.setItem("boardingGate", boardingGate);
           CustomControl.customControlAllDelete();
           // 서비스 재초기화
-          MarkerService.createBoardingMarker(boardingGate);
+          const boardingMarker =
+            MarkerService.createBoardingMarker(boardingGate);
           CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
 
           // UI 업데이트
           updateBoardingGateUI();
+          await PolylineService.createBoardingPolyline(boardingMarker);
+          PolylineService.setPolyline();
         }
       } catch (error) {
         console.error("탑승구 확인 처리 오류:", error);

@@ -316,5 +316,8 @@ const MapService = (() => {
         }
       });
     },
+    getCurrentPosition: async () => {
+      return await getCurrentPosition();
+    },
   };
 })();
