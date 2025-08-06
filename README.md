@@ -27,6 +27,7 @@ Map_Web_Vanilla-master/
 ㅣ   ㅣ   ㄴ-- polylineService.js => polyline 생성 및 관리
 ㅣ   ㅣ
 ㅣ   ㅣ-- utility/
+ㅣ   ㅣ   ㅣ-- location.js => 유저 현재위치
 ㅣ   ㅣ   ㄴ-- utility.js => 계산로직
 ㅣ   ㅣ
 ㅣ   ㄴ-- main.js

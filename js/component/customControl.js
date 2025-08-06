@@ -259,37 +259,42 @@ const CustomControl = (() => {
     });
 
     naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
-      const userPos = await MapService.getCurrentPosition();
-      //JSON.parse(sessionStorage.getItem("myLocation"));
-      const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
-      if (userPos) {
-        map.getCenter();
-        map.setCenter(latLng);
-        const marker = new naver.maps.Marker({
-          position: new naver.maps.LatLng(latLng),
-          map: null,
-          title: "내 위치",
-          icon: {
-            content:
-              '<img src="./images/user_Location.png" style="width:30px;height:30px">',
-            size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(7, 14),
-          },
-        });
-        if (userMarker[0] != null) {
-          userMarker.forEach((uMarker) => {
-            uMarker.setMap(null);
+      try {
+        const userPos = await MapService.getCurrentPosition();
+        //JSON.parse(sessionStorage.getItem("myLocation"));
+        const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
+        if (userPos) {
+          map.getCenter();
+          map.setCenter(latLng);
+          const marker = new naver.maps.Marker({
+            position: new naver.maps.LatLng(latLng),
+            map: null,
+            title: "내 위치",
+            icon: {
+              content:
+                '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+              size: new naver.maps.Size(27, 35),
+              anchor: new naver.maps.Point(7, 14),
+            },
           });
+          if (userMarker[0] != null) {
+            userMarker.forEach((uMarker) => {
+              uMarker.setMap(null);
+            });
+          }
+          marker.setMap(map);
+          userMarker.push(marker);
+          const boardingPolyline = PolylineService.getBoardingPolyline();
+          console.log("boardingPolyline : ", boardingPolyline);
+          if (boardingPolyline != null) {
+            PolylineService.updatePolyline();
+          }
+        } else {
+          alert("위치 정보가 없습니다.");
         }
-        marker.setMap(map);
-        userMarker.push(marker);
-        const boardingPolyline = PolylineService.getBoardingPolyline();
-        console.log("boardingPolyline : ", boardingPolyline);
-        if (boardingPolyline != null) {
-          PolylineService.updatePolyline();
-        }
-      } else {
-        alert("위치 정보가 없습니다.");
+      } catch (error) {
+        alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
+        console.log("위치 권한 오류: " + error.message, "error");
       }
     });
   };

@@ -7,7 +7,7 @@ $(document).ready(async () => {
   const initializeServices = async () => {
     try {
       sessionStorage.setItem("render", true);
-      await MapService.savedLocation();
+      await utLocation.savedLocation();
       console.log("사용자 위치 저장 완료");
       map = await MapService.init();
       if (!map) {

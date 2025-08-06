@@ -22,7 +22,7 @@ const PolylineService = (() => {
     }
   };
   const createBoardingPolyline = async (marker) => {
-    const userLocation = await MapService.getCurrentPosition();
+    const userLocation = await utLocation.getCurrentPosition();
     boardingMarker = marker;
     boardingPolyline = new naver.maps.Polyline({
       map: null,
@@ -38,7 +38,7 @@ const PolylineService = (() => {
   };
 
   const updatePolyline = async (boardingGateNum) => {
-    const userLocation = await MapService.getCurrentPosition();
+    const userLocation = await utLocation.getCurrentPosition();
     let areas = DataService.getAllAreas();
     if (boardingGateNum != null) {
       areas.find((area) => area.name === "탑승게이트" + boardingGateNum);

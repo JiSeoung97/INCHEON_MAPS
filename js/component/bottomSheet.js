@@ -186,7 +186,7 @@ const BottomSheet = (() => {
   };
   const resetAllBorderColor = () => {
     const div = document.querySelectorAll(".eastWest div");
-    div.forEach((divBox, boxIndex) => {
+    div.forEach((divBox) => {
       divBox.style.setProperty("border-color", "#E8E8E8");
     });
   };
