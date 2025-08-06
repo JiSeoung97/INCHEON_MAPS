@@ -284,6 +284,7 @@ const CustomControl = (() => {
         marker.setMap(map);
         userMarker.push(marker);
         const boardingPolyline = PolylineService.getBoardingPolyline();
+        console.log("boardingPolyline : ", boardingPolyline);
         if (boardingPolyline != null) {
           PolylineService.updatePolyline();
         }

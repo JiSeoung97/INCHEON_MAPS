@@ -135,8 +135,12 @@ $(document).ready(async () => {
 
           // UI 업데이트
           updateBoardingGateUI();
-          await PolylineService.createBoardingPolyline(boardingMarker);
-          PolylineService.setPolyline();
+          if (PolylineService.getBoardingPolyline() != null) {
+            PolylineService.updatePolyline();
+          } else {
+            await PolylineService.createBoardingPolyline(boardingMarker);
+            PolylineService.setPolyline();
+          }
         }
       } catch (error) {
         console.error("탑승구 확인 처리 오류:", error);

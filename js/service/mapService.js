@@ -243,6 +243,10 @@ const MapService = (() => {
         if (boardingGateNum != null) {
           console.log("BoardingMarker 생성");
           await MarkerService.createBoardingMarker(boardingGateNum);
+          boardingMarkers = MarkerService.getBoardingMarker();
+          console.log("boardingMarkers : ", boardingMarkers[0][0]);
+          await PolylineService.createBoardingPolyline(boardingMarkers[0]);
+          PolylineService.setPolyline();
         } else {
           console.error("boardingMarker 생성 실패");
         }

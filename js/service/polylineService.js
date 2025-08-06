@@ -37,9 +37,16 @@ const PolylineService = (() => {
     console.log("boardingPolyline : ", boardingPolyline);
   };
 
-  const updatePolyline = async () => {
+  const updatePolyline = async (boardingGateNum) => {
     const userLocation = await MapService.getCurrentPosition();
-    boardingPolyline.setPath(boardingMarker, userLocation);
+    let areas = DataService.getAllAreas();
+    if (boardingGateNum != null) {
+      areas.find((area) => area.name === "탑승게이트" + boardingGateNum);
+      boardingPolyline.setPath([areas, userLocation]);
+    } else {
+      let xy = { x: boardingMarker.position.x, y: boardingMarker.position.y };
+      boardingPolyline.setPath([xy, userLocation]);
+    }
   };
 
   const setPolyline = () => {
@@ -87,8 +94,8 @@ const PolylineService = (() => {
       }
       await createBoardingPolyline(boardingMarker);
     },
-    updatePolyline: () => {
-      updatePolyline();
+    updatePolyline: (boardingGateNum = null) => {
+      updatePolyline(boardingGateNum);
     },
     setPolyline: () => {
       setPolyline();

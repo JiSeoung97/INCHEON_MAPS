@@ -412,5 +412,8 @@ const MarkerService = (() => {
     getZoomMarker: () => {
       return zoomOutMarkers;
     },
+    getBoardingMarker: () => {
+      return boardingMarkers;
+    },
   };
 })();
