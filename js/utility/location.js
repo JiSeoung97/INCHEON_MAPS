@@ -39,15 +39,10 @@ const utLocation = (() => {
   const savedLocation = async (location) => {
     try {
       const position = location;
-      console.log(position);
       const locationData = {
         lat: position.lat,
         lng: position.lng,
       };
-      console.log(
-        "JSON.stringify(locationData) : ",
-        JSON.stringify(locationData)
-      );
       sessionStorage.setItem("myLocation", JSON.stringify(locationData));
       return locationData;
     } catch (error) {

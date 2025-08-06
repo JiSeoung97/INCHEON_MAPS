@@ -1,6 +1,7 @@
 "use strict";
 
 const TimeCalculator = (() => {
+  let boardingGateNum;
   const timereset = async () => {
     return new Promise((resolve) => {
       try {
@@ -34,6 +35,7 @@ const TimeCalculator = (() => {
   const calculateAllTimes = async (foundData, foundApi) => {
     try {
       let totalTime = 0;
+      let language = MapService.languageReturn();
       boardingGateNum = sessionStorage.getItem("boardingGate");
       // 홀까지 이동 시간
       const distanceStr = await Utility.getDistance(foundData);
@@ -54,15 +56,10 @@ const TimeCalculator = (() => {
         boardingGateNum
       );
       boardingDistance.replace("M", "");
-      console.log(
-        "boardingDistance : ",
-        Number(boardingDistance.replace("M", ""))
-      );
       const boardingTime = Math.floor(
         Number(boardingDistance.replace("M", "")) / 60
       );
       totalTime += boardingTime;
-      console.log("boardingTime : ", boardingTime);
       const boardingTimeStr =
         boardingGateNum > 100
           ? `${boardingTime - 10}${language["minute"]}`

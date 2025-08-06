@@ -25,12 +25,6 @@ const Utility = (() => {
         startLocation = JSON.parse(sessionStorage.getItem("myLocation"));
       }
       if (targetLocation !== null) {
-        console.log(
-          "area : ",
-          area.position,
-          "targetLocation : ",
-          targetLocation
-        );
         const lng1 = area.position.lng;
         const lat1 = area.position.lat;
         const lng2 = targetLocation.lng;
@@ -52,7 +46,6 @@ const Utility = (() => {
           Math.round(
             earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
           ).toLocaleString() + "M";
-        console.log("distance : ", distance);
         return distance;
       }
     } catch (error) {
@@ -101,7 +94,6 @@ const Utility = (() => {
     markers = MarkerService.getMarkers();
     let infoWindows = InfoWindowService.getInfoWindows();
     let selectedInfowindow = MarkerService.getSelectedInfowindow();
-    const areas = DataService.getAllAreas();
     let idx = index;
     if (index == null) {
       idx = infoWindows.length - 1;
@@ -110,7 +102,6 @@ const Utility = (() => {
       selectedInfowindow = infoWindows[idx];
       infoWindows[idx].open(map, markers[idx]);
     }
-    console.log(areas[idx]);
   };
   const translateAreaName = (areaName, language) => {
     if (areaName.includes("출국장")) {

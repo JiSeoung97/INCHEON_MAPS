@@ -206,7 +206,6 @@ const BottomSheet = (() => {
         .slice(0, 3)
         .map((reco) => Translate.transName(reco.name));
       departurehall = await Promise.all(translationPromises);
-
       const innerHTML = createSecondMenuHTML();
       controls.innerHTML = innerHTML;
 
@@ -355,7 +354,6 @@ const BottomSheet = (() => {
     try {
       const ranks = [language["first"], language["second"], language["third"]];
       const recoRank = document.getElementsByClassName("reco-rank");
-
       Array.from(recoRank).forEach((rank, idx) => {
         if (idx < departurehall.length) {
           rank.innerHTML = `<div>${departurehall[idx]} <small>(${ranks[idx]})</small></div>`;

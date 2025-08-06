@@ -28,7 +28,6 @@ const RecoService = (() => {
         }
       }
 
-      console.log("배열 타입:", Array.isArray(recoArray));
       recoArray.sort((a, b) => a.time - b.time);
 
       console.log("추천 게이트 계산 완료:", recoArray);
@@ -53,14 +52,12 @@ const RecoService = (() => {
     const eastWest = document.getElementsByClassName("eastWest");
     let idx;
     departureAreas.forEach((departure, index) => {
-      console.log("departure : ", departure, " recoArray[0] : ", recoArray[0]);
       if (departure.name == recoArray[0].name) {
         idx = index;
         console.log(departure.name, idx);
       }
     });
     eastWest[idx].getElementsByClassName("like-icon")[0].style.display = "flex";
-    console.log(eastWest[idx].getElementsByClassName("like-icon")[0]);
   };
 
   return {

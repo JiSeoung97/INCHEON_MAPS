@@ -53,7 +53,7 @@ const Translate = (() => {
 
   return {
     transName: (name) => {
-      transName(name);
+      return transName(name);
     },
     translateMenu: async () => {
       try {
