@@ -100,11 +100,17 @@ const BottomSheet = (() => {
   const changeBorderColor = async (index) => {
     try {
       const allareas = DataService.getAllAreas();
-      let idx = 0;
-
-      idx = index + 1;
+      let idx = index + 1;
       const div = document.querySelectorAll(".eastWest div");
-      div.forEach((divBox, boxIndex) => {
+
+      let eastWest = [];
+      div.forEach((a, divIndex) => {
+        if (divIndex % 2 == 0) {
+          eastWest.push(a);
+        }
+      });
+      console.log("eastWest : ", eastWest);
+      eastWest.forEach((divBox, boxIndex) => {
         if (index == boxIndex) {
           divBox.style.setProperty(
             "border-color",
@@ -489,22 +495,11 @@ const BottomSheet = (() => {
         console.error("추천 이벤트 설정 실패:", error);
       }
     },
-    changeBorderColor: (index) => {
-      changeBorderColor();
+    changeBorderColor: async (index) => {
+      await changeBorderColor(index);
     },
     resetAllBorderColor: () => {
       resetAllBorderColor();
-    },
-    animateToPosition: (position) => {
-      return new Promise((resolve) => {
-        bottomSheet.style.transition = "bottom 0.3s ease";
-        updatePosition(position);
-        currentPosition = position;
-
-        setTimeout(() => {
-          resolve();
-        }, 300);
-      });
     },
   };
 })();
