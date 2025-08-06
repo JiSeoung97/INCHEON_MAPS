@@ -126,7 +126,7 @@ const MapService = (() => {
         console.log("setting 시작");
         DataService.initData();
         PolylineService.init();
-        await BottomSheet.recoGate();
+        await RecoService.recoGate();
         await MarkerService.init();
         boardingGateNum = sessionStorage.getItem("boardingGate");
         console.log("boardingGateNum :", boardingGateNum);
@@ -159,7 +159,8 @@ const MapService = (() => {
 
         ampm = language["am"];
         await BottomSheet.changeMenu();
-        await BottomSheet.translateMenu();
+        await DragService.init();
+        await Translate.translateMenu();
         if (polylines[0] == null) {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
