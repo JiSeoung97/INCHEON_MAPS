@@ -62,14 +62,14 @@ const MarkerService = (() => {
           title: area.name,
           icon: {
             content:
-              '<div style="font-size:0.7rem;display:flex ;justify-content:center;align-items:center;width:auto;flex-direction:column"><div class = "boarding-icon" style="display: flex;font-size:1.25rem;font-weight: Semibold;padding-top:0.3125rem;flex-direction:column;height:2rem;width:2.5rem; border-radius: 0.5rem 0.5rem 0 0;border: 1px solid #BDBDBD; background-color:#fff;color:#056CFE;justify-content:center;align-items:center;"><img src="./images/flight_blue.svg" style="width:10px; height = 10px;">' +
+              '<div style="font-size:0.7rem;display:flex ;justify-content:center;align-items:center;width:auto;flex-direction:column"><div class = "boarding-icon" style="display: flex;font-size:1.25rem;font-weight:bold;padding-top:0.3125rem;flex-direction:column;height:2rem;width:2.5rem; border-radius: 0.5rem 0.5rem 0.2rem 0.2rem;border: 1px solid #BDBDBD; background-color:#fff;color:#056CFE;justify-content:center;align-items:center;"><p style="font-size:0.4rem;font-weight:semibold">GATE<p>' +
               boardingGateNum +
               '</div><span style ="display:flex;width:100%;text-align:center;justify-content:center;align-items:center;">' +
               language["boardingGate"] +
               boardingGateNum +
               "</span></div>",
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(21, 30),
+            anchor: new naver.maps.Point(40, 20),
           },
         });
       }
@@ -133,7 +133,7 @@ const MarkerService = (() => {
     let departure = area.name.replace("출국장", "").split(" ");
 
     return (
-      '<div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+      '<div style="display:flex;flex-direction: column;align-items: center;justify-content:center "><div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
       departure[0] +
       '</div><span style="display:flex;flex-direction:row;height:auto;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
       language["departurehall"] +
@@ -191,7 +191,7 @@ const MarkerService = (() => {
           .replace("background-color:#056CFE", "background-color:#fff")
           .replace(";transform:scale(1.2);transform-origin:center;", ";"),
         size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(18, 10),
+        anchor: new naver.maps.Point(40, 20),
       };
       selectedBoardingMarker = null;
     } else {
@@ -203,7 +203,7 @@ const MarkerService = (() => {
           .replace("background-color:#fff", "background-color:#056CFE")
           .replace(";", ";transform:scale(1.2);transform-origin:center;"),
         size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(18, 10),
+        anchor: new naver.maps.Point(40, 20),
       };
       selectedBoardingMarker = selectMarker;
     }
@@ -243,7 +243,7 @@ const MarkerService = (() => {
             .replace("background-color:#056CFE", "background-color:#fff")
             .replace(";transform:scale(1.2);transform-origin:center;", ";"),
           size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(18, 10),
+          anchor: new naver.maps.Point(40, 20),
         };
         boardingMarkers[0].setIcon(boardingIcon);
         selectedBoardingMarker = null;

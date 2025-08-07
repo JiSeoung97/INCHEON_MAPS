@@ -21,7 +21,7 @@ const mockData = {
         {
           id: "DG2_W",
           name: "2출국장 서편",
-          position: { lat: 37.45021, lng: 126.4531 },
+          position: { lat: 37.45016, lng: 126.45286 },
           congestion: "medium",
           count: 45,
           capacity: 80,
@@ -32,7 +32,7 @@ const mockData = {
         {
           id: "DG2_E",
           name: "2출국장 동편",
-          position: { lat: 37.450265, lng: 126.4536 },
+          position: { lat: 37.45021, lng: 126.45328 },
           congestion: "low",
           count: 12,
           capacity: 50,
@@ -43,7 +43,7 @@ const mockData = {
         {
           id: "DG3_W",
           name: "3출국장 서편",
-          position: { lat: 37.449925, lng: 126.45187 },
+          position: { lat: 37.44982, lng: 126.4516 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -54,7 +54,7 @@ const mockData = {
         {
           id: "DG3_E",
           name: "3출국장 동편",
-          position: { lat: 37.45008, lng: 126.45242 },
+          position: { lat: 37.44995, lng: 126.452 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -65,7 +65,7 @@ const mockData = {
         {
           id: "DG4_W",
           name: "4출국장 서편",
-          position: { lat: 37.448385, lng: 126.449415 },
+          position: { lat: 37.4486, lng: 126.44964 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -76,7 +76,7 @@ const mockData = {
         {
           id: "DG4_E",
           name: "4출국장 동편",
-          position: { lat: 37.448735, lng: 126.44979 },
+          position: { lat: 37.44884, lng: 126.44993 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -87,7 +87,7 @@ const mockData = {
         {
           id: "DG5_W",
           name: "5출국장 서편",
-          position: { lat: 37.44752, lng: 126.4488 },
+          position: { lat: 37.44773, lng: 126.44894 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -98,7 +98,7 @@ const mockData = {
         {
           id: "DG5_E",
           name: "5출국장 동편",
-          position: { lat: 37.44792, lng: 126.449045 },
+          position: { lat: 37.44805, lng: 126.44918 },
           congestion: "veryhigh",
           count: 120,
           capacity: 150,
@@ -883,11 +883,17 @@ const mockData = {
       ],
     },
   ],
+  bank: {
+    name: "하나은행",
+    position: { lat: 37.44908, lng: 126.448566 },
+    decription: "탑승구 29번 옆",
+  },
 
   companyLocation: {
     name: "1번 키오스크",
     position: { lat: 37.447, lng: 126.4493 },
     description: "1출국장 5번출구 앞",
+    areas: [],
   },
 
   lastUpdated: new Date().toISOString(),

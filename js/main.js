@@ -137,10 +137,12 @@ $(document).ready(async () => {
           // UI 업데이트
           updateBoardingGateUI();
           if (PolylineService.getBoardingPolyline() != null) {
-            PolylineService.updatePolyline();
+            await PolylineService.updatePolyline(boardingGate);
+            console.log("polyline update");
           } else {
             await PolylineService.createBoardingPolyline(boardingMarker);
             PolylineService.setPolyline();
+            console.log("polyline create");
           }
         }
       } catch (error) {
@@ -240,7 +242,7 @@ $(document).ready(async () => {
     setupEventListeners();
 
     // 4. 광고 모달 처리
-    handleAdModal();
+    // handleAdModal();
 
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();

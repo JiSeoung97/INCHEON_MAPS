@@ -2,7 +2,6 @@
 
 const BottomSheet = (() => {
   let language;
-  let bottomSheet;
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
