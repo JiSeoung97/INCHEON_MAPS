@@ -317,9 +317,9 @@ table th:nth-child(3) {
 }
 .modal-content {
   background: #fff;
-  border-radius: 2rem;
+  border-radius: 1rem;
   width: 22rem;
-  height: 27.5rem; /* 필요에 따라 조절 */
+  height: 25rem; /* 필요에 따라 조절 */
   padding: 1rem;
   position: relative;
 }
@@ -327,8 +327,20 @@ table th:nth-child(3) {
   display: inline-flex;
   height: 8rem;
   width: 100%;
+  margin-bottom: 1rem;
   align-items: center;
   justify-content: center;
+}
+#modalTryMeal {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+#modalTitle {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00000080;
 }
 #modelImg {
   height: 6rem;
@@ -345,27 +357,21 @@ table th:nth-child(3) {
 #modal-contents {
   display: flex;
   flex-direction: column;
+  height: 100%;
   align-items: center;
 }
 #modalText {
   flex: 1;
 }
-#modalText p:nth-child(1) {
-  font-size: 12px;
-  text-align: left;
-  font-weight: bold;
-}
-#modalText p:nth-child(2) {
-  font-size: 18;
-  font-weight: bold;
-  text-align: left;
-  font-weight: bold;
-}
+
 #reco {
+  margin-bottom: 2.5rem;
+  margin-top: auto;
   padding-top: 5px;
   padding-bottom: 5px;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 1.25rem;
+  height: 3rem;
   width: 90%;
   border-radius: 5px;
   border: 3px;
@@ -386,8 +392,8 @@ table th:nth-child(3) {
   font-size: 10.29px;
 }
 #arrow-right {
-  padding-top: 3px;
-  height: 18px;
+  padding-top: 0.25rem;
+  height: 1.2rem;
   object-fit: cover;
 }
 #handle {

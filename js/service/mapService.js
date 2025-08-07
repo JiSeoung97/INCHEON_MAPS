@@ -124,6 +124,16 @@ const MapService = (() => {
     setting: async () => {
       try {
         console.log("setting 시작");
+        let lang = sessionStorage.getItem("language");
+        firstlang = lang;
+        if (lang == null) {
+          languageText = "Language";
+          lang = "ko";
+          language = await loadTranslateData(lang);
+        } else {
+          language = await loadTranslateData(lang);
+          languageText = language[lang];
+        }
         DataService.initData();
         PolylineService.init();
         await RecoService.recoGate();
@@ -136,7 +146,7 @@ const MapService = (() => {
           return map;
         }
         const allAreas = DataService.getAllAreas();
-        MarkerService.allMarkerDelete();
+        await MarkerService.allMarkerDelete();
         markers = [];
         boardingMarkers = [];
         infoWindows = [];

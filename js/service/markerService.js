@@ -338,6 +338,18 @@ const MarkerService = (() => {
     init: async () => {
       language = MapService.languageReturn();
       map = MapService.getMap();
+      if (markers[0] != null) {
+        markers.forEach((marker) => {
+          marker.setMap(null);
+
+          console.log("maker.setMap(null) 작동함");
+        });
+        zoomOutMarkers.forEach((marker) => {
+          marker.setMap(null);
+        });
+      }
+      zoomOutMarkers = [];
+      markers = [];
       const allAreas = DataService.getAllAreas();
       for (let index = 0; index < allAreas.length; index++) {
         const area = allAreas[index];
@@ -359,8 +371,8 @@ const MarkerService = (() => {
       createMarker(null, null, boardingGateNum);
       return boardingMarkers[0];
     },
-    allMarkerDelete: () => {
-      allMarkerDelete();
+    allMarkerDelete: async () => {
+      await allMarkerDelete();
     },
     showMarkers: () => {
       try {
