@@ -984,6 +984,27 @@ const mockData = {
         floorInfo: "3층",
         description: "3출국장 부근",
       },
+      {
+        id: "element_14",
+        name: "안내데스크",
+        position: { lat: 37.4487388, lng: 126.4508303 },
+        floorInfo: "3층",
+        description: "8번 출입구 부근",
+      },
+      {
+        id: "element_15",
+        name: "안내데스크",
+        position: { lat: 37.4486476, lng: 126.4489714 },
+        floorInfo: "3층",
+        description: "4출국장 부근",
+      },
+      {
+        id: "element_16",
+        name: "안내데스크",
+        position: { lat: 37.4505389, lng: 126.4523054 },
+        floorInfo: "3층",
+        description: "2출국장 부근",
+      },
     ],
   },
 
