@@ -36,13 +36,17 @@ const MapService = (() => {
       if (map.getZoom() < 18) {
         selectedInfowindow.forEach((infoWindow) => {
           infoWindow.setMap(null);
+          MarkerService.allElementhide();
         });
         PolylineService.deletePolyLine();
-      } else {
+      } else if (map.getZoom() < 20) {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
         });
         PolylineService.viewPolyLine();
+        MarkerService.allElementhide();
+      } else {
+        MarkerService.allElementShow();
       }
     });
   };

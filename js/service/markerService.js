@@ -101,11 +101,13 @@ const MarkerService = (() => {
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
         position: element.position,
-        map: map,
+        map: null,
         title: null,
         icon: {
           content:
-            '<div style="height : 10px;width:10px;background-color:blue; border-radius:5px"><div>',
+            '<div style ="display:flex;flex-direction:column;font-size:10px;justify-content:center;align-items:center;"><div style="height : 10px;width:10px;background-color:blue; border-radius:5px"></div>' +
+            element.name +
+            "</div>",
           size: new naver.maps.Size(27, 35),
           anchor: new naver.maps.Point(0, 0),
         },
@@ -115,8 +117,14 @@ const MarkerService = (() => {
   };
 
   const allElementShow = () => {
+    console.log("====element Show====");
     elementsMarker.forEach((element) => {
       element.setMap(map);
+    });
+  };
+  const allElementhide = () => {
+    elementsMarker.forEach((element) => {
+      element.setMap(null);
     });
   };
 
@@ -454,7 +462,12 @@ const MarkerService = (() => {
     },
     elementSetting: () => {
       createElementMarker();
+    },
+    allElementShow: () => {
       allElementShow();
+    },
+    allElementhide: () => {
+      allElementhide();
     },
   };
 })();
