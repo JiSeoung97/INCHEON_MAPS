@@ -1005,6 +1005,13 @@ const mockData = {
         floorInfo: "3층",
         description: "2출국장 부근",
       },
+      {
+        id: "element_17",
+        name: "장애인 안심여행센터",
+        position: { lat: 37.4486988, lng: 126.4511418 },
+        floorInfo: "3층",
+        description: "7번 출입구 밖",
+      },
     ],
   },
 

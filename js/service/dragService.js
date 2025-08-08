@@ -98,7 +98,6 @@ const DragService = (() => {
     const deltaRem = pxToRem(deltaY);
     let newBottom = startBottom - deltaRem;
     // 경계 제한
-    console.log(POSITIONS);
     const minPosition = Math.max(POSITIONS.CLOSED - 7, -25); // 안전한 최소값
     const maxPosition = Math.min(POSITIONS.OPEN + 2, 7); // 안전한 최대값
 

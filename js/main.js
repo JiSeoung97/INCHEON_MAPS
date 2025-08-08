@@ -20,6 +20,7 @@ $(document).ready(async () => {
       initBottomSheet();
       await initCustomControl();
       initModalService();
+      MarkerService.elementSetting();
       console.log("map, modal init 완료");
 
       return { success: true, hasLocation: true };

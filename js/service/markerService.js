@@ -13,6 +13,7 @@ const MarkerService = (() => {
   let selectedInfowindow;
   let selectedBoardingMarker;
   let boardingGateNum = null;
+  let elementsMarker = [];
   const createMarker = async (areaData, index, boardingGateNum) => {
     try {
       const data = DataService.getAllAreas();
@@ -95,6 +96,30 @@ const MarkerService = (() => {
       console.error("출국장 마커 생성 실패 : ", error);
     }
   };
+  const createElementMarker = () => {
+    const elements = DataService.getAllElements();
+    elements.forEach((element) => {
+      const marker = new naver.maps.Marker({
+        position: element.position,
+        map: map,
+        title: null,
+        icon: {
+          content:
+            '<div style="height : 10px;width:10px;background-color:blue; border-radius:5px"><div>',
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(0, 0),
+        },
+      });
+      elementsMarker.push(marker);
+    });
+  };
+
+  const allElementShow = () => {
+    elementsMarker.forEach((element) => {
+      element.setMap(map);
+    });
+  };
+
   const createZoomOutMarker = async (index) => {
     try {
       if (index % 2 == 1 || index == 0) return;
@@ -426,6 +451,10 @@ const MarkerService = (() => {
     },
     getBoardingMarker: () => {
       return boardingMarkers;
+    },
+    elementSetting: () => {
+      createElementMarker();
+      allElementShow();
     },
   };
 })();
