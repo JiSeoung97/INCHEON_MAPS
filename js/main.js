@@ -110,16 +110,10 @@ $(document).ready(async () => {
 
     const handleBoardingGateConfirm = async () => {
       try {
-        const modal = document.getElementById("modal-background");
-        modal.style.display = "none";
-
         const gateNum = document.getElementsByClassName("gate-input")[0];
         boardingGate = gateNum.value;
         console.log("입력된 탑승구:", boardingGate);
-        console.log(
-          "MapService.boardingGateIdx(boardingGate) : ",
-          MapService.boardingGateIdx(boardingGate)
-        );
+
         if (MapService.boardingGateIdx(boardingGate)) {
           console.log("유효하지 않은 탑승구");
           MapService.alertGateNumCheck();
@@ -145,6 +139,7 @@ $(document).ready(async () => {
             PolylineService.setPolyline();
             console.log("polyline create");
           }
+          ModalService.boardingModalClose();
         }
       } catch (error) {
         console.error("탑승구 확인 처리 오류:", error);

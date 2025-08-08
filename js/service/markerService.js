@@ -105,7 +105,7 @@ const MarkerService = (() => {
         title: null,
         icon: {
           content:
-            '<div style ="display:flex;flex-direction:column;font-size:10px;justify-content:center;align-items:center;"><div style="height : 10px;width:10px;background-color:blue; border-radius:5px"></div>' +
+            '<div style ="display:flex;flex-direction:column;z-index:10;font-size:10px;justify-content:center;align-items:center;"><div style="height : 10px;width:10px;background-color:blue; border-radius:5px"></div>' +
             element.name +
             "</div>",
           size: new naver.maps.Size(27, 35),
@@ -337,7 +337,7 @@ const MarkerService = (() => {
 
     if (index % 2 == 1) {
       return (
-        '<div class = "markerIcon"style="display:flex ;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto;margin-top:10px"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
+        '<div class = "markerIcon"style="display:flex ;z-index :11;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto;margin-top:10px"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
         "</span>" +
         '<div style="display:flex ;background-color:#fff;padding-top:2px;flex-direction: column;width: 2.6rem; height: 2.6rem;color:#056CFE;align-items: center; justify-content:center;border:0.848px solid #BDBDBD ; border-radius: 50%;font-size:1rem;border-color:#BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px;">' +
@@ -346,7 +346,7 @@ const MarkerService = (() => {
       );
     } else {
       return (
-        '<div style="display:flex ;flex-direction:row;align-items: center; justify-content:cente;margin-top:10px;width:5rem"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+        '<div style="display:flex ;flex-direction:row;align-items: center;z-index :11; justify-content:cente;margin-top:10px;width:5rem"><div style="display:flex ;background-color:#fff;width: 2.6rem !important; height: 2.6rem;padding-top:2px;flex-direction: column; border-radius: 50%;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
         departure[0] +
         '</div><span style="display:flex;flex-direction:row;height:2rem;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +

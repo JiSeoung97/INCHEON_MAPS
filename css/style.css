@@ -303,17 +303,24 @@ table th:nth-child(3) {
 }
 
 .modal-overlay {
+  visibility: hidden;
+  opacity: 0;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  display: none; /* 숨김 상태 */
-
+  display: flex; /* 숨김 상태 */
   background-color: #00000080;
   justify-content: center;
   z-index: 4000;
   padding-top: 20px;
+  transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.modal-overlay.show {
+  visibility: visible;
+  opacity: 1;
 }
 .modal-content {
   top: 2.5rem;
@@ -635,7 +642,7 @@ small {
   color: #2e90fa;
 }
 
-#modal-background {
+/* #modal-background {
   position: fixed;
   margin: 0;
   padding: 0;
@@ -646,7 +653,7 @@ small {
   align-items: center;
   z-index: 9998;
   width: 100%;
-}
+} */
 
 .btn-cancel {
   background-color: #fff;
@@ -688,10 +695,12 @@ small {
   background-color: #f3f4f6;
 }
 .modal {
+  top: 10rem;
   background-color: #fff;
   border-radius: 16px;
   padding: 24px 16px 16px;
-  width: 300px;
+  width: 20rem;
+  height: 15rem;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   position: relative;
