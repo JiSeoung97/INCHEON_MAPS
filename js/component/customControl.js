@@ -250,7 +250,7 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
-        MapService.moveBoardingGate();
+        MapService.moveBoardingGate(boardingGateNum);
         console.log(boardingGateNum);
         Utility.openBoardingWindowInfo();
       } else {

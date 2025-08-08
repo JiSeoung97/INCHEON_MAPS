@@ -176,8 +176,10 @@ const MapService = (() => {
           PolylineService.createPolyline(markers);
         }
         zoomEvent();
-        naver.maps.Event.addListener(map, "click", function () {
+        naver.maps.Event.addListener(map, "click", function (e) {
           console.log("mapclick");
+          let latLng = { x: e.coord.x, y: e.coord.y };
+          console.log(latLng);
           infoWindows = InfoWindowService.getInfoWindows();
           MarkerService.replaceAllMarkerIcon();
           if (MarkerService.getSelectedMarker() != null) {
@@ -207,14 +209,14 @@ const MapService = (() => {
     alertGateNumCheck: () => {
       alert(language["checkNum"]);
     },
-    moveBoardingGate: () => {
+    moveBoardingGate: (boardingGateNum) => {
       const areaData = DataService.getAllAreas();
 
       var transition = {
         duration: 800,
         easing: "easeOutCubic",
       };
-
+      boardingMarkers = MarkerService.getBoardingMarker();
       MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
       Array.from(areaData).forEach((area) => {
         if (area.name == "탑승게이트" + boardingGateNum) {

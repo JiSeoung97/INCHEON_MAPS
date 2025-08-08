@@ -242,7 +242,7 @@ $(document).ready(async () => {
     setupEventListeners();
 
     // 4. 광고 모달 처리
-    // handleAdModal();
+    handleAdModal();
 
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();
