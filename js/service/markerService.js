@@ -70,7 +70,7 @@ const MarkerService = (() => {
               boardingGateNum +
               "</span></div>",
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(20, 10),
+            anchor: new naver.maps.Point(45, 10),
           },
         });
       }

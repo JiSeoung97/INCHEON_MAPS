@@ -29,7 +29,12 @@ const Utility = (() => {
         const lat1 = area.position.lat;
         const lng2 = targetLocation.lng;
         const lat2 = targetLocation.lat;
-
+        console.log(
+          "area : ",
+          area.position,
+          "targetLocation : ",
+          targetLocation
+        );
         const earthR = 6371000; // 지구 반지름
         const degToRad = (deg) => deg * (Math.PI / 180);
 
@@ -41,7 +46,12 @@ const Utility = (() => {
           Math.cos(degToRad(lat1)) *
             Math.cos(degToRad(lat2)) *
             Math.sin(dlng / 2) ** 2;
-
+        console.log(
+          "a : ",
+          a,
+          "-------------------------------------------------",
+          boardingGateNum
+        );
         const distance =
           Math.round(
             earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
