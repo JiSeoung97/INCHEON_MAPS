@@ -10,9 +10,11 @@ const Utility = (() => {
   }
   const getDistance = (area, boardingGateNum) => {
     try {
+      let startLocation = null;
       let targetLocation = null;
       if (boardingGateNum == null) {
         targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+        startLocation = area;
       } else {
         const areas = DataService.getAllAreas();
         areas.forEach((bArea) => {
@@ -20,6 +22,7 @@ const Utility = (() => {
             targetLocation = bArea.position;
           }
         });
+        startLocation = JSON.parse(sessionStorage.getItem("myLocation"));
       }
       if (targetLocation !== null) {
         const lng1 = area.position.lng;
@@ -67,7 +70,7 @@ const Utility = (() => {
     selectedMarker = MarkerService.getSelectedMarker();
     markers = MarkerService.getMarkers();
     var transition = {
-      duration: 800,
+      duration: 1000,
       easing: "easeOutCubic",
     };
     MarkerService.replaceAllMarkerIcon();
@@ -78,7 +81,7 @@ const Utility = (() => {
     );
     console.log(map);
     map.panTo(newPosition, transition);
-    await delay(800);
+    await delay(1000);
     setTimeout(() => {
       if (map.getZoom() <= 17) {
         map.setZoom(18, true);
@@ -91,7 +94,6 @@ const Utility = (() => {
     markers = MarkerService.getMarkers();
     let infoWindows = InfoWindowService.getInfoWindows();
     let selectedInfowindow = MarkerService.getSelectedInfowindow();
-    const areas = DataService.getAllAreas();
     let idx = index;
     if (index == null) {
       idx = infoWindows.length - 1;
@@ -100,7 +102,6 @@ const Utility = (() => {
       selectedInfowindow = infoWindows[idx];
       infoWindows[idx].open(map, markers[idx]);
     }
-    console.log(areas[idx]);
   };
   const translateAreaName = (areaName, language) => {
     if (areaName.includes("출국장")) {

@@ -4,7 +4,7 @@ const DataService = (() => {
   let data = null;
   let apiDatas = null;
   let congestions = [];
-
+  let elements = [];
   const updateCongestion = () => {
     if (!data) return;
     Array.from(apiDatas).forEach((apiData) => {
@@ -50,7 +50,8 @@ const DataService = (() => {
     initData: () => {
       data = window.mockData || null;
       apiDatas = window.mockData2.data[0].response.body.items.item || null;
-
+      elements = data.elements.areas;
+      console.log(elements);
       if (!data) {
         console.error("모킹 데이터 로드 실패함");
         return null;
@@ -58,7 +59,9 @@ const DataService = (() => {
       updateCongestion();
       return data;
     },
-
+    getAllElements: () => {
+      return elements;
+    },
     getAllData: () => {
       return data;
     },

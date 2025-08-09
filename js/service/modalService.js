@@ -24,22 +24,14 @@ const ModalService = (() => {
       '<img id="arrow-right" src="./images/arrow-right.png" />';
   };
 
-  const adModalOpen = () => {
-    const modal = document.getElementById("adModal");
-    modal.style.setProperty("display", "flex");
+  const modalOpen = (index) => {
+    const modal = document.getElementsByClassName("modal-overlay");
+    console.log("modal show : ", modal[index]);
+    modal[index].classList.add("show");
   };
-  const adModalClose = () => {
-    const modal = document.getElementById("adModal");
-    console.log("modalClose");
-    modal.style.setProperty("display", "none");
-  };
-  const boardingModalOpen = () => {
-    const modal = document.getElementById("modal-background");
-    modal.style.display = "flex";
-  };
-  const boardingModalClose = () => {
-    const modal = document.getElementById("modal-background");
-    modal.style.display = "none";
+  const modalClose = (index) => {
+    const modal = document.getElementsByClassName("modal-overlay");
+    modal[index].classList.remove("show");
   };
   return {
     init: () => {
@@ -54,17 +46,17 @@ const ModalService = (() => {
       modalLangChange();
     },
     adModalOpen: () => {
-      adModalOpen();
+      modalOpen(0);
     },
 
     adModalClose: () => {
-      adModalClose();
+      modalClose(0);
     },
     boardingModalClose: () => {
-      boardingModalClose();
+      modalClose(1);
     },
     boardingModalOpen: () => {
-      boardingModalOpen();
+      modalOpen(1);
     },
   };
 })();

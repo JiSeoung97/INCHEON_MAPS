@@ -7,7 +7,8 @@ $(document).ready(async () => {
   const initializeServices = async () => {
     try {
       sessionStorage.setItem("render", true);
-      await MapService.savedLocation();
+      let userLocation = await utLocation.getCurrentPosition();
+      await utLocation.savedLocation(userLocation);
       console.log("사용자 위치 저장 완료");
       map = await MapService.init();
       if (!map) {
@@ -19,6 +20,7 @@ $(document).ready(async () => {
       initBottomSheet();
       await initCustomControl();
       initModalService();
+      MarkerService.elementSetting();
       console.log("map, modal init 완료");
 
       return { success: true, hasLocation: true };
@@ -108,17 +110,11 @@ $(document).ready(async () => {
 
     const handleBoardingGateConfirm = async () => {
       try {
-        const modal = document.getElementById("modal-background");
-        modal.style.display = "none";
-
         const gateNum = document.getElementsByClassName("gate-input")[0];
         boardingGate = gateNum.value;
         console.log("입력된 탑승구:", boardingGate);
-        console.log(
-          "MapService.boardingGateIdx(boardingGate) : ",
-          !MapService.boardingGateIdx(boardingGate)
-        );
-        if (!MapService.boardingGateIdx(boardingGate)) {
+
+        if (MapService.boardingGateIdx(boardingGate)) {
           console.log("유효하지 않은 탑승구");
           MapService.alertGateNumCheck();
           return;
@@ -127,13 +123,23 @@ $(document).ready(async () => {
           sessionStorage.setItem("boardingGate", boardingGate);
           CustomControl.customControlAllDelete();
           // 서비스 재초기화
-          await initCustomControl();
+          const boardingMarker =
+            MarkerService.createBoardingMarker(boardingGate);
+          CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
-          BottomSheet.trainShow();
 
           // UI 업데이트
           updateBoardingGateUI();
+          if (PolylineService.getBoardingPolyline() != null) {
+            await PolylineService.updatePolyline(boardingGate);
+            console.log("polyline update");
+          } else {
+            await PolylineService.createBoardingPolyline(boardingMarker);
+            PolylineService.setPolyline();
+            console.log("polyline create");
+          }
+          ModalService.boardingModalClose();
         }
       } catch (error) {
         console.error("탑승구 확인 처리 오류:", error);
@@ -207,19 +213,11 @@ $(document).ready(async () => {
   };
   const handleAdModal = () => {
     if (sessionStorage.getItem("render")) {
-      try {
-        ModalService.adModalOpen();
-        console.log("admodalopen");
-      } catch (error) {
-        console.error("광고 모달 열기 실패:", error);
-      }
+      ModalService.adModalOpen();
+      console.log("admodalopen");
     }
     sessionStorage.setItem("render", true);
   };
-
-  if (sessionStorage.getItem("render")) {
-    ModalService.adModalOpen();
-  }
 
   try {
     console.log("애플리케이션 초기화 시작...");
@@ -251,6 +249,7 @@ $(document).ready(async () => {
     );
   } catch (error) {
     console.error("애플리케이션 초기화 중 치명적 오류:", error);
+    window.location.href = "errorPage.html";
     alert(
       "애플리케이션을 초기화하는 중 오류가 발생했습니다. 페이지를 새로고침해주세요."
     );

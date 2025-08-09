@@ -76,18 +76,18 @@
           <div id="modalText">
             <p id="modalTryMeal">출국 전 든든한 한끼 어떠신가요?</p>
             <p id="modalTitle">인천공항 맛집 BEST 10!</p>
-            <button id="reco">
-              인천공항 맛집 보러가기
-              <img id="arrow-right" src="./images/arrow-right.png" />
-            </button>
           </div>
+          <button id="reco">
+            인천공항 맛집 보러가기
+            <img id="arrow-right" src="./images/arrow-right.png" />
+          </button>
         </div>
       </div>
     </div>
-    <div id="modal-background">
+    <div id="modal-background" class="modal-overlay">
       <div class="modal">
         <div class="modal-header">
-          탑승구 번호를 입력해주세요
+          <span id="input-gateNum">탑승구 번호를 입력해주세요</span>
           <div class="modal-close">&times;</div>
         </div>
         <div class="input-container">
@@ -111,17 +111,18 @@
       </table>
     </div>
     <script src="js/utility/utility.js"></script>
-    <script src="js/markerService.js"></script>
-    <script src="js/infoWindowService.js"></script>
-    <script src="js/polylineService.js"></script>
-    <script src="js/language.js"></script>
+    <script src="js/utility/location.js"></script>
+    <script src="js/service/markerService.js"></script>
+    <script src="js/component/infoWindow.js"></script>
+    <script src="js/service/polylineService.js"></script>
+    <script src="data/language.js"></script>
     <script src="data/mock-data2.js"></script>
     <script src="data/mock-data.js"></script>
-    <script src="js/dataService.js"></script>
-    <script src="js/bottomSheet.js"></script>
-    <script src="js/mapService.js"></script>
-    <script src="js/customControl.js"></script>
-    <script src="js/modalService.js"></script>
+    <script src="js/service/dataService.js"></script>
+    <script src="js/component/bottomSheet.js"></script>
+    <script src="js/service/mapService.js"></script>
+    <script src="js/component/customControl.js"></script>
+    <script src="js/service/modalService.js"></script>
     <script src="js/main.js"></script>
     <script>
       // 페이지 로드 완료 후 실행

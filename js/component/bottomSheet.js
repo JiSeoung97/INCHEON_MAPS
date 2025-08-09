@@ -2,77 +2,10 @@
 
 const BottomSheet = (() => {
   let language;
-  let bottomSheet;
-  let handle;
-  let peekElement;
-  let isDragging = false;
-  let startY = 0;
-  let startBottom = 0;
-  let currentBottom = 0;
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
-  let currentPosition;
-  const POSITIONS = {
-    CLOSED: 0,
-    OPEN: 0,
-  };
 
-  const transName = async (name) => {
-    return new Promise((resolve) => {
-      try {
-        let names = name.split(" ");
-        console.log(name);
-        names[0] = names[0].replace("출국장", "");
-        let newName = "gate" + names[0];
-        console.log("newName : ", newName);
-
-        let eastWest;
-        if (names[1] == "동편") {
-          eastWest = "east";
-        } else {
-          eastWest = "west";
-        }
-
-        const result =
-          language[newName].replace("<br>", "") + " " + language[eastWest];
-        resolve(result);
-      } catch (error) {
-        console.error("이름 번역 실패:", error);
-        resolve(name); // 원본 이름 반환
-      }
-    });
-  };
-  const timereset = async () => {
-    return new Promise((resolve) => {
-      try {
-        const time = document.getElementById("nTime");
-        const now = new Date();
-        const year = now.getFullYear();
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const day = String(now.getDate()).padStart(2, "0");
-        let hour = now.getHours();
-        let minute = String(now.getMinutes()).padStart(2, "0");
-        const hourStr = String(hour).padStart(2, "0");
-
-        time.innerHTML =
-          "UPDATE : " +
-          year +
-          "." +
-          month +
-          "." +
-          day +
-          " " +
-          hourStr +
-          ":" +
-          minute;
-        resolve();
-      } catch (error) {
-        console.error("시간 설정 실패");
-        resolve();
-      }
-    });
-  };
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();
@@ -104,7 +37,7 @@ const BottomSheet = (() => {
 
         contentsEl[index].innerHTML = htmlContents;
       }
-      recoLikeIconView();
+      RecoService.recoLikeIconView();
     } catch (error) {
       console.error("게이트 혼잡도 표시 실패:", error);
     }
@@ -166,11 +99,17 @@ const BottomSheet = (() => {
   const changeBorderColor = async (index) => {
     try {
       const allareas = DataService.getAllAreas();
-      let idx = 0;
-
-      idx = index + 1;
+      let idx = index + 1;
       const div = document.querySelectorAll(".eastWest div");
-      div.forEach((divBox, boxIndex) => {
+
+      let eastWest = [];
+      div.forEach((a, divIndex) => {
+        if (divIndex % 2 == 0) {
+          eastWest.push(a);
+        }
+      });
+      console.log("eastWest : ", eastWest);
+      eastWest.forEach((divBox, boxIndex) => {
         if (index == boxIndex) {
           divBox.style.setProperty(
             "border-color",
@@ -186,7 +125,7 @@ const BottomSheet = (() => {
   };
   const resetAllBorderColor = () => {
     const div = document.querySelectorAll(".eastWest div");
-    div.forEach((divBox, boxIndex) => {
+    div.forEach((divBox) => {
       divBox.style.setProperty("border-color", "#E8E8E8");
     });
   };
@@ -220,67 +159,7 @@ const BottomSheet = (() => {
       console.error("게이트 이벤트 리스너 설정 실패:", error);
     }
   };
-  const recoGate = async () => {
-    try {
-      const areas = DataService.getAllAreas();
-      const apiData = DataService.getApiData();
-      recoArray = [];
-      for (let i = 0; i < areas.length; i++) {
-        if (i < 10 && areas[i].id !== "DG1" && areas[i].id !== "DG6") {
-          const distance = await getAreaDistance(areas[i]);
-          const apiDataForArea = apiData.find(
-            (api) => api.deskname === areas[i].id
-          );
 
-          if (apiDataForArea) {
-            const waitingTime = Math.round(
-              DataService.getTotalWaitTime(apiDataForArea) / 60
-            );
-
-            recoArray.push({
-              name: areas[i].name,
-              time: distance + waitingTime,
-              position: areas[i].position,
-            });
-          }
-        }
-      }
-
-      console.log("배열 타입:", Array.isArray(recoArray));
-      recoArray.sort((a, b) => a.time - b.time);
-
-      console.log("추천 게이트 계산 완료:", recoArray);
-    } catch (error) {
-      console.error("추천 게이트 계산 실패:", error);
-    }
-  };
-  const recoLikeIconView = () => {
-    const data = DataService.getAllAreas();
-    const departureAreas = data.slice(1, 9);
-    const eastWest = document.getElementsByClassName("eastWest");
-    let idx;
-    console.log(recoArray[0].name);
-    console.log("---------------------------------");
-    departureAreas.forEach((departure, index) => {
-      if (departure.name == recoArray[0].name) {
-        idx = index;
-        console.log(departure.name, idx);
-      }
-    });
-    eastWest[idx].getElementsByClassName("like-icon")[0].style.display = "flex";
-    console.log(eastWest[idx].getElementsByClassName("like-icon")[0]);
-  };
-  const getAreaDistance = async (area) => {
-    try {
-      const distanceStr = await Utility.getDistance(area);
-      return Math.round(
-        Number(distanceStr.replace("M", "").replace(",", "")) / 70
-      );
-    } catch (error) {
-      console.error("거리 계산 실패:", error);
-      return 0;
-    }
-  };
   const changeMenu = async (idx = 0) => {
     try {
       boardingGateNum = sessionStorage.getItem("boardingGate");
@@ -294,8 +173,10 @@ const BottomSheet = (() => {
 
       if (idx === 0) {
         await handleFirstMenu(menuBtn, controls);
-      } else {
+      } else if (boardingGateNum != null) {
         await handleSecondMenu(menuBtn, controls);
+      } else {
+        ModalService.boardingModalOpen();
       }
     } catch (error) {
       console.error("메뉴 변경 실패:", error);
@@ -308,7 +189,7 @@ const BottomSheet = (() => {
 
       controls.innerHTML = createFirstMenuHTML();
       await showGateCongestion();
-      await timereset();
+      await TimeCalculator.timereset();
       await setupGateEventListeners();
     } catch (error) {
       console.error("첫 번째 메뉴 처리 실패:", error);
@@ -320,11 +201,10 @@ const BottomSheet = (() => {
       menuBtn[0].style.setProperty("border-bottom", "1px solid #2121221A");
 
       departurehall = [];
-      const translationPromises = recoArray
+      const translationPromises = RecoService.getRecoArray()
         .slice(0, 3)
-        .map((reco) => transName(reco.name));
+        .map((reco) => Translate.transName(reco.name));
       departurehall = await Promise.all(translationPromises);
-
       const innerHTML = createSecondMenuHTML();
       controls.innerHTML = innerHTML;
 
@@ -473,7 +353,6 @@ const BottomSheet = (() => {
     try {
       const ranks = [language["first"], language["second"], language["third"]];
       const recoRank = document.getElementsByClassName("reco-rank");
-
       Array.from(recoRank).forEach((rank, idx) => {
         if (idx < departurehall.length) {
           rank.innerHTML = `<div>${departurehall[idx]} <small>(${ranks[idx]})</small></div>`;
@@ -518,7 +397,7 @@ const BottomSheet = (() => {
       console.error("선택 이벤트 설정 실패 : ", error);
     }
   };
-  const updateSelectedHall = async (idx, ranks) => {
+  const updateSelectedHall = async (idx) => {
     try {
       const reco = document.getElementById("reco-select");
       const selectHall = document.getElementById("selectHall");
@@ -568,303 +447,16 @@ const BottomSheet = (() => {
         console.error("data를 찾을 수 없습니다");
         return;
       }
-      const times = await calculateAllTimes(foundData, foundApi);
-      await updateTimeDisplay(times);
+      const times = await TimeCalculator.calculateAllTimes(foundData, foundApi);
+      await TimeCalculator.updateTimeDisplay(times);
     } catch (error) {
       console.error("예상 시간 계산 실패 : ", error);
     }
   };
-  const calculateAllTimes = async (foundData, foundApi) => {
-    try {
-      let totalTime = 0;
-      boardingGateNum = sessionStorage.getItem("boardingGate");
-      // 홀까지 이동 시간
-      const distanceStr = await Utility.getDistance(foundData);
-      const distance = Number(distanceStr.replace("M", "").replace(",", ""));
-      const hallTime = Math.floor(distance / 60);
-      totalTime += hallTime;
-
-      const hallWaiting =
-        hallTime > 60
-          ? `${Math.floor(hallTime / 60)}${language["hour"]} ${hallTime % 60}${
-              language["minute"]
-            }`
-          : `${hallTime}${language["minute"]}`;
-
-      // 탑승구까지 이동 시간
-      const boardingDistance = await Utility.getDistance(
-        foundData,
-        boardingGateNum
-      );
-      boardingDistance.replace("M", "");
-      console.log(
-        "boardingDistance : ",
-        Number(boardingDistance.replace("M", ""))
-      );
-      const boardingTime = Math.floor(
-        Number(boardingDistance.replace("M", "")) / 60
-      );
-      totalTime += boardingTime;
-      console.log("boardingTime : ", boardingTime);
-      const boardingTimeStr =
-        boardingGateNum > 100
-          ? `${boardingTime - 10}${language["minute"]}`
-          : `${boardingTime}${language["minute"]}`;
-
-      // 대기 시간
-      const waitTime = foundApi.espwaittime === "D" ? 0 : foundApi.espwaittime;
-      const waitingMinutes = Math.floor(waitTime / 60);
-      totalTime += waitingMinutes;
-      const waitingTime = `${waitingMinutes}${language["minute"]}`;
-
-      // 출입국 시간
-      const immigrationTotal =
-        foundApi.immigrationtime === "NA"
-          ? 60
-          : foundApi.immigrationtime * foundApi.quelength;
-      const immigrationMinutes = Math.floor(immigrationTotal / 60);
-      totalTime += immigrationMinutes;
-      let estimatedTime =
-        immigrationMinutes + waitingMinutes + language["minute"];
-      const immigration =
-        immigrationTotal > 3600
-          ? `${Math.floor(immigrationTotal / 3600)}${
-              language["hour"]
-            } ${Math.floor((immigrationTotal % 3600) / 60)}${
-              language["minute"]
-            }`
-          : `${immigrationMinutes}${language["minute"]}`;
-
-      // 총 시간
-      const strTotal =
-        totalTime > 60
-          ? `${Math.floor(totalTime / 60)}${language["hour"]} ${
-              totalTime % 60
-            }${language["minute"]}`
-          : `${totalTime}${language["minute"]}`;
-
-      return {
-        total: strTotal,
-        times: [hallWaiting, estimatedTime, boardingTimeStr],
-      };
-    } catch (error) {
-      console.error("시간 계산 실패:", error);
-      return {
-        total: `0${language["minute"]}`,
-        times: [
-          `0${language["minute"]}`,
-          `0${language["minute"]}`,
-          `0${language["minute"]}`,
-          `0${language["minute"]}`,
-        ],
-      };
-    }
-  };
-  const updateTimeDisplay = async (timeData) => {
-    try {
-      const total = document.getElementsByClassName("total-time");
-      const latingTime = document.getElementsByClassName("latingTime");
-
-      if (total[0]) {
-        total[0].innerText = timeData.total;
-      }
-
-      Array.from(latingTime).forEach((time, idx) => {
-        if (idx < timeData.times.length) {
-          time.innerHTML = "";
-          time.innerText = timeData.times[idx];
-        }
-      });
-    } catch (error) {
-      console.error("시간 표시 업데이트 실패:", error);
-    }
-  };
-  const translateMenu = async () => {
-    let menuBtn;
-    let conEx;
-    try {
-      menuBtn = Array.from(document.getElementsByClassName("menuBtn"));
-      conEx = document.getElementById("congestionEx");
-    } catch (error) {
-      console.error("시간 표시 업데이트 실패 :", error);
-    }
-    menuBtn.forEach((menu, index) => {
-      if (index == 0) {
-        menu.innerHTML = language["departureHallCongestion"];
-      } else {
-        menu.innerHTML = language["estimated"];
-      }
-    });
-    conEx.innerHTML =
-      "• " +
-      language["departureHallCongestion"] +
-      '  <span id="questionMark">?</span>';
-  };
-  function getEventY(e) {
-    return e.type.includes("touch") ? e.touches[0].clientY : e.clientY;
-  }
-  function calculatePeekHeight() {
-    if (!peekElement) {
-      console.error("peek 클래스 요소를 찾을 수 없습니다!");
-      return 100; // 기본값
-    }
-    let totalHeight = 0;
-    let marginTop;
-    let marginBottom;
-    let paddingTop;
-    let paddingBottom;
-    Array.from(peekElement).forEach((peek) => {
-      const style = window.getComputedStyle(peek);
-      marginTop = parseInt(style.marginTop) || 0;
-      marginBottom = parseInt(style.marginBottom) || 0;
-      paddingTop = parseInt(style.paddingTop) || 0;
-      paddingBottom = parseInt(style.paddingBottom) || 0;
-      let height =
-        peek.offsetHeight +
-        marginTop +
-        marginBottom +
-        paddingTop +
-        paddingBottom +
-        50;
-      totalHeight += height;
-    });
-
-    console.log("Peek element height1:", peekElement[0].offsetHeight);
-    console.log("Peek element height2:", peekElement[1].offsetHeight);
-    console.log("Total peek height:", totalHeight);
-
-    return totalHeight;
-  }
-  function calculatePositions() {
-    const sheetHeight = bottomSheet.offsetHeight;
-    const peekHeight = calculatePeekHeight();
-    const viewportHight = window.innerHeight;
-    const hiddenHeight = sheetHeight - peekHeight;
-    const closedRem = -pxToRem(hiddenHeight);
-    if (closedRem > 0) {
-      POSITIONS.CLOSED = -4;
-    } else {
-      const maxHiddenRem = -pxToRem(viewportHight);
-      POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
-    }
-    POSITIONS.OPEN = -5;
-
-    if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
-      POSITIONS.CLOSED = -10;
-    }
-
-    return POSITIONS;
-  }
-  function pxToRem(px) {
-    const rootFontSize =
-      parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-    return px / rootFontSize;
-  }
-
-  function updatePosition(bottomRem) {
-    bottomSheet.style.bottom = bottomRem + "rem";
-    currentBottom = bottomRem;
-  }
-
-  function startDrag(e) {
-    isDragging = true;
-    startY = getEventY(e);
-    startBottom = currentBottom;
-    handle.style.cursor = "grabbing";
-
-    bottomSheet.style.transition = "none";
-
-    e.preventDefault();
-  }
-
-  // 드래그 중
-  function drag(e) {
-    if (!isDragging) return;
-    const currentY = getEventY(e);
-    const deltaY = currentY - startY;
-    const deltaRem = pxToRem(deltaY);
-    let newBottom = startBottom - deltaRem;
-    // 경계 제한
-    console.log(POSITIONS);
-    const minPosition = Math.max(POSITIONS.CLOSED - 7, -25); // 안전한 최소값
-    const maxPosition = Math.min(POSITIONS.OPEN + 2, 7); // 안전한 최대값
-
-    newBottom = Math.max(minPosition, Math.min(maxPosition, newBottom));
-    updatePosition(newBottom);
-
-    e.preventDefault();
-  }
-
-  // 드래그 종료
-  function endDrag() {
-    if (!isDragging) return;
-
-    isDragging = false;
-    handle.style.cursor = "grab";
-
-    // 트랜지션 다시 활성화
-    bottomSheet.style.transition = "bottom 0.3s ease";
-
-    let targetPosition = POSITIONS.CLOSED;
-    let minDistance = Math.abs(currentBottom - POSITIONS.CLOSED);
-    for (const [key, position] of Object.entries(POSITIONS)) {
-      console.log(POSITIONS);
-      console.log(position);
-      const distance = Math.abs(currentBottom - position);
-      if (distance < minDistance) {
-        console.log("min,distance : ", distance);
-        minDistance = distance;
-        targetPosition = position;
-      }
-    }
-    currentPosition = targetPosition;
-    updatePosition(targetPosition);
-  }
-  function initialize() {
-    currentPosition = POSITIONS.CLOSED;
-    if (!peekElement) {
-      console.error("peek 클래스 요소가 없습니다. HTML을 확인해주세요.");
-      return;
-    }
-
-    calculatePositions();
-    currentBottom = POSITIONS.OPEN;
-    updatePosition(POSITIONS.OPEN);
-    currentPosition = POSITIONS.OPEN;
-  }
-  function getElement() {
-    bottomSheet = document.getElementById("bottomSheet");
-    handle = document.getElementById("handle");
-    peekElement = document.getElementsByClassName("peek");
-  }
-  function bottomSheetEvent() {
-    handle.addEventListener("mousedown", startDrag);
-    document.addEventListener("mousemove", drag);
-    document.addEventListener("mouseup", endDrag);
-
-    // 터치 이벤트 (passive: false로 설정)
-    handle.addEventListener("touchstart", startDrag, { passive: false });
-    document.addEventListener("touchmove", drag, { passive: false });
-    document.addEventListener("touchend", endDrag, { passive: false });
-  }
 
   return {
     init: async () => {
-      try {
-        getElement();
-        initialize();
-        bottomSheetEvent();
-        console.log("bottomSheet 초기화 완료");
-      } catch (error) {
-        console.error("bottomSheet 초기화 실패 : ", error);
-      }
-    },
-    recoGate: async () => {
-      try {
-        await recoGate();
-      } catch (error) {
-        console.error("추천 게이트 설정 실패 : ", error);
-      }
+      recoArray = await RecoService.recoGate();
     },
     languageChan: (lang) => {
       language = lang;
@@ -874,13 +466,6 @@ const BottomSheet = (() => {
         await changeMenu(idx);
       } catch (error) {
         console.error("메뉴 변경 실패 : ", error);
-      }
-    },
-    translateMenu: async () => {
-      try {
-        await translateMenu();
-      } catch (error) {
-        console.error("메뉴 번역 실패:", error);
       }
     },
 
@@ -899,24 +484,6 @@ const BottomSheet = (() => {
         console.error("게이트 혼잡도 표시 실패:", error);
       }
     },
-    recoLikeIconView: () => {
-      recoLikeIconView();
-    },
-    updateTimeDisplay: async (timeData) => {
-      try {
-        await updateTimeDisplay(timeData);
-      } catch (error) {
-        console.error("시간 표시 업데이트 실패:", error);
-      }
-    },
-
-    calculateEstimatedTime: async (idx) => {
-      try {
-        await estimated(idx);
-      } catch (error) {
-        console.error("예상 시간 계산 실패:", error);
-      }
-    },
 
     setupRecommendationEvents: async () => {
       try {
@@ -925,34 +492,11 @@ const BottomSheet = (() => {
         console.error("추천 이벤트 설정 실패:", error);
       }
     },
-
-    // 강제 위치 변경 함수
-    forceOpen: () => {
-      currentPosition = POSITIONS.OPEN;
-      updatePosition(POSITIONS.OPEN);
-    },
-
-    forceClose: () => {
-      currentPosition = POSITIONS.CLOSED;
-      updatePosition(POSITIONS.CLOSED);
-    },
-
-    changeBorderColor: (index) => {
-      changeBorderColor();
+    changeBorderColor: async (index) => {
+      await changeBorderColor(index);
     },
     resetAllBorderColor: () => {
       resetAllBorderColor();
-    },
-    animateToPosition: (position) => {
-      return new Promise((resolve) => {
-        bottomSheet.style.transition = "bottom 0.3s ease";
-        updatePosition(position);
-        currentPosition = position;
-
-        setTimeout(() => {
-          resolve();
-        }, 300);
-      });
     },
   };
 })();

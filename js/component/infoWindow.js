@@ -3,7 +3,7 @@
 const InfoWindowService = (() => {
   let infoWindows = [];
   let language;
-  const createInfoWindow = (area, boardingGateNum = null) => {
+  const createInfoWindow = (area, boardingGateNum) => {
     const infoWindow = new naver.maps.InfoWindow({
       content: getInfoWindowContent(area, boardingGateNum),
       maxWidth: 300,
@@ -67,6 +67,11 @@ const InfoWindowService = (() => {
         "</div>"
       );
     } else {
+      console.log(
+        "areaData : ",
+        areaData,
+        "----------------------------------------------"
+      );
       let distance = Utility.getDistance(areaData, boardingGateNum);
       return (
         '<div class="info-window boardingGate' +
@@ -85,9 +90,9 @@ const InfoWindowService = (() => {
   };
 
   return {
-    createInfoWindow: (area) => {
+    createInfoWindow: (area, boardingGate) => {
       language = MapService.languageReturn();
-      return createInfoWindow(area);
+      return createInfoWindow(area, boardingGate);
     },
     getInfoWindows: () => {
       return infoWindows;
