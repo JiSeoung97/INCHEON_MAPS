@@ -49,7 +49,7 @@ const MarkerService = (() => {
             icon: {
               content: content,
               size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(55, 30),
+              anchor: new naver.maps.Point(20, 30),
             },
           });
         }
