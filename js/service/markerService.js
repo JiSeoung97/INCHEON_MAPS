@@ -49,7 +49,7 @@ const MarkerService = (() => {
             icon: {
               content: content,
               size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(21, 30),
+              anchor: new naver.maps.Point(55, 30),
             },
           });
         }
@@ -70,7 +70,7 @@ const MarkerService = (() => {
               boardingGateNum +
               "</span></div>",
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(40, 20),
+            anchor: new naver.maps.Point(20, 10),
           },
         });
       }
@@ -217,26 +217,24 @@ const MarkerService = (() => {
     console.log(selectMarker);
     if (selectedBoardingMarker != null) {
       newIcon = {
+        ...selectMarker.getIcon(),
         content: selectMarker
           .getIcon()
           ["content"].replace("white", "blue")
           .replace("color:#fff", "color:#056CFE")
           .replace("background-color:#056CFE", "background-color:#fff")
           .replace(";transform:scale(1.2);transform-origin:center;", ";"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(40, 20),
       };
       selectedBoardingMarker = null;
     } else {
       newIcon = {
+        ...selectMarker.getIcon(),
         content: selectMarker
           .getIcon()
           ["content"].replace("blue", "white")
           .replace("color:#056CFE", "color:#fff")
           .replace("background-color:#fff", "background-color:#056CFE")
           .replace(";", ";transform:scale(1.2);transform-origin:center;"),
-        size: new naver.maps.Size(27, 35),
-        anchor: new naver.maps.Point(40, 20),
       };
       selectedBoardingMarker = selectMarker;
     }
@@ -269,14 +267,13 @@ const MarkerService = (() => {
       };
       if (boardingMarkers[0] != null) {
         boardingIcon = {
+          ...boardingMarkers[0].getIcon(),
           content: boardingMarkers[0]
             .getIcon()
             ["content"].replace("white", "blue")
             .replace("color:#fff", "color:#056CFE")
             .replace("background-color:#056CFE", "background-color:#fff")
             .replace(";transform:scale(1.2);transform-origin:center;", ";"),
-          size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(40, 20),
         };
         boardingMarkers[0].setIcon(boardingIcon);
         selectedBoardingMarker = null;

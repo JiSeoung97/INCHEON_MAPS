@@ -695,12 +695,16 @@ small {
   background-color: #f3f4f6;
 }
 .modal {
+  display: flex;
+  flex-direction: column;
   top: 10rem;
   background-color: #fff;
   border-radius: 16px;
   padding: 24px 16px 16px;
+  justify-content: center;
+  align-items: center;
   width: 20rem;
-  height: 15rem;
+  height: 18rem;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   position: relative;
@@ -725,7 +729,7 @@ small {
 }
 .input-container {
   position: relative;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 .gate-input {
   border: none;

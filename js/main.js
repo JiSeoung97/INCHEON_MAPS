@@ -249,6 +249,7 @@ $(document).ready(async () => {
     );
   } catch (error) {
     console.error("애플리케이션 초기화 중 치명적 오류:", error);
+    window.location.href = "errorPage.html";
     alert(
       "애플리케이션을 초기화하는 중 오류가 발생했습니다. 페이지를 새로고침해주세요."
     );
