@@ -40,8 +40,6 @@ const CustomControl = (() => {
       zoomMarkers.forEach((e) => {
         e.setMap(null);
       });
-      deletecustomControl();
-
       // 배열 초기화
       boardingMarkers = [];
       markers = [];

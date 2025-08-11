@@ -90,8 +90,10 @@ const InfoWindowService = (() => {
   };
 
   return {
-    createInfoWindow: (area, boardingGate) => {
+    createInfoWindow: (area, boardingGate = null) => {
       language = MapService.languageReturn();
+      if (boardingGate != null) {
+      }
       return createInfoWindow(area, boardingGate);
     },
     getInfoWindows: () => {

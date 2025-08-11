@@ -70,7 +70,7 @@ const MarkerService = (() => {
               boardingGateNum +
               "</span></div>",
             size: new naver.maps.Size(27, 35),
-            anchor: new naver.maps.Point(45, 10),
+            anchor: boardingAncPoint(),
           },
         });
       }
@@ -96,6 +96,25 @@ const MarkerService = (() => {
       console.error("출국장 마커 생성 실패 : ", error);
     }
   };
+
+  const boardingAncPoint = () => {
+    const lang = sessionStorage.getItem("language");
+    let point;
+    switch (lang) {
+      case "zh":
+      case "ko":
+        point = new naver.maps.Point(25, 10);
+        break;
+      case "en":
+        point = new naver.maps.Point(45, 10);
+        break;
+      case "ja":
+        point = new naver.maps.Point(35, 10);
+        break;
+    }
+    return point;
+  };
+
   const createElementMarker = () => {
     const elements = DataService.getAllElements();
     elements.forEach((element) => {
