@@ -177,6 +177,7 @@ $(document).ready(async () => {
 
     $(".confirm-btn").click(async () => {
       await handleBoardingGateConfirm();
+      handleAdModal();
     });
 
     $("#adClose").click(() => {
