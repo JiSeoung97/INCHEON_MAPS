@@ -263,6 +263,7 @@ table th:nth-child(3) {
 }
 .menuBtn {
   font-size: 0.9rem;
+  cursor: pointer;
 }
 .menuBtn:nth-child(1),
 .menuBtn:nth-child(2) {

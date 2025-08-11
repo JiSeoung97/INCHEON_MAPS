@@ -96,8 +96,7 @@ $(document).ready(async () => {
 
     const handleOtherMenuClick = async () => {
       if (boardingGate == null) {
-        const modal = document.getElementById("modal-background");
-        modal.style.display = "flex";
+        ModalService.boardingModalOpen();
       } else {
         try {
           BottomSheet.changeMenu(btnIdx);
@@ -165,6 +164,7 @@ $(document).ready(async () => {
         btnIdx = Number(e.currentTarget.dataset.idx);
       } catch (error) {}
       if (btnIdx === 0) {
+        console.log(btnIdx);
         await handleFirstMenuClick();
       } else {
         await handleOtherMenuClick();

@@ -20,7 +20,6 @@ body {
   position: relative;
   animation: float 6s ease-in-out infinite;
 }
-
 .error-code {
   font-size: 10rem;
   font-weight: 800;

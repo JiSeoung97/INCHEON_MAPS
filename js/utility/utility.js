@@ -16,13 +16,7 @@ const Utility = (() => {
         targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
         startLocation = area;
       } else {
-        const areas = DataService.getAllAreas();
-        areas.forEach((bArea) => {
-          if (bArea.name == "탑승게이트" + boardingGateNum) {
-            targetLocation = bArea.position;
-          }
-        });
-        startLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+        targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
       }
       if (targetLocation !== null) {
         const lng1 = area.position.lng;
@@ -50,7 +44,13 @@ const Utility = (() => {
           "a : ",
           a,
           "-------------------------------------------------",
-          boardingGateNum
+          Math.cos(degToRad(lat1)),
+          " ",
+          Math.cos(degToRad(lat2)),
+          " ",
+          Math.sin(dlng / 2) ** 2,
+          " ",
+          Math.sin(dLat / 2) ** 2
         );
         const distance =
           Math.round(
