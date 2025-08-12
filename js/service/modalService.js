@@ -1,5 +1,5 @@
-"use strict";
-
+import Logger from "../utility/logger.js";
+import MapService from "./mapService.js";
 const ModalService = (() => {
   let language;
 
@@ -7,7 +7,6 @@ const ModalService = (() => {
     language = MapService.languageReturn();
   };
   const modalLangChange = () => {
-    console.log(language);
     const tryMeal = document.getElementById("modalTryMeal");
     const modalTitle = document.getElementById("modalTitle");
     const subtext = document.getElementsByClassName("subtext");
@@ -26,7 +25,6 @@ const ModalService = (() => {
 
   const modalOpen = (index) => {
     const modal = document.getElementsByClassName("modal-overlay");
-    console.log("modal show : ", modal[index]);
     modal[index].classList.add("show");
   };
   const modalClose = (index) => {
@@ -35,7 +33,7 @@ const ModalService = (() => {
   };
   return {
     init: () => {
-      console.log("modalService init");
+      Logger.log("modalService init");
       init();
       let modalHeader = document.getElementsByClassName("modal-header");
       modalLangChange();
@@ -60,3 +58,5 @@ const ModalService = (() => {
     },
   };
 })();
+
+export default ModalService;

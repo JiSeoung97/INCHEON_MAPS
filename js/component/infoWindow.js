@@ -1,5 +1,5 @@
-"use strict";
-
+import MapService from "../service/mapService.js";
+import Utility from "../utility/utility.js";
 const InfoWindowService = (() => {
   let infoWindows = [];
   let language;
@@ -67,11 +67,6 @@ const InfoWindowService = (() => {
         "</div>"
       );
     } else {
-      console.log(
-        "areaData : ",
-        areaData,
-        "----------------------------------------------"
-      );
       let distance = Utility.getDistance(areaData, boardingGateNum);
       return (
         '<div class="info-window boardingGate' +
@@ -101,3 +96,4 @@ const InfoWindowService = (() => {
     },
   };
 })();
+export default InfoWindowService;

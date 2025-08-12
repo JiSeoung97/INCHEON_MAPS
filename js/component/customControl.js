@@ -1,5 +1,8 @@
-"use strict";
-
+import Logger from "../utility/logger.js";
+import MapService from "../service/mapService.js";
+import MarkerService from "../service/markerService.js";
+import InfoWindowService from "./infoWindow.js";
+import ModalService from "../service/modalService.js";
 const CustomControl = (() => {
   let language = [];
   let markers = [];
@@ -56,7 +59,7 @@ const CustomControl = (() => {
       customControlEvent();
       customControlSetMap();
     } catch (error) {
-      console.error("언어변경실패", error);
+      Logger.error("언어변경실패", error);
     }
   };
   const deletecustomControl = () => {
@@ -148,7 +151,6 @@ const CustomControl = (() => {
     );
 
     let langChan = "";
-    console.log("selectedLangArray : ", selectedLangArray);
     selectedLangArray.forEach((lang) => {
       langImgArray.forEach((langImg) => {
         if (langImg[0] == lang) {
@@ -180,7 +182,6 @@ const CustomControl = (() => {
     let mapLangs;
 
     naver.maps.Event.addDOMListener(boardingInfo.getElement(), "click", () => {
-      console.log("modal");
       ModalService.boardingModalOpen();
     });
     naver.maps.Event.addListener(map, "center_changed", () => {
@@ -249,7 +250,7 @@ const CustomControl = (() => {
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
         MapService.moveBoardingGate(boardingGateNum);
-        console.log(boardingGateNum);
+        Logger.log(boardingGateNum);
         Utility.openBoardingWindowInfo();
       } else {
         ModalService.boardingModalOpen();
@@ -283,7 +284,7 @@ const CustomControl = (() => {
           marker.setMap(map);
           userMarker.push(marker);
           const boardingPolyline = PolylineService.getBoardingPolyline();
-          console.log("boardingPolyline : ", boardingPolyline);
+          Logger.log("boardingPolyline : ", boardingPolyline);
           if (boardingPolyline != null) {
             PolylineService.updatePolyline();
           }
@@ -292,7 +293,7 @@ const CustomControl = (() => {
         }
       } catch (error) {
         alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
-        console.log("위치 권한 오류: " + error.message, "error");
+        Logger.log("위치 권한 오류: " + error.message, "error");
       }
     });
   };
@@ -313,7 +314,7 @@ const CustomControl = (() => {
 
       map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
     } catch (error) {
-      console.error(`커스텀 컨트롤 삭제 실패:`, error);
+      Logger.error(`커스텀 컨트롤 삭제 실패:`, error);
     }
   };
   const createLanguageArrayWithSelectiveImg = (
@@ -350,11 +351,11 @@ const CustomControl = (() => {
 
   return {
     init: async () => {
-      console.log("customControl init");
+      Logger.log("customControl init");
       map = MapService.getMap();
       boardingGateNum = sessionStorage.getItem("boardingGate");
       language = MapService.languageReturn();
-      console.log("language : ", language);
+      Logger.log("language : ", language);
       InfoWindowService.getInfoWindows();
       MarkerService.getMarkers();
       createCustomControl();
@@ -366,3 +367,5 @@ const CustomControl = (() => {
     },
   };
 })();
+
+export default CustomControl;

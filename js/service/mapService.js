@@ -1,5 +1,12 @@
-"use strict";
-
+import Logger from "../utility/logger.js";
+import BottomSheet from "../component/bottomSheet.js";
+import DataService from "./dataService.js";
+import PolylineService from "./polylineService.js";
+import RecoService from "./recoService.js";
+import MarkerService from "./markerService.js";
+import DragService from "./dragService.js";
+import Translate from "../utility/translate.js";
+import InfoWindowService from "../component/infoWindow.js";
 const MapService = (() => {
   let map = null;
   let markers = [];
@@ -22,15 +29,13 @@ const MapService = (() => {
       BottomSheet.languageChan(languageData[lang]);
       return languageData[lang];
     } catch (error) {
-      console.log("언어 로드 실패 : ", error);
+      Logger.error("언어 로드 실패 : ", error);
     }
   };
 
   const zoomEvent = () => {
     naver.maps.Event.addListener(map, "zoom_changed", () => {
-      console.log("zoomEvent 작동");
       selectedInfowindow = InfoWindowService.getInfoWindows();
-      console.log("selectedInfowindow : ", selectedInfowindow);
       MarkerService.replaceAllMarkerIcon();
       MarkerService.getZoomEvent();
       if (map.getZoom() < 18) {
@@ -58,7 +63,9 @@ const MapService = (() => {
       index > 132 ||
       index == 4 ||
       index == 5 ||
-      index == 44
+      index == 13 ||
+      index == 44 ||
+      index == null
     );
   };
 
@@ -85,22 +92,22 @@ const MapService = (() => {
     };
 
     map = new naver.maps.Map("map", mapOptions);
-    console.log("map객체 생성완료");
+    Logger.log("map객체 생성완료");
     return map;
   };
 
   return {
     init: async () => {
-      console.log("MapService 초기화 시작");
+      Logger.log("MapService 초기화 시작");
 
       const mapElement = document.getElementById("map");
       if (!mapElement) {
-        console.error("지도를 표시할 엘리먼트를 찾을 수 없음.");
+        Logger.error("지도를 표시할 엘리먼트를 찾을 수 없음.");
         return null;
       }
 
       if (!window.naver || !naver.maps) {
-        console.error("네이버 지도 API가 로드되지 않았습니다.");
+        Logger.error("네이버 지도 API가 로드되지 않았습니다.");
         return null;
       }
       let lang = sessionStorage.getItem("language");
@@ -113,21 +120,19 @@ const MapService = (() => {
         language = await loadTranslateData(lang);
         languageText = language[lang];
       }
-      console.log("language load완료");
+      Logger.log("language load완료");
       try {
-        console.log("지도 초기화 시도...");
-
         map = initMap();
         return map;
       } catch (error) {
-        console.error("지도 초기화 중 오류 발생: ", error);
-        console.log("지도 초기화 중 오류가 발생했습니다.", "error");
+        Logger.error("지도 초기화 중 오류 발생: ", error);
+        Logger.log("지도 초기화 중 오류가 발생했습니다.", error);
         return null;
       }
     },
     setting: async () => {
       try {
-        console.log("setting 시작");
+        Logger.log("setting 시작");
         let lang = sessionStorage.getItem("language");
         firstlang = lang;
         if (lang == null) {
@@ -143,10 +148,10 @@ const MapService = (() => {
         await RecoService.recoGate();
         await MarkerService.init();
         boardingGateNum = sessionStorage.getItem("boardingGate");
-        console.log("boardingGateNum :", boardingGateNum);
+        Logger.log("boardingGateNum :", boardingGateNum);
         const data = DataService.initData();
         if (!data) {
-          console.log("데이터 초기화 실패", "error");
+          Logger.log("데이터 초기화 실패", "error");
           return map;
         }
         const allAreas = DataService.getAllAreas();
@@ -157,14 +162,12 @@ const MapService = (() => {
         boardingInfoWindows = [];
         zoomOutMarkers = [];
         if (boardingGateNum != null) {
-          console.log("BoardingMarker 생성");
           await MarkerService.createBoardingMarker(boardingGateNum);
           boardingMarkers = MarkerService.getBoardingMarker();
-          console.log("boardingMarkers : ", boardingMarkers[0][0]);
           await PolylineService.createBoardingPolyline(boardingMarkers[0]);
           PolylineService.setPolyline();
         } else {
-          console.error("boardingMarker 생성 실패");
+          Logger.error("boardingMarker 생성 실패");
         }
         for (let index = 0; index < allAreas.length; index++) {
           const area = allAreas[index];
@@ -181,9 +184,8 @@ const MapService = (() => {
         }
         zoomEvent();
         naver.maps.Event.addListener(map, "click", function (e) {
-          console.log("mapclick");
           let latLng = { x: e.coord.x, y: e.coord.y };
-          console.log(latLng);
+          Logger.log(latLng);
           infoWindows = InfoWindowService.getInfoWindows();
           MarkerService.replaceAllMarkerIcon();
           if (MarkerService.getSelectedMarker() != null) {
@@ -196,9 +198,9 @@ const MapService = (() => {
         });
 
         await BottomSheet.showGateCongestion();
-        console.log("setting 완료");
+        Logger.log("setting 완료");
       } catch (error) {
-        console.error("data를 가져오는 도중 error발생 : ", error);
+        Logger.error("data를 가져오는 도중 error발생 : ", error);
       }
     },
     languageReturn: () => {
@@ -224,7 +226,6 @@ const MapService = (() => {
       MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
       Array.from(areaData).forEach((area) => {
         if (area.name == "탑승게이트" + boardingGateNum) {
-          console.log(area.position.lat);
           let movePosition = naver.maps.LatLng(
             area.position.lat - 0.0003,
             area.position.lng
@@ -238,3 +239,5 @@ const MapService = (() => {
     },
   };
 })();
+
+export default MapService;

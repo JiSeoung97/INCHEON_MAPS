@@ -1,4 +1,6 @@
-"use strict";
+import Logger from "../utility/logger.js";
+import DataService from "./dataService.js";
+import Utility from "../utility/utility.js";
 
 const RecoService = (() => {
   let recoArray = [];
@@ -30,9 +32,9 @@ const RecoService = (() => {
 
       recoArray.sort((a, b) => a.time - b.time);
 
-      console.log("추천 게이트 계산 완료:", recoArray);
+      Logger.log("추천 게이트 계산 완료:", recoArray);
     } catch (error) {
-      console.error("추천 게이트 계산 실패:", error);
+      Logger.error("추천 게이트 계산 실패:", error);
     }
   };
   const getAreaDistance = async (area) => {
@@ -42,7 +44,7 @@ const RecoService = (() => {
         Number(distanceStr.replace("M", "").replace(",", "")) / 70
       );
     } catch (error) {
-      console.error("거리 계산 실패:", error);
+      Logger.error("거리 계산 실패:", error);
       return 0;
     }
   };
@@ -54,7 +56,6 @@ const RecoService = (() => {
     departureAreas.forEach((departure, index) => {
       if (departure.name == recoArray[0].name) {
         idx = index;
-        console.log(departure.name, idx);
       }
     });
     eastWest[idx].getElementsByClassName("like-icon")[0].style.display = "flex";
@@ -66,7 +67,7 @@ const RecoService = (() => {
         await recoGate();
         return recoArray;
       } catch (error) {
-        console.error("추천 게이트 설정 실패 : ", error);
+        Logger.error("추천 게이트 설정 실패 : ", error);
       }
     },
     recoLikeIconView: () => {
@@ -77,3 +78,5 @@ const RecoService = (() => {
     },
   };
 })();
+
+export default RecoService;

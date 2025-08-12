@@ -1,5 +1,6 @@
-"use strict";
-
+import Logger from "./logger.js";
+import MapService from "../service/mapService.js";
+import Utility from "./utility.js";
 const TimeCalculator = (() => {
   let boardingGateNum;
   const timereset = async () => {
@@ -27,7 +28,7 @@ const TimeCalculator = (() => {
           minute;
         resolve();
       } catch (error) {
-        console.error("시간 설정 실패");
+        Logger.error("시간 설정 실패");
         resolve();
       }
     });
@@ -53,11 +54,11 @@ const TimeCalculator = (() => {
       // 탑승구까지 이동 시간
       const boardingDistance = await Utility.getDistance(
         foundData,
-        boardingGateNum
+        boardingGateNum,
+        true
       );
-      boardingDistance.replace("M", "");
       const boardingTime = Math.floor(
-        Number(boardingDistance.replace("M", "")) / 60
+        Number(boardingDistance.replace("M", "").replace(",", "")) / 60
       );
       totalTime += boardingTime;
       const boardingTimeStr =
@@ -102,7 +103,7 @@ const TimeCalculator = (() => {
         times: [hallWaiting, estimatedTime, boardingTimeStr],
       };
     } catch (error) {
-      console.error("시간 계산 실패:", error);
+      Logger.error("시간 계산 실패:", error);
       return {
         total: `0${language["minute"]}`,
         times: [
@@ -130,7 +131,7 @@ const TimeCalculator = (() => {
         }
       });
     } catch (error) {
-      console.error("시간 표시 업데이트 실패:", error);
+      Logger.error("시간 표시 업데이트 실패:", error);
     }
   };
   return {
@@ -144,8 +145,10 @@ const TimeCalculator = (() => {
       try {
         await updateTimeDisplay(timeData);
       } catch (error) {
-        console.error("시간 표시 업데이트 실패:", error);
+        Logger.error("시간 표시 업데이트 실패:", error);
       }
     },
   };
 })();
+
+export default TimeCalculator;
