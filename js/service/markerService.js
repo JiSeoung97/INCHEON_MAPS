@@ -1,5 +1,8 @@
 import Logger from "../utility/logger.js";
-
+import MapService from "./mapService.js";
+import DataService from "./dataService.js";
+import Utility from "../utility/utility.js";
+import InfoWindowService from "../component/infoWindow.js";
 const MarkerService = (() => {
   let markers = [];
   let infoWindows = [];
@@ -474,3 +477,5 @@ const MarkerService = (() => {
     },
   };
 })();
+
+export default MarkerService;

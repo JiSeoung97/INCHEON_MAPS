@@ -1,4 +1,6 @@
 import Logger from "../utility/logger.js";
+import DataService from "./dataService.js";
+import Utility from "../utility/utility.js";
 
 const RecoService = (() => {
   let recoArray = [];
@@ -76,3 +78,5 @@ const RecoService = (() => {
     },
   };
 })();
+
+export default RecoService;

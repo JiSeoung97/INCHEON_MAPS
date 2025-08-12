@@ -1,5 +1,5 @@
 import Logger from "./logger.js";
-
+import DataService from "../service/dataService.js";
 const Utility = (() => {
   let map;
   let markers = [];
@@ -8,7 +8,7 @@ const Utility = (() => {
   function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  const getDistance = (area, boardingGateNum) => {
+  const getDistance = async (area, boardingGateNum, bottomSheet) => {
     try {
       let startLocation = null;
       let targetLocation = null;
@@ -18,12 +18,21 @@ const Utility = (() => {
       } else {
         targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
       }
+      if (bottomSheet) {
+        startLocation = area;
+        const datas = await DataService.getAllAreas();
+        Array(datas).forEach((data) => {
+          if (data.name == "탑승게이트" + boardingGateNum)
+            targetLocation = data;
+        });
+        console.log(targetLocation);
+      }
+
       if (targetLocation !== null) {
         const lng1 = area.position.lng;
         const lat1 = area.position.lat;
         const lng2 = targetLocation.lng;
         const lat2 = targetLocation.lat;
-
         const earthR = 6371000; // 지구 반지름
         const degToRad = (deg) => deg * (Math.PI / 180);
 
@@ -142,8 +151,8 @@ const Utility = (() => {
     return gaugeColor;
   };
   return {
-    getDistance: (area, boardingGateNum = null) => {
-      return getDistance(area, boardingGateNum);
+    getDistance: (area, boardingGateNum = null, bottomSheet = false) => {
+      return getDistance(area, boardingGateNum, bottomSheet);
     },
     calculateMidPoint: (position1, position2) => {
       return calculateMidPoint(position1, position2);
@@ -165,3 +174,4 @@ const Utility = (() => {
     },
   };
 })();
+export default Utility;

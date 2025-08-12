@@ -1,5 +1,5 @@
 import Logger from "../utility/logger.js";
-
+import MapService from "./mapService.js";
 const ModalService = (() => {
   let language;
 
@@ -58,3 +58,5 @@ const ModalService = (() => {
     },
   };
 })();
+
+export default ModalService;

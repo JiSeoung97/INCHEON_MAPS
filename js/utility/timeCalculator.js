@@ -1,5 +1,6 @@
 import Logger from "./logger.js";
-
+import MapService from "../service/mapService.js";
+import Utility from "./utility.js";
 const TimeCalculator = (() => {
   let boardingGateNum;
   const timereset = async () => {
@@ -53,11 +54,12 @@ const TimeCalculator = (() => {
       // 탑승구까지 이동 시간
       const boardingDistance = await Utility.getDistance(
         foundData,
-        boardingGateNum
+        boardingGateNum,
+        true
       );
-      boardingDistance.replace("M", "");
+      console.log(foundData);
       const boardingTime = Math.floor(
-        Number(boardingDistance.replace("M", "")) / 60
+        Number(boardingDistance.replace("M", "").replace(",", "")) / 60
       );
       totalTime += boardingTime;
       const boardingTimeStr =
@@ -149,3 +151,5 @@ const TimeCalculator = (() => {
     },
   };
 })();
+
+export default TimeCalculator;

@@ -167,3 +167,5 @@ const DragService = (() => {
     },
   };
 })();
+
+export default DragService;

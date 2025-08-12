@@ -1,5 +1,12 @@
 import Logger from "../utility/logger.js";
-
+import BottomSheet from "../component/bottomSheet.js";
+import DataService from "./dataService.js";
+import PolylineService from "./polylineService.js";
+import RecoService from "./recoService.js";
+import MarkerService from "./markerService.js";
+import DragService from "./dragService.js";
+import Translate from "../utility/translate.js";
+import InfoWindowService from "../component/infoWindow.js";
 const MapService = (() => {
   let map = null;
   let markers = [];
@@ -232,3 +239,5 @@ const MapService = (() => {
     },
   };
 })();
+
+export default MapService;

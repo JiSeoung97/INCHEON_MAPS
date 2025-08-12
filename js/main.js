@@ -1,5 +1,11 @@
 import Logger from "./utility/logger.js";
-
+import utLocation from "./utility/location.js";
+import MapService from "./service/mapService.js";
+import BottomSheet from "./component/bottomSheet.js";
+import CustomControl from "./component/customControl.js";
+import ModalService from "./service/modalService.js";
+import MarkerService from "./service/markerService.js";
+import PolylineService from "./service/polylineService.js";
 $(document).ready(async () => {
   let appConfig = {};
 
@@ -25,7 +31,6 @@ $(document).ready(async () => {
       };
     }
   };
-  HttpError.initHttpErrorHandler();
   let map;
   let boardingGate = sessionStorage.getItem("boardingGate");
   let btnIdx = 0;
@@ -275,7 +280,7 @@ $(document).ready(async () => {
   } catch (error) {
     Logger.error("애플리케이션 초기화 중 치명적 오류:", error);
     window.location.href = "errorPage.html";
-    alert(
+    Logger.error(
       "애플리케이션을 초기화하는 중 오류가 발생했습니다. 페이지를 새로고침해주세요."
     );
   }

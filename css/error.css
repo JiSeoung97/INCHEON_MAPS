@@ -21,7 +21,7 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 .error-code {
-  font-size: 10rem;
+  font-size: 5rem;
   font-weight: 800;
   color: #5e56f2;
   position: relative;

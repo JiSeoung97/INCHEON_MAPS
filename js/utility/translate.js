@@ -1,5 +1,5 @@
-"use strict";
-
+import Logger from "./logger.js";
+import MapService from "../service/mapService.js";
 const Translate = (() => {
   let language;
   const transName = async (name) => {
@@ -62,3 +62,5 @@ const Translate = (() => {
     },
   };
 })();
+
+export default Translate;

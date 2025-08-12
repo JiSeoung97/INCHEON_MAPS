@@ -1,5 +1,8 @@
 import Logger from "../utility/logger.js";
-
+import MapService from "../service/mapService.js";
+import MarkerService from "../service/markerService.js";
+import InfoWindowService from "./infoWindow.js";
+import ModalService from "../service/modalService.js";
 const CustomControl = (() => {
   let language = [];
   let markers = [];
@@ -364,3 +367,5 @@ const CustomControl = (() => {
     },
   };
 })();
+
+export default CustomControl;

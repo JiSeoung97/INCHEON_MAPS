@@ -1,5 +1,5 @@
-"use strict";
-
+import MapService from "../service/mapService.js";
+import Utility from "../utility/utility.js";
 const InfoWindowService = (() => {
   let infoWindows = [];
   let language;
@@ -96,3 +96,4 @@ const InfoWindowService = (() => {
     },
   };
 })();
+export default InfoWindowService;

@@ -1,5 +1,9 @@
 import Logger from "../utility/logger.js";
-
+import RecoService from "../service/recoService.js";
+import DataService from "../service/dataService.js";
+import TimeCalculator from "../utility/timeCalculator.js";
+import Translate from "../utility/translate.js";
+import Utility from "../utility/utility.js";
 const BottomSheet = (() => {
   let language;
   let departurehall = [];
@@ -499,3 +503,5 @@ const BottomSheet = (() => {
     },
   };
 })();
+
+export default BottomSheet;
