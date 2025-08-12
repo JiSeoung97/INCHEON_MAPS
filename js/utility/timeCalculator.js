@@ -57,7 +57,6 @@ const TimeCalculator = (() => {
         boardingGateNum,
         true
       );
-      console.log(foundData);
       const boardingTime = Math.floor(
         Number(boardingDistance.replace("M", "").replace(",", "")) / 60
       );
