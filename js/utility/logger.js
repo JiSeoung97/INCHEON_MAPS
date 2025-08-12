@@ -6,7 +6,7 @@ const Logger = {
    */
   log: function (...args) {
     // window.appConfig 객체가 존재하고, BRANCH가 'dev'일 때만 실행
-    if (window.appConfig?.BRANCH === "dev") {
+    if (window.appConfig?.ENV_MODE === "dev") {
       console.log(...args);
     }
   },
@@ -17,7 +17,7 @@ const Logger = {
    * @param {...any} args - console.warn과 동일한 인자를 받습니다.
    */
   warn: function (...args) {
-    if (window.appConfig?.BRANCH === "dev") {
+    if (window.appConfig?.ENV_MODE === "dev") {
       console.warn(...args);
     }
   },

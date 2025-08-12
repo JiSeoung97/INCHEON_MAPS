@@ -6,6 +6,7 @@ import CustomControl from "./component/customControl.js";
 import ModalService from "./service/modalService.js";
 import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
+import Utility from "./utility/utility.js";
 $(document).ready(async () => {
   let appConfig = {};
 

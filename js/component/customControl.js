@@ -3,6 +3,9 @@ import MapService from "../service/mapService.js";
 import MarkerService from "../service/markerService.js";
 import InfoWindowService from "./infoWindow.js";
 import ModalService from "../service/modalService.js";
+import Utility from "../utility/utility.js";
+import utLocation from "../utility/location.js";
+import PolylineService from "../service/polylineService.js";
 const CustomControl = (() => {
   let language = [];
   let markers = [];
