@@ -7,10 +7,8 @@ const Translate = (() => {
       try {
         language = MapService.languageReturn();
         let names = name.split(" ");
-        console.log(name);
         names[0] = names[0].replace("출국장", "");
         let newName = "gate" + names[0];
-        console.log("newName : ", newName);
 
         let eastWest;
         if (names[1] == "동편") {
@@ -23,7 +21,7 @@ const Translate = (() => {
           language[newName].replace("<br>", "") + " " + language[eastWest];
         resolve(result);
       } catch (error) {
-        console.error("이름 번역 실패:", error);
+        Logger.error("이름 번역 실패:", error);
         resolve(name); // 원본 이름 반환
       }
     });
@@ -36,7 +34,7 @@ const Translate = (() => {
       menuBtn = Array.from(document.getElementsByClassName("menuBtn"));
       conEx = document.getElementById("congestionEx");
     } catch (error) {
-      console.error("시간 표시 업데이트 실패 :", error);
+      Logger.error("시간 표시 업데이트 실패 :", error);
     }
     menuBtn.forEach((menu, index) => {
       if (index == 0) {
@@ -59,7 +57,7 @@ const Translate = (() => {
       try {
         await translateMenu();
       } catch (error) {
-        console.error("메뉴 번역 실패:", error);
+        Logger.error("메뉴 번역 실패:", error);
       }
     },
   };

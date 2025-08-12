@@ -1,4 +1,4 @@
-"use strict";
+import Logger from "../utility/logger.js";
 
 const MarkerService = (() => {
   let markers = [];
@@ -93,7 +93,7 @@ const MarkerService = (() => {
 
       return { marker, infoWindow };
     } catch (error) {
-      console.error("출국장 마커 생성 실패 : ", error);
+      Logger.error("출국장 마커 생성 실패 : ", error);
     }
   };
 
@@ -136,7 +136,6 @@ const MarkerService = (() => {
   };
 
   const allElementShow = () => {
-    console.log("====element Show====");
     elementsMarker.forEach((element) => {
       element.setMap(map);
     });
@@ -170,13 +169,12 @@ const MarkerService = (() => {
         setTimeout(() => {
           map.setZoom(map.getZoom() + 1, true);
         }, 100);
-        console.log("zoomclick");
       });
       zoomOutMarkers.push(zoommarker);
 
       return { zoommarker };
     } catch (error) {
-      console.error("탑승구 줌아웃 마커 생성 실패", error);
+      Logger.error("탑승구 줌아웃 마커 생성 실패", error);
     }
   };
   const getZoomMarkerIcon = (area) => {
@@ -202,7 +200,6 @@ const MarkerService = (() => {
     });
     replaceAllMarkerIcon();
 
-    console.log("selectedMarker : ", selectedMarker);
     if (selectedMarker == selectMarker) {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -232,8 +229,6 @@ const MarkerService = (() => {
   };
   const replaceBoardingMarkerIcon = (selectMarker) => {
     let newIcon;
-    console.log("selectedMarker : ", selectedBoardingMarker);
-    console.log(selectMarker);
     if (selectedBoardingMarker != null) {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -263,7 +258,6 @@ const MarkerService = (() => {
     let newIcon;
     let boardingIcon;
     let newContent;
-    console.log("selectedBoardingMarker : ", selectedBoardingMarker);
     markers.forEach((marker, index) => {
       if (index % 2 == 1) {
         newContent = marker
@@ -302,9 +296,7 @@ const MarkerService = (() => {
   };
   function zoomMarkerEvent() {
     let currentZoom = Number(map.getZoom());
-    console.log(currentZoom);
     if (currentZoom <= 17) {
-      console.log("markers 삭제 및 zoomoutMarker생성");
       markers.forEach((marker) => {
         marker.setMap(null);
       });
@@ -312,11 +304,9 @@ const MarkerService = (() => {
         marker.setMap(map);
       });
     } else {
-      console.log("markers 생성 및 zoomoutMarker제거");
       markers.forEach((marker) => {
         marker.setMap(map);
       });
-      console.log("markers : ", markers);
       zoomOutMarkers.forEach((marker) => {
         marker.setMap(null);
       });
@@ -348,7 +338,7 @@ const MarkerService = (() => {
     } else if (departure[1] == "동편") {
       eastWest = language["east"];
     } else {
-      console.log("eastwest error");
+      Logger.log("eastwest error");
     }
 
     if (index % 2 == 1) {
@@ -379,7 +369,7 @@ const MarkerService = (() => {
         marker.setMap(null);
       });
     } catch (error) {
-      console.error("marker가 존재하지 않음");
+      Logger.error("marker가 존재하지 않음");
     }
   };
 
@@ -391,7 +381,7 @@ const MarkerService = (() => {
         markers.forEach((marker) => {
           marker.setMap(null);
 
-          console.log("maker.setMap(null) 작동함");
+          Logger.log("maker.setMap(null) 작동함");
         });
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
@@ -436,14 +426,11 @@ const MarkerService = (() => {
           });
         }
         boardingGateNum = sessionStorage.getItem("boardingGate");
-        console.log("boardingGateNum : ", boardingGateNum);
         if (boardingGateNum != null) {
-          console.log("boardingMarkers : ", boardingMarkers);
-          console.log(markers);
           boardingMarkers[0].setMap(map);
         }
       } catch (error) {
-        console.error("showMarker 실패 : ", error);
+        Logger.error("showMarker 실패 : ", error);
       }
     },
     getZoomEvent: () => {

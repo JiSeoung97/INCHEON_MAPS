@@ -1,4 +1,4 @@
-"use strict";
+import Logger from "../utility/logger.js";
 
 const DataService = (() => {
   let data = null;
@@ -51,9 +51,8 @@ const DataService = (() => {
       data = window.mockData || null;
       apiDatas = window.mockData2.data[0].response.body.items.item || null;
       elements = data.elements.areas;
-      console.log(elements);
       if (!data) {
-        console.error("모킹 데이터 로드 실패함");
+        Logger.error("모킹 데이터 로드 실패함");
         return null;
       }
       updateCongestion();
@@ -73,7 +72,7 @@ const DataService = (() => {
     },
     getCompanyLocation: () => {
       if (!data) {
-        console.log("data", data);
+        Logger.log("data", data);
         return null;
       }
       return data.companyLocation;
@@ -110,7 +109,7 @@ const DataService = (() => {
 
     getAllAreas: () => {
       if (!data) {
-        console.log(data);
+        Logger.log(data);
         return null;
       }
       const allAreas = [];

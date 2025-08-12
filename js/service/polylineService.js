@@ -1,4 +1,4 @@
-"use strict";
+import Logger from "../utility/logger.js";
 
 const PolylineService = (() => {
   let polylines = [];
@@ -6,8 +6,6 @@ const PolylineService = (() => {
   let boardingMarker;
   let boardingPolyline = null;
   const createPolyline = (markers) => {
-    console.log("createPolyline");
-    console.log("markers : ", markers);
     for (let i = 0; i < markers.length; i += 2) {
       let polyline = new naver.maps.Polyline({
         map: null,
@@ -34,18 +32,15 @@ const PolylineService = (() => {
       strokeLineCap: "butt",
       strokeStyle: "longdash",
     });
-    console.log("boardingPolyline : ", boardingPolyline);
   };
 
   const updatePolyline = async (boardingGateNum) => {
     const userLocation = await utLocation.getCurrentPosition();
     let areas = DataService.getAllAreas();
-    console.log("boardingGateNum : ", boardingGateNum);
     if (boardingGateNum != null) {
       const area = areas.find(
         (area) => area.name === "탑승게이트" + boardingGateNum
       );
-      console.log("area : ", area);
       boardingPolyline.setPath([area.position, userLocation]);
     } else {
       let xy = { x: boardingMarker.position.x, y: boardingMarker.position.y };
@@ -54,7 +49,6 @@ const PolylineService = (() => {
   };
 
   const setPolyline = () => {
-    console.log(boardingPolyline);
     boardingPolyline.setMap(map);
   };
 
@@ -64,7 +58,7 @@ const PolylineService = (() => {
         polyline.setMap(null);
       });
     } catch (error) {
-      console.error("polyline setMap(null)실패 : ", error);
+      Logger.error("polyline setMap(null)실패 : ", error);
     }
   };
   const viewPolyLine = async () => {
@@ -73,7 +67,7 @@ const PolylineService = (() => {
         polyline.setMap(map);
       });
     } catch (error) {
-      console.error("polyline setMap(map)실패 : ", error);
+      Logger.error("polyline setMap(map)실패 : ", error);
     }
   };
   return {

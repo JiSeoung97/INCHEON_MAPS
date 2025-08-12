@@ -1,4 +1,4 @@
-"use strict";
+import Logger from "../utility/logger.js";
 
 const DragService = (() => {
   let handle;
@@ -18,7 +18,7 @@ const DragService = (() => {
   }
   function calculatePeekHeight() {
     if (!peekElement) {
-      console.error("peek 클래스 요소를 찾을 수 없습니다!");
+      Logger.error("peek 클래스 요소를 찾을 수 없습니다!");
       return 100; // 기본값
     }
     let totalHeight = 0;
@@ -42,9 +42,7 @@ const DragService = (() => {
       totalHeight += height;
     });
 
-    console.log("Peek element height1:", peekElement[0].offsetHeight);
-    console.log("Peek element height2:", peekElement[1].offsetHeight);
-    console.log("Total peek height:", totalHeight);
+    Logger.log("Total peek height:", totalHeight);
 
     return totalHeight;
   }
@@ -120,11 +118,9 @@ const DragService = (() => {
     let targetPosition = POSITIONS.CLOSED;
     let minDistance = Math.abs(currentBottom - POSITIONS.CLOSED);
     for (const [key, position] of Object.entries(POSITIONS)) {
-      console.log(POSITIONS);
-      console.log(position);
       const distance = Math.abs(currentBottom - position);
       if (distance < minDistance) {
-        console.log("min,distance : ", distance);
+        Logger.log("min,distance : ", distance);
         minDistance = distance;
         targetPosition = position;
       }
@@ -135,7 +131,7 @@ const DragService = (() => {
   function initialize() {
     currentPosition = POSITIONS.CLOSED;
     if (!peekElement) {
-      console.error("peek 클래스 요소가 없습니다. HTML을 확인해주세요.");
+      Logger.error("peek 클래스 요소가 없습니다. HTML을 확인해주세요.");
       return;
     }
 
@@ -165,9 +161,8 @@ const DragService = (() => {
         getElement();
         initialize();
         bottomSheetEvent();
-        console.log("bottomSheet 초기화 완료");
       } catch (error) {
-        console.error("bottomSheet 초기화 실패 : ", error);
+        Logger.error("bottomSheet drag 초기화 실패 : ", error);
       }
     },
   };

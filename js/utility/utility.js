@@ -1,4 +1,4 @@
-"use strict";
+import Logger from "./logger.js";
 
 const Utility = (() => {
   let map;
@@ -23,12 +23,7 @@ const Utility = (() => {
         const lat1 = area.position.lat;
         const lng2 = targetLocation.lng;
         const lat2 = targetLocation.lat;
-        console.log(
-          "area : ",
-          area.position,
-          "targetLocation : ",
-          targetLocation
-        );
+
         const earthR = 6371000; // 지구 반지름
         const degToRad = (deg) => deg * (Math.PI / 180);
 
@@ -40,18 +35,7 @@ const Utility = (() => {
           Math.cos(degToRad(lat1)) *
             Math.cos(degToRad(lat2)) *
             Math.sin(dlng / 2) ** 2;
-        console.log(
-          "a : ",
-          a,
-          "-------------------------------------------------",
-          Math.cos(degToRad(lat1)),
-          " ",
-          Math.cos(degToRad(lat2)),
-          " ",
-          Math.sin(dlng / 2) ** 2,
-          " ",
-          Math.sin(dLat / 2) ** 2
-        );
+
         const distance =
           Math.round(
             earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
@@ -59,7 +43,7 @@ const Utility = (() => {
         return distance;
       }
     } catch (error) {
-      console.error("위치권한이 필요합니다 : ", error);
+      Logger.error("위치권한이 필요합니다 : ", error);
     }
   };
 
@@ -89,7 +73,6 @@ const Utility = (() => {
       markers[idx].position._lat - 0.0003,
       markers[idx].position._lng
     );
-    console.log(map);
     map.panTo(newPosition, transition);
     await delay(1000);
     setTimeout(() => {

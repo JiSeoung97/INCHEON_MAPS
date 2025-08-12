@@ -1,4 +1,4 @@
-"use strict";
+import Logger from "../utility/logger.js";
 
 const BottomSheet = (() => {
   let language;
@@ -19,7 +19,7 @@ const BottomSheet = (() => {
 
       const contentsEl = document.getElementsByClassName("eastWest");
       if (!contentsEl || contentsEl.length === 0) {
-        console.warn("eastWest 요소들을 찾을 수 없습니다.");
+        Logger.error("eastWest 요소들을 찾을 수 없습니다.");
         return;
       }
 
@@ -39,7 +39,7 @@ const BottomSheet = (() => {
       }
       RecoService.recoLikeIconView();
     } catch (error) {
-      console.error("게이트 혼잡도 표시 실패:", error);
+      Logger.error("게이트 혼잡도 표시 실패:", error);
     }
   };
   const getCongestionInfo = (congestionLevel) => {
@@ -108,7 +108,7 @@ const BottomSheet = (() => {
           eastWest.push(a);
         }
       });
-      console.log("eastWest : ", eastWest);
+
       eastWest.forEach((divBox, boxIndex) => {
         if (index == boxIndex) {
           divBox.style.setProperty(
@@ -120,7 +120,7 @@ const BottomSheet = (() => {
         }
       });
     } catch (error) {
-      console.error("error :", error);
+      Logger.error("error :", error);
     }
   };
   const resetAllBorderColor = () => {
@@ -133,7 +133,7 @@ const BottomSheet = (() => {
     try {
       const moveGate = document.getElementsByClassName("eastWest");
       if (!moveGate || moveGate.length === 0) {
-        console.warn("eastWest 요소들을 찾을 수 없습니다.");
+        Logger.error("eastWest 요소들을 찾을 수 없습니다.");
         return;
       }
 
@@ -151,12 +151,12 @@ const BottomSheet = (() => {
             Utility.openWindowInfo(index);
             await changeBorderColor(index);
           } catch (error) {
-            console.error(`게이트 ${index} 클릭 처리 오류:`, error);
+            Logger.error(`게이트 ${index} 클릭 처리 오류:`, error);
           }
         });
       });
     } catch (error) {
-      console.error("게이트 이벤트 리스너 설정 실패:", error);
+      Logger.error("게이트 이벤트 리스너 설정 실패:", error);
     }
   };
 
@@ -167,7 +167,7 @@ const BottomSheet = (() => {
       const controls = document.getElementById("controls");
 
       if (!menuBtn || !controls) {
-        console.error("필요한 DOM 요소를 찾을 수 없습니다.");
+        Logger.error("필요한 DOM 요소를 찾을 수 없습니다.");
         return;
       }
 
@@ -179,7 +179,7 @@ const BottomSheet = (() => {
         ModalService.boardingModalOpen();
       }
     } catch (error) {
-      console.error("메뉴 변경 실패:", error);
+      Logger.error("메뉴 변경 실패:", error);
     }
   };
   const handleFirstMenu = async (menuBtn, controls) => {
@@ -192,7 +192,7 @@ const BottomSheet = (() => {
       await TimeCalculator.timereset();
       await setupGateEventListeners();
     } catch (error) {
-      console.error("첫 번째 메뉴 처리 실패:", error);
+      Logger.error("첫 번째 메뉴 처리 실패:", error);
     }
   };
   const handleSecondMenu = async (menuBtn, controls) => {
@@ -211,7 +211,7 @@ const BottomSheet = (() => {
       await trainShow();
       await setupRecommendationEvents();
     } catch (error) {
-      console.error("두 번째 메뉴 처리 실패:", error);
+      Logger.error("두 번째 메뉴 처리 실패:", error);
     }
   };
   const createFirstMenuHTML = () => {
@@ -314,7 +314,7 @@ const BottomSheet = (() => {
 
       await updateRecommendationRanks();
     } catch (error) {
-      console.error("추천 이벤트 설정 실패:", error);
+      Logger.error("추천 이벤트 설정 실패:", error);
     }
   };
   const handlePriorityClick = async (priority) => {
@@ -346,7 +346,7 @@ const BottomSheet = (() => {
         reco.style.display = "none";
       }
     } catch (error) {
-      console.error("우선순위 클릭 처리 실패:", error);
+      Logger.error("우선순위 클릭 처리 실패:", error);
     }
   };
   const updateRecommendationRanks = async () => {
@@ -359,7 +359,7 @@ const BottomSheet = (() => {
         }
       });
     } catch (error) {
-      console.error("추천 순위 업데이트 실패:", error);
+      Logger.error("추천 순위 업데이트 실패:", error);
     }
   };
   const trainShow = async () => {
@@ -367,12 +367,11 @@ const BottomSheet = (() => {
       try {
         const train = document.getElementById("trainAlert");
         if (boardingGateNum > 100 && boardingGateNum < 133) {
-          console.log("train : ", train);
           train.style.display = "flex";
         }
         resolve();
       } catch (error) {
-        console.error("train 표시 실패 : ", error);
+        Logger.error("train 표시 실패 : ", error);
         resolve();
       }
     });
@@ -389,12 +388,12 @@ const BottomSheet = (() => {
             await updateSelectedHall(idx, ranks);
             await updateRankDisplay(idx, ranks);
           } catch (error) {
-            console.log("선택 이벤트 처리 실패 : ", index, error);
+            Logger.log("선택 이벤트 처리 실패 : ", index, error);
           }
         });
       });
     } catch (error) {
-      console.error("선택 이벤트 설정 실패 : ", error);
+      Logger.error("선택 이벤트 설정 실패 : ", error);
     }
   };
   const updateSelectedHall = async (idx) => {
@@ -412,7 +411,7 @@ const BottomSheet = (() => {
         selectHall.innerHTML = `${language["departurehall"]} : <span style="color:#2E90FA">${departure[0]} ${eastWest}</span><small></small><img id="down" src="./images/dropDown.svg">`;
       }
     } catch (error) {
-      console.error("선택된 홀 업데이트 실패:", error);
+      Logger.error("선택된 홀 업데이트 실패:", error);
     }
   };
   const updateRankDisplay = async (selectedIdx, ranks) => {
@@ -433,7 +432,7 @@ const BottomSheet = (() => {
         }
       });
     } catch (error) {
-      console.error("순위 표시 업데이트 실패:", error);
+      Logger.error("순위 표시 업데이트 실패:", error);
     }
   };
   const estimated = async (idx) => {
@@ -444,13 +443,13 @@ const BottomSheet = (() => {
       const foundApi = apiData.find((data) => data.deskname === foundData.id);
 
       if (!foundData || !foundApi) {
-        console.error("data를 찾을 수 없습니다");
+        Logger.error("data를 찾을 수 없습니다");
         return;
       }
       const times = await TimeCalculator.calculateAllTimes(foundData, foundApi);
       await TimeCalculator.updateTimeDisplay(times);
     } catch (error) {
-      console.error("예상 시간 계산 실패 : ", error);
+      Logger.error("예상 시간 계산 실패 : ", error);
     }
   };
 
@@ -465,7 +464,7 @@ const BottomSheet = (() => {
       try {
         await changeMenu(idx);
       } catch (error) {
-        console.error("메뉴 변경 실패 : ", error);
+        Logger.error("메뉴 변경 실패 : ", error);
       }
     },
 
@@ -473,7 +472,7 @@ const BottomSheet = (() => {
       try {
         await trainShow();
       } catch (error) {
-        console.error("기차 표시 실패:", error);
+        Logger.error("기차 표시 실패:", error);
       }
     },
 
@@ -481,7 +480,7 @@ const BottomSheet = (() => {
       try {
         await showGateCongestion();
       } catch (error) {
-        console.error("게이트 혼잡도 표시 실패:", error);
+        Logger.error("게이트 혼잡도 표시 실패:", error);
       }
     },
 
@@ -489,7 +488,7 @@ const BottomSheet = (() => {
       try {
         await setupRecommendationEvents();
       } catch (error) {
-        console.error("추천 이벤트 설정 실패:", error);
+        Logger.error("추천 이벤트 설정 실패:", error);
       }
     },
     changeBorderColor: async (index) => {

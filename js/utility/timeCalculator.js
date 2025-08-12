@@ -1,4 +1,4 @@
-"use strict";
+import Logger from "./logger.js";
 
 const TimeCalculator = (() => {
   let boardingGateNum;
@@ -27,7 +27,7 @@ const TimeCalculator = (() => {
           minute;
         resolve();
       } catch (error) {
-        console.error("시간 설정 실패");
+        Logger.error("시간 설정 실패");
         resolve();
       }
     });
@@ -102,7 +102,7 @@ const TimeCalculator = (() => {
         times: [hallWaiting, estimatedTime, boardingTimeStr],
       };
     } catch (error) {
-      console.error("시간 계산 실패:", error);
+      Logger.error("시간 계산 실패:", error);
       return {
         total: `0${language["minute"]}`,
         times: [
@@ -130,7 +130,7 @@ const TimeCalculator = (() => {
         }
       });
     } catch (error) {
-      console.error("시간 표시 업데이트 실패:", error);
+      Logger.error("시간 표시 업데이트 실패:", error);
     }
   };
   return {
@@ -144,7 +144,7 @@ const TimeCalculator = (() => {
       try {
         await updateTimeDisplay(timeData);
       } catch (error) {
-        console.error("시간 표시 업데이트 실패:", error);
+        Logger.error("시간 표시 업데이트 실패:", error);
       }
     },
   };

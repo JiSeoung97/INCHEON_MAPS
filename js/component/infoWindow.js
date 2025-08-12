@@ -67,11 +67,6 @@ const InfoWindowService = (() => {
         "</div>"
       );
     } else {
-      console.log(
-        "areaData : ",
-        areaData,
-        "----------------------------------------------"
-      );
       let distance = Utility.getDistance(areaData, boardingGateNum);
       return (
         '<div class="info-window boardingGate' +
