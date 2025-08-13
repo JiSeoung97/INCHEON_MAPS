@@ -69,7 +69,10 @@ body {
   text-align: center;
   margin-bottom: 5px;
 }
-
+.info-window.shadow {
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
 .info-window p {
   margin-bottom: 5px;
 }

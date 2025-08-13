@@ -57,7 +57,7 @@ const languageData = {
     subTitle: "탑승구까지의 이동 예상 소요시간을 알려드려요",
     confirmBtn: "확인",
     hanaBank: "하나은행 환전소",
-    location: "{{near}근처}",
+    location: "{{near}}근처",
     more: "더보기",
   },
   ja: {
@@ -118,7 +118,7 @@ const languageData = {
     subTitle: "搭乗口までの移動にかかる予想所要時間をご案内します。",
     confirmBtn: "確認",
     hanaBank: "하나은행 환전소",
-    location: "{{near}근처}",
+    location: "{{near}}근처",
     more: "더보기",
   },
   zh: {

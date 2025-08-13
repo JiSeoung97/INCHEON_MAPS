@@ -50,7 +50,7 @@ const TimeCalculator = (() => {
               language["minute"]
             }`
           : `${hallTime}${language["minute"]}`;
-
+      console.log(foundData);
       // 탑승구까지 이동 시간
       const boardingDistance = await Utility.getDistance(
         foundData,

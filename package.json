@@ -1,12 +1,19 @@
 {
   "scripts": {
     "dev": "cross-env NODE_ENV=development node server.js",
-    "start": "cross-env NODE_ENV=production node server.js"
+    "start": "cross-env NODE_ENV=production node server.js",
+    "build": "node build.js",
+    "build:prod": "NODE_ENV=production node build.js"
   },
   "dependencies": {
     "axios": "^1.10.0",
     "cross-env": "^10.0.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0"
+  },
+  "devDependencies": {
+    "clean-css": "^5.3.3",
+    "fs-extra": "^11.3.1",
+    "uglify-js": "^3.19.3"
   }
 }

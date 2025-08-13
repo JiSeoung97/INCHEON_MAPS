@@ -4,16 +4,30 @@ const InfoWindowService = (() => {
   let infoWindows = [];
   let language;
   const createInfoWindow = async (area, boardingGateNum) => {
-    const infoWindow = new naver.maps.InfoWindow({
-      content: await getInfoWindowContent(area, boardingGateNum),
-      maxWidth: 300,
-      backgroundColor: "#fff",
-      borderColor: Utility.congestionColor(area),
-      disableAutopan: true,
-      borderWidth: 3,
-      borderRadius: 12,
-      disableAnchor: false,
-    });
+    let infoWindow;
+    if (boardingGateNum == null) {
+      infoWindow = new naver.maps.InfoWindow({
+        content: await getInfoWindowContent(area, boardingGateNum),
+        maxWidth: 300,
+        backgroundColor: "#fff",
+        borderColor: Utility.congestionColor(area),
+        disableAutopan: true,
+        borderWidth: 3,
+        borderRadius: 12,
+        disableAnchor: false,
+      });
+    } else {
+      infoWindow = new naver.maps.InfoWindow({
+        content: await getInfoWindowContent(area, boardingGateNum),
+        maxWidth: 300,
+        backgroundColor: "#fff",
+        borderColor: Utility.congestionColor(area),
+        disableAutopan: true,
+        borderWidth: 0,
+        borderRadius: 12,
+        disableAnchor: false,
+      });
+    }
     infoWindows.push(infoWindow);
     return infoWindow;
   };
@@ -69,8 +83,7 @@ const InfoWindowService = (() => {
     } else {
       let distance = await Utility.getDistance(areaData, boardingGateNum);
       return (
-        '<div class="info-window boardingGate' +
-        '">' +
+        '<div class="info-window shadow">' +
         "<h3>" +
         language["nthGate"].replace("{{number}}", boardingGateNum) +
         "</h3>" +
@@ -83,7 +96,35 @@ const InfoWindowService = (() => {
       );
     }
   };
-
+  const getElementContent = (area) => {
+    let name = language[area.name];
+    let location = language[area.description];
+    const contents =
+      '<div class="info-window shadow">' +
+      "<h3>" +
+      name +
+      "</h3>" +
+      "<p>" +
+      location +
+      "</p>";
+    '<span style="left:auto;font-size:12px;color:#2E90FA">' +
+      language["more"] +
+      "></span>";
+    ("</div>");
+  };
+  const elementInfo = async () => {
+    let infoWindow;
+    infoWindow = new naver.maps.InfoWindow({
+      content: await getElementContent(area),
+      maxWidth: 300,
+      backgroundColor: "#fff",
+      borderColor: Utility.congestionColor(area),
+      disableAutopan: true,
+      borderWidth: 0,
+      borderRadius: 12,
+      disableAnchor: false,
+    });
+  };
   return {
     createInfoWindow: async (area, boardingGate = null) => {
       language = MapService.languageReturn();

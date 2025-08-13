@@ -150,8 +150,9 @@ $(document).ready(async () => {
           sessionStorage.setItem("boardingGate", boardingGate);
           CustomControl.customControlAllDelete();
           // 서비스 재초기화
-          const boardingMarker =
-            MarkerService.createBoardingMarker(boardingGate);
+          const boardingMarker = await MarkerService.createBoardingMarker(
+            boardingGate
+          );
           CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();

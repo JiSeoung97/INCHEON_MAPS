@@ -3,6 +3,7 @@ import DataService from "../service/dataService.js";
 import MarkerService from "../service/markerService.js";
 import InfoWindowService from "../component/infoWindow.js";
 import MapService from "../service/mapService.js";
+import RecoService from "../service/recoService.js";
 const Utility = (() => {
   let map;
   let markers = [];
@@ -15,25 +16,24 @@ const Utility = (() => {
     try {
       let startLocation = null;
       let targetLocation = null;
-      if (boardingGateNum == null) {
-        targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
-        startLocation = area;
-      } else {
-        targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
-      }
+
+      targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+      startLocation = area;
+
       if (bottomSheet) {
         startLocation = area;
+        console.log(startLocation);
         const datas = await DataService.getAllAreas();
-        Array(datas).forEach((data) => {
-          if (data.name == "탑승게이트" + boardingGateNum)
-            targetLocation = data;
+        datas.forEach((data) => {
+          if (data.name == "탑승게이트" + boardingGateNum) {
+            targetLocation = data.position;
+          }
         });
-        console.log(targetLocation);
       }
 
       if (targetLocation !== null) {
-        const lng1 = area.position.lng;
-        const lat1 = area.position.lat;
+        const lng1 = startLocation.position.lng;
+        const lat1 = startLocation.position.lat;
         const lng2 = targetLocation.lng;
         const lat2 = targetLocation.lat;
 
