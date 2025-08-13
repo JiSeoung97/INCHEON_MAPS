@@ -1,5 +1,6 @@
 import Logger from "./logger.js";
-
+import ErrorHandler from "./httpError.js";
+import { LocationError } from "./customError.js";
 const utLocation = (() => {
   const getCurrentPosition = () => {
     return new Promise((resolve, reject) => {
@@ -20,7 +21,13 @@ const utLocation = (() => {
             resolve(userLocation);
             // } else {
             //   alert("인천공항 내부에서만 이용할 수 있습니다.");
-            //   resolve();
+            // try {
+            //   throw new LocationError(
+            //     "인천공항 내부에서만 이용할 수 있습니다."
+            //   );
+            // } catch (error) {
+            //   ErrorHandler.handleSpecificError(error);
+            // }
             // }
           },
           (error) => {
@@ -39,6 +46,7 @@ const utLocation = (() => {
                 alert("알 수 없는 오류로 위치 정보를 가져올 수 없습니다.");
                 break;
             }
+            ErrorHandler.handleSpecificError(error);
             reject(error);
           },
           {

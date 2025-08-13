@@ -10,6 +10,7 @@ const ErrorHandler = (() => {
       404: "요청한 페이지나 리소스를 찾을 수 없습니다.",
       500: "서버 내부에서 오류가 발생했습니다.",
       NETWORK_ERROR: "네트워크 연결을 확인해주세요.",
+      LOCATION_ERROR: "인천공항내에서만 이용가능합니다",
       // 필요한 다른 상태 코드 메시지 추가
     };
     return messages[statusCode] || "네트워크 연결을 확인해주세요..";
@@ -21,7 +22,7 @@ const ErrorHandler = (() => {
    */
   const handleGlobalError = (error) => {
     Logger.error("전역 에러 발생:", error);
-
+    console.log(error);
     // 에러 정보 추출
     const statusCode = error?.status || error?.statusCode || "UNKNOWN";
     const message = error?.message || getErrorMessage(statusCode);
@@ -63,8 +64,7 @@ const ErrorHandler = (() => {
       error?.response?.status ||
       error?.status ||
       error?.statusCode ||
-      "UNKNOWN";
-
+      "NETWORK_ERROR";
     // 2. 에러 페이지로 보낼 정보를 JSON 객체로 만듭니다.
     const errorDetails = {
       code: statusCode,
@@ -74,14 +74,14 @@ const ErrorHandler = (() => {
     };
 
     // 3. URLSearchParams를 사용해 쿼리 스트링을 생성합니다.
+    sessionStorage.setItem("errorData", JSON.stringify(errorDetails));
     //    JSON.stringify로 객체를 문자열로 만들면, 자동으로 URL 인코딩됩니다.
     const params = new URLSearchParams({
       errorData: JSON.stringify(errorDetails),
     });
-
     // 4. 에러 페이지로 리다이렉트시킵니다.
     Logger.log(`${statusCode} 에러 발생. 에러 페이지로 이동합니다.`);
-    window.location.href = `${ERROR_PAGE}?${params.toString()}`;
+    window.location.href = `${ERROR_PAGE}`;
   };
 
   return {
