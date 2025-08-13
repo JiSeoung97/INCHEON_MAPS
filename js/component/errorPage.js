@@ -34,7 +34,7 @@ class ErrorPageHandler {
   // 에러 정보를 화면에 표시
   displayErrorInfo() {
     const { errorCode, errorMessage, timestamp, type } = this.errorInfo;
-
+    console.log(errorCode);
     // 에러 코드별 제목 설정
     const titleMap = {
       404: "페이지를 찾을 수 없습니다",
@@ -51,21 +51,17 @@ class ErrorPageHandler {
       //   408: "네트워크 연결을 확인하고 다시 시도해주세요.",
       500: "잠시 후 다시 시도해주세요. 문제가 지속되면 관리자에게 문의하세요.",
       //   504: "네트워크 연결을 확인하고 다시 시도해주세요.",
-      NETWORK_ERROR: "인터넷 연결 상태를 확인하고 다시 시도해주세요.",
+      NETWORKERROR: "인터넷 연결 상태를 확인하고 다시 시도해주세요.",
       //   UNKNOWN: "페이지를 새로고침하거나 관리자에게 문의해주세요.",
     };
 
-    const error = document.getElementsByClassName("error-code");
+    const errors = document.getElementsByClassName("glitch");
     const message = document.querySelector(".message-container h2");
     const suggestion = document.querySelector(".message-container p");
-    error[0].innerHTML =
-      '<span aria-hidden="true">' +
-      errorCode +
-      "</span>" +
-      errorCode +
-      '<span  aria-hidden="true">' +
-      errorCode +
-      "</span>";
+
+    for (let i = 0; i < 3; i++) {
+      errors[i].textContent = errorCode;
+    }
 
     message.innerHTML = errorMessage;
     suggestion.innerHTML =
@@ -84,24 +80,13 @@ class ErrorPageHandler {
       viewedAt: new Date().toISOString(),
     };
 
-    errorHistory.unshift(errorEntry);
-
-    // 최대 20개까지만 보관
-    if (errorHistory.length > 20) {
-      errorHistory.splice(20);
-    }
-
-    localStorage.setItem("errorHistory", JSON.stringify(errorHistory));
-
     // 개발 환경에서 콘솔에 상세 정보 출력
-    Logger.group("🚨 에러 페이지 정보");
     Logger.log("에러 코드:", this.errorInfo.errorCode);
     Logger.log("에러 메시지:", this.errorInfo.errorMessage);
     Logger.log("발생 시간:", this.errorInfo.timestamp);
     Logger.log("에러 타입:", this.errorInfo.type);
     Logger.log("사용자 에이전트:", navigator.userAgent);
     Logger.log("이전 페이지:", document.referrer);
-    Logger.groupEnd();
   }
 }
 

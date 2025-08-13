@@ -154,8 +154,8 @@ const Utility = (() => {
     return gaugeColor;
   };
   return {
-    getDistance: (area, boardingGateNum = null, bottomSheet = false) => {
-      return getDistance(area, boardingGateNum, bottomSheet);
+    getDistance: async (area, boardingGateNum = null, bottomSheet = false) => {
+      return await getDistance(area, boardingGateNum, bottomSheet);
     },
     calculateMidPoint: (position1, position2) => {
       return calculateMidPoint(position1, position2);

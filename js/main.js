@@ -6,8 +6,10 @@ import CustomControl from "./component/customControl.js";
 import ModalService from "./service/modalService.js";
 import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
+import ErrorHandler from "./utility/httpError.js";
 import Utility from "./utility/utility.js";
 $(document).ready(async () => {
+  // ErrorHandler.init();
   let appConfig = {};
 
   // 서버의 /api/config 경로로 요청을 보내 환경 변수를 가져오는 함수
@@ -25,11 +27,6 @@ $(document).ready(async () => {
         "서버 환경 설정을 불러오는 데 실패했습니다. 기본 설정으로 실행합니다.",
         error
       );
-      // 실패 시 기본값 설정 (선택 사항)
-      appConfig = {
-        BRANCH: "dev",
-        API_KEY: "6nv3jwasxn",
-      };
     }
   };
   let map;
@@ -50,7 +47,7 @@ $(document).ready(async () => {
 
       initBottomSheet();
       await initCustomControl();
-      initModalService();
+      await initModalService();
       MarkerService.elementSetting();
       Logger.log("map, modal init 완료");
 

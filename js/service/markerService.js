@@ -66,7 +66,7 @@ const MarkerService = (() => {
           title: area.name,
           icon: {
             content:
-              '<div style="font-size:0.7rem;display:flex ;justify-content:center;align-items:center;width:auto;flex-direction:column"><div class = "boarding-icon" style="display: flex;font-size:1.25rem;font-weight:bold;padding-top:0.3125rem;flex-direction:column;height:2rem;width:2.5rem; border-radius: 0.5rem 0.5rem 0.2rem 0.2rem;border: 1px solid #BDBDBD; background-color:#fff;color:#056CFE;justify-content:center;align-items:center;"><p style="font-size:0.4rem;font-weight:semibold">GATE<p>' +
+              '<div style="font-size:0.7rem;display:flex ;justify-content:center;align-items:center;width:auto;flex-direction:column;margin-top:10px"><div class = "boarding-icon" style="display: flex;font-size:1.25rem;font-weight:bold;padding-top:0.3125rem;flex-direction:column;height:2rem;width:2.5rem; border-radius: 0.5rem 0.5rem 0.2rem 0.2rem;border: 1px solid #BDBDBD; background-color:#fff;color:#056CFE;justify-content:center;align-items:center;"><p style="font-size:0.4rem;font-weight:semibold">GATE<p>' +
               boardingGateNum +
               '</div><span style ="display:flex;width:100%;text-align:center;justify-content:center;align-items:center;">' +
               language["boardingGate"] +
@@ -77,9 +77,9 @@ const MarkerService = (() => {
           },
         });
       }
-      area.floorInfo = Utility.getDistance(area, boardingGateNum);
+      area.floorInfo = await Utility.getDistance(area, boardingGateNum);
 
-      const infoWindow = InfoWindowService.createInfoWindow(
+      const infoWindow = await InfoWindowService.createInfoWindow(
         area,
         boardingGateNum
       );
@@ -106,13 +106,13 @@ const MarkerService = (() => {
     switch (lang) {
       case "zh":
       case "ko":
-        point = new naver.maps.Point(25, 10);
+        point = new naver.maps.Point(21, 15);
         break;
       case "en":
-        point = new naver.maps.Point(45, 10);
+        point = new naver.maps.Point(21, 15);
         break;
       case "ja":
-        point = new naver.maps.Point(35, 10);
+        point = new naver.maps.Point(21, 15);
         break;
     }
     return point;
@@ -405,12 +405,12 @@ const MarkerService = (() => {
     getMarkers: () => {
       return markers;
     },
-    createBoardingMarker: (boardingGateNum) => {
+    createBoardingMarker: async (boardingGateNum) => {
       if (boardingMarkers[0] != null) {
         boardingMarkers[0].setMap(null);
         boardingMarkers = [];
       }
-      createMarker(null, null, boardingGateNum);
+      await createMarker(null, null, boardingGateNum);
       return boardingMarkers[0];
     },
     allMarkerDelete: async () => {

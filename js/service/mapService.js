@@ -143,13 +143,13 @@ const MapService = (() => {
           language = await loadTranslateData(lang);
           languageText = language[lang];
         }
-        DataService.initData();
+        const data = await DataService.initData();
         PolylineService.init();
         await RecoService.recoGate();
         await MarkerService.init();
         boardingGateNum = sessionStorage.getItem("boardingGate");
         Logger.log("boardingGateNum :", boardingGateNum);
-        const data = DataService.initData();
+
         if (!data) {
           Logger.log("데이터 초기화 실패", "error");
           return map;
@@ -162,9 +162,12 @@ const MapService = (() => {
         boardingInfoWindows = [];
         zoomOutMarkers = [];
         if (boardingGateNum != null) {
-          await MarkerService.createBoardingMarker(boardingGateNum);
-          boardingMarkers = MarkerService.getBoardingMarker();
-          await PolylineService.createBoardingPolyline(boardingMarkers[0]);
+          boardingMarkers = await MarkerService.createBoardingMarker(
+            boardingGateNum
+          );
+
+          console.log(boardingMarkers);
+          await PolylineService.createBoardingPolyline(boardingMarkers);
           PolylineService.setPolyline();
         } else {
           Logger.error("boardingMarker 생성 실패");
@@ -224,15 +227,17 @@ const MapService = (() => {
       };
       boardingMarkers = MarkerService.getBoardingMarker();
       MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
+      let movePosition;
       Array.from(areaData).forEach((area) => {
         if (area.name == "탑승게이트" + boardingGateNum) {
-          let movePosition = naver.maps.LatLng(
+          movePosition = naver.maps.LatLng(
             area.position.lat - 0.0003,
             area.position.lng
           );
           map.panTo(movePosition, transition);
         }
       });
+      return movePosition;
     },
     getCurrentPosition: async () => {
       return await getCurrentPosition();

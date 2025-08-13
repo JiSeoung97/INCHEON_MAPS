@@ -115,6 +115,19 @@ const TimeCalculator = (() => {
       };
     }
   };
+  const padZero = () => {
+    String(num).padStart(2, "0");
+  };
+  const formatCurrentDateTime = () => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = padZero(now.getMonth() + 1); // getMonth()는 0부터 시작
+    const day = padZero(now.getDate());
+    const hours = padZero(now.getHours());
+    const minutes = padZero(now.getMinutes());
+    const seconds = padZero(now.getSeconds());
+    return `${year}${month}${day}${hours}${minutes}${seconds}`;
+  };
   const updateTimeDisplay = async (timeData) => {
     try {
       const total = document.getElementsByClassName("total-time");
@@ -147,6 +160,9 @@ const TimeCalculator = (() => {
       } catch (error) {
         Logger.error("시간 표시 업데이트 실패:", error);
       }
+    },
+    formatCurrentDateTime: () => {
+      return formatCurrentDateTime();
     },
   };
 })();

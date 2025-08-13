@@ -56,6 +56,9 @@ const languageData = {
     modalBtn: "인천공항 맛집 보러가기",
     subTitle: "탑승구까지의 이동 예상 소요시간을 알려드려요",
     confirmBtn: "확인",
+    hanaBank: "하나은행 환전소",
+    location: "{{near}근처}",
+    more: "더보기",
   },
   ja: {
     terminal: "第1旅客ターミナル",
@@ -114,6 +117,9 @@ const languageData = {
     modalBtn: "仁川空港のグルメを見る",
     subTitle: "搭乗口までの移動にかかる予想所要時間をご案内します。",
     confirmBtn: "確認",
+    hanaBank: "하나은행 환전소",
+    location: "{{near}근처}",
+    more: "더보기",
   },
   zh: {
     update: "更新时间",

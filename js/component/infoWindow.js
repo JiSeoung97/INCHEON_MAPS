@@ -3,9 +3,9 @@ import Utility from "../utility/utility.js";
 const InfoWindowService = (() => {
   let infoWindows = [];
   let language;
-  const createInfoWindow = (area, boardingGateNum) => {
+  const createInfoWindow = async (area, boardingGateNum) => {
     const infoWindow = new naver.maps.InfoWindow({
-      content: getInfoWindowContent(area, boardingGateNum),
+      content: await getInfoWindowContent(area, boardingGateNum),
       maxWidth: 300,
       backgroundColor: "#fff",
       borderColor: Utility.congestionColor(area),
@@ -17,9 +17,9 @@ const InfoWindowService = (() => {
     infoWindows.push(infoWindow);
     return infoWindow;
   };
-  const getInfoWindowContent = (areaData, boardingGateNum) => {
+  const getInfoWindowContent = async (areaData, boardingGateNum) => {
     let gaugeColor;
-    let distance = Utility.getDistance(areaData);
+    let distance = await Utility.getDistance(areaData);
     let conLevel;
     switch (areaData.congestion) {
       case "none":
@@ -67,14 +67,14 @@ const InfoWindowService = (() => {
         "</div>"
       );
     } else {
-      let distance = Utility.getDistance(areaData, boardingGateNum);
+      let distance = await Utility.getDistance(areaData, boardingGateNum);
       return (
         '<div class="info-window boardingGate' +
         '">' +
         "<h3>" +
         language["nthGate"].replace("{{number}}", boardingGateNum) +
         "</h3>" +
-        "<p>" +
+        '<p style = "color:#21212280">' +
         language["distance"] +
         ": " +
         distance +
@@ -85,11 +85,11 @@ const InfoWindowService = (() => {
   };
 
   return {
-    createInfoWindow: (area, boardingGate = null) => {
+    createInfoWindow: async (area, boardingGate = null) => {
       language = MapService.languageReturn();
       if (boardingGate != null) {
       }
-      return createInfoWindow(area, boardingGate);
+      return await createInfoWindow(area, boardingGate);
     },
     getInfoWindows: () => {
       return infoWindows;

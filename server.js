@@ -5,7 +5,7 @@ dotenv.config({ path: `.env.${nodeEnv}` });
 // --- 디버깅용 코드 ---
 console.log("--- 환경 변수 확인 ---");
 console.log("NODE_ENV:", process.env.NODE_ENV);
-console.log("BRANCH:", process.env.BRANCH); // 여기서 'dev'가 출력되어야 합니다.
+console.log("BRANCH:", process.env.ENV_MODE); // 여기서 'dev'가 출력되어야 합니다.
 console.log("--------------------");
 // --------------------
 
@@ -20,14 +20,14 @@ const PORT = 3000; // 서버를 열 포트 번호
 // 2. 프론트엔드에 환경 변수를 전달할 API 경로(Endpoint) 생성
 app.get("/api/config", (req, res) => {
   res.json({
-    BRANCH: process.env.BRANCH,
+    BRANCH: process.env.ENV_MODE,
     // 필요한 다른 환경 변수들도 여기에 추가
   });
 });
 
 app.get("/api/config", (req, res) => {
   res.json({
-    BRANCH: process.env.BRANCH,
+    BRANCH: process.env.ENV_MODE,
     API_BASE_URL: process.env.API_BASE_URL,
     API_KEY: process.env.API_KEY,
   });
@@ -53,5 +53,5 @@ app.listen(PORT, () => {
   console.log(
     `✅ Node.js 서버가 http://localhost:${PORT} 에서 실행되었습니다.`
   );
-  console.log(`✅ 현재 환경(BRANCH): ${process.env.BRANCH}`);
+  console.log(`✅ 현재 환경(BRANCH): ${process.env.ENV_MODE}`);
 });
