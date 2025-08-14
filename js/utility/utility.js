@@ -3,7 +3,6 @@ import DataService from "../service/dataService.js";
 import MarkerService from "../service/markerService.js";
 import InfoWindowService from "../component/infoWindow.js";
 import MapService from "../service/mapService.js";
-import RecoService from "../service/recoService.js";
 const Utility = (() => {
   let map;
   let markers = [];
@@ -22,7 +21,6 @@ const Utility = (() => {
 
       if (bottomSheet) {
         startLocation = area;
-        console.log(startLocation);
         const datas = await DataService.getAllAreas();
         datas.forEach((data) => {
           if (data.name == "탑승게이트" + boardingGateNum) {

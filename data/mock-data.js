@@ -1053,4 +1053,4 @@ const mockData = {
   },
 };
 
-window.mockData = mockData;
+export default mockData;

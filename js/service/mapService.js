@@ -7,6 +7,7 @@ import MarkerService from "./markerService.js";
 import DragService from "./dragService.js";
 import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
+import languageData from "../../data/language.js";
 const MapService = (() => {
   let map = null;
   let markers = [];

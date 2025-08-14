@@ -238,3 +238,4 @@ const languageData = {
     confirmBtn: "OK",
   },
 };
+export default languageData;

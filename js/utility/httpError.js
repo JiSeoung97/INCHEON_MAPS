@@ -1,4 +1,3 @@
-// js/utility/globalErrorHandler.js
 import Logger from "./logger.js";
 
 const ErrorHandler = (() => {
@@ -76,9 +75,9 @@ const ErrorHandler = (() => {
     // 3. URLSearchParams를 사용해 쿼리 스트링을 생성합니다.
     sessionStorage.setItem("errorData", JSON.stringify(errorDetails));
     //    JSON.stringify로 객체를 문자열로 만들면, 자동으로 URL 인코딩됩니다.
-    const params = new URLSearchParams({
-      errorData: JSON.stringify(errorDetails),
-    });
+    // const params = new URLSearchParams({
+    //   errorData: JSON.stringify(errorDetails),
+    // });
     // 4. 에러 페이지로 리다이렉트시킵니다.
     Logger.log(`${statusCode} 에러 발생. 에러 페이지로 이동합니다.`);
     window.location.href = `${ERROR_PAGE}`;
@@ -89,9 +88,7 @@ const ErrorHandler = (() => {
       setupGlobalErrorHandlers();
       Logger.log("✅ 전역 에러 핸들러가 초기화되었습니다.");
     },
-    handleSpecificError: (error) => {
-      handleSpecificError(error);
-    },
+    handleSpecificError: handleSpecificError,
   };
 })();
 

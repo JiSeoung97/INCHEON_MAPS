@@ -1,5 +1,7 @@
 import Logger from "../utility/logger.js";
 import TimeCalculator from "../utility/timeCalculator.js";
+import mockData from "../../data/mock-data.js";
+import mockData2 from "../../data/mock-data2.js";
 import ErrorHandler from "../utility/httpError.js";
 const DataService = (() => {
   let data = null;
@@ -68,9 +70,9 @@ const DataService = (() => {
 
   return {
     initData: async () => {
-      data = window.mockData || null;
-      apiDatas = window.mockData2.data[0].response.body.items.item || null;
-      await getAirportData();
+      data = mockData || null;
+      apiDatas = mockData2.data[0].response.body.items.item || null;
+      // await getAirportData();
       elements = data.elements.areas;
       if (!data) {
         Logger.error("모킹 데이터 로드 실패함");
