@@ -3,6 +3,7 @@ import DataService from "../service/dataService.js";
 import MarkerService from "../service/markerService.js";
 import InfoWindowService from "../component/infoWindow.js";
 import MapService from "../service/mapService.js";
+
 const Utility = (() => {
   let map;
   let markers = [];

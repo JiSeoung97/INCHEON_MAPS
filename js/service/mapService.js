@@ -8,6 +8,7 @@ import DragService from "./dragService.js";
 import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
 import languageData from "../../data/language.js";
+
 const MapService = (() => {
   let map = null;
   let markers = [];
@@ -150,7 +151,6 @@ const MapService = (() => {
         await MarkerService.init();
         boardingGateNum = sessionStorage.getItem("boardingGate");
         Logger.log("boardingGateNum :", boardingGateNum);
-
         if (!data) {
           Logger.log("데이터 초기화 실패", "error");
           return map;

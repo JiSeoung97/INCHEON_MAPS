@@ -31,13 +31,13 @@ class ErrorPageHandler {
     };
     console.log(urlParams);
     console.log(this.errorInfo);
+
     Logger.log("받은 에러 정보:", this.errorInfo);
   }
 
   // 에러 정보를 화면에 표시
   displayErrorInfo() {
     const { errorCode, errorMessage, timestamp, type } = this.errorInfo;
-    console.log(errorCode);
     // 에러 코드별 제목 설정
     const titleMap = {
       404: "페이지를 찾을 수 없습니다",
@@ -46,6 +46,7 @@ class ErrorPageHandler {
       //   504: "게이트웨이 시간 초과",
       NETWORK_ERROR: "네트워크 연결 오류",
       LOCATION_ERROR: "위치 오류",
+
       //   UNKNOWN: "알 수 없는 오류",
     };
 
@@ -84,6 +85,7 @@ class ErrorPageHandler {
       referrer: document.referrer,
       viewedAt: new Date().toISOString(),
     };
+
 
     // 개발 환경에서 콘솔에 상세 정보 출력
     Logger.log("에러 코드:", this.errorInfo.errorCode);

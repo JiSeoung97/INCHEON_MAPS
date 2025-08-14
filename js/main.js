@@ -10,6 +10,7 @@ import ErrorHandler from "./utility/httpError.js";
 import Utility from "./utility/utility.js";
 $(document).ready(async () => {
   // ErrorHandler.init();
+
   let appConfig = {};
 
   // 서버의 /api/config 경로로 요청을 보내 환경 변수를 가져오는 함수

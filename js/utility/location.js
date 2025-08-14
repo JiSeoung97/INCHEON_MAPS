@@ -1,6 +1,7 @@
 import Logger from "./logger.js";
 import ErrorHandler from "./httpError.js";
 import { LocationError } from "./customError.js";
+
 const utLocation = (() => {
   const getCurrentPosition = () => {
     return new Promise((resolve, reject) => {

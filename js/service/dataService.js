@@ -3,6 +3,7 @@ import TimeCalculator from "../utility/timeCalculator.js";
 import mockData from "../../data/mock-data.js";
 import mockData2 from "../../data/mock-data2.js";
 import ErrorHandler from "../utility/httpError.js";
+
 const DataService = (() => {
   let data = null;
   let apiDatas = null;

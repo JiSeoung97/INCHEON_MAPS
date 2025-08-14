@@ -18,6 +18,7 @@ const Logger = {
    */
   warn: function (...args) {
     if (window.appConfig?.ENV_MODE === "dev") {
+
       console.warn(...args);
     }
   },

@@ -1,5 +1,6 @@
 import Logger from "./logger.js";
 
+
 const ErrorHandler = (() => {
   const ERROR_PAGE = "errorPage.html"; // 에러 발생 시 이동할 페이지
 
