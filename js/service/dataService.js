@@ -1,4 +1,8 @@
 import Logger from "../utility/logger.js";
+import TimeCalculator from "../utility/timeCalculator.js";
+import mockData from "../../data/mock-data.js";
+import mockData2 from "../../data/mock-data2.js";
+import ErrorHandler from "../utility/httpError.js";
 
 const DataService = (() => {
   let data = null;
@@ -23,7 +27,26 @@ const DataService = (() => {
 
     return data;
   };
+  const getAirportData = async () => {
+    try {
+      const requestParams = {
+        accessKey: window.appConfig.API_KEY || "",
+        _type: "json",
+        datetime: TimeCalculator.formatCurrentDateTime(),
+      };
 
+      const result = await apiDatas.get(
+        "/service/DptgtSnsrDatT1/dptgtsnsrdatt1",
+        { params: requestParams }
+      );
+
+      apiDatas = result.data.response.body.items.item || null;
+      Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
+    } catch (error) {
+      Logger.error("혼잡도 api데이터 로드 실패");
+      // ErrorHandler.handleSpecificError(error);
+    }
+  };
   const calculateTotalWaitTime = (item) => {
     const queueLength = parseInt(item.quelength) || 0;
     const immigrationTime =
@@ -47,9 +70,10 @@ const DataService = (() => {
   };
 
   return {
-    initData: () => {
-      data = window.mockData || null;
-      apiDatas = window.mockData2.data[0].response.body.items.item || null;
+    initData: async () => {
+      data = mockData || null;
+      apiDatas = mockData2.data[0].response.body.items.item || null;
+      // await getAirportData();
       elements = data.elements.areas;
       if (!data) {
         Logger.error("모킹 데이터 로드 실패함");

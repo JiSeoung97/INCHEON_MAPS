@@ -3,6 +3,10 @@ import MapService from "../service/mapService.js";
 import MarkerService from "../service/markerService.js";
 import InfoWindowService from "./infoWindow.js";
 import ModalService from "../service/modalService.js";
+import Utility from "../utility/utility.js";
+import utLocation from "../utility/location.js";
+import PolylineService from "../service/polylineService.js";
+
 const CustomControl = (() => {
   let language = [];
   let markers = [];
@@ -178,7 +182,7 @@ const CustomControl = (() => {
       position: naver.maps.Position.LEFT_TOP,
     });
   };
-  const customControlEvent = () => {
+  const customControlEvent = async () => {
     let mapLangs;
 
     naver.maps.Event.addDOMListener(boardingInfo.getElement(), "click", () => {
@@ -195,8 +199,8 @@ const CustomControl = (() => {
       const userLng = Math.round(user_location.lng * 10000000) / 10000000;
       if (movePosition != null) {
         if (
-          movePosition.lat == currentCenter._lat &&
-          movePosition.lng == currentCenter._lng
+          movePosition._lat == currentCenter._lat &&
+          movePosition._lng == currentCenter._lng
         ) {
           sendBlack.style.display = "none";
           sendBlue.style.display = "block";
@@ -249,7 +253,7 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
-        MapService.moveBoardingGate(boardingGateNum);
+        movePosition = MapService.moveBoardingGate(boardingGateNum);
         Logger.log(boardingGateNum);
         Utility.openBoardingWindowInfo();
       } else {
@@ -359,7 +363,7 @@ const CustomControl = (() => {
       InfoWindowService.getInfoWindows();
       MarkerService.getMarkers();
       createCustomControl();
-      customControlEvent();
+      await customControlEvent();
       customControlSetMap();
     },
     customControlAllDelete: () => {

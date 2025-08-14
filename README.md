@@ -17,6 +17,7 @@ Map_Web_Vanilla-master/
 ㅣ   ㅣ-- component/
 ㅣ   ㅣ   ㅣ-- bottomSheet.js => 바텀시트 데이터삽입 및 drag
 ㅣ   ㅣ   ㅣ-- infoWindow.js => infoWindow생성
+ㅣ   ㅣ   ㅣ-- errorPage.js => errorPage에서 error정보 받기
 ㅣ   ㅣ   ㄴ-- customControl.js => customControl 생성, 제거, event
 ㅣ   ㅣ
 ㅣ   ㅣ-- service/
@@ -29,13 +30,17 @@ Map_Web_Vanilla-master/
 ㅣ   ㅣ   ㄴ-- recoService.js => 출국장 추천
 ㅣ   ㅣ
 ㅣ   ㅣ-- utility/
+ㅣ   ㅣ   ㅣ-- customError.js => LocationError클래스 생성
+ㅣ   ㅣ   ㅣ-- httpError.js => errorHandler 생성
 ㅣ   ㅣ   ㅣ-- location.js => 유저 현재위치
+ㅣ   ㅣ   ㅣ-- logger.js => Logger생성
 ㅣ   ㅣ   ㅣ-- timeCalculator.js => 예상소요시간 계산
 ㅣ   ㅣ   ㅣ-- translate.js => 번역 및 문자열 수정
 ㅣ   ㅣ   ㄴ-- utility.js => 계산로직
 ㅣ   ㅣ
 ㅣ   ㄴ-- main.js
 ㅣ
+ㅣ-- errorPage.html
 ㅣ-- index.html
 ㅣ-- .gitignore
 ㄴ-- README.md

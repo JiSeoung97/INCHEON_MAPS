@@ -6,7 +6,11 @@ import CustomControl from "./component/customControl.js";
 import ModalService from "./service/modalService.js";
 import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
+import ErrorHandler from "./utility/httpError.js";
+import Utility from "./utility/utility.js";
 $(document).ready(async () => {
+  // ErrorHandler.init();
+
   let appConfig = {};
 
   // 서버의 /api/config 경로로 요청을 보내 환경 변수를 가져오는 함수
@@ -24,11 +28,6 @@ $(document).ready(async () => {
         "서버 환경 설정을 불러오는 데 실패했습니다. 기본 설정으로 실행합니다.",
         error
       );
-      // 실패 시 기본값 설정 (선택 사항)
-      appConfig = {
-        BRANCH: "dev",
-        API_KEY: "6nv3jwasxn",
-      };
     }
   };
   let map;
@@ -49,7 +48,7 @@ $(document).ready(async () => {
 
       initBottomSheet();
       await initCustomControl();
-      initModalService();
+      await initModalService();
       MarkerService.elementSetting();
       Logger.log("map, modal init 완료");
 
@@ -152,8 +151,9 @@ $(document).ready(async () => {
           sessionStorage.setItem("boardingGate", boardingGate);
           CustomControl.customControlAllDelete();
           // 서비스 재초기화
-          const boardingMarker =
-            MarkerService.createBoardingMarker(boardingGate);
+          const boardingMarker = await MarkerService.createBoardingMarker(
+            boardingGate
+          );
           CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
@@ -280,7 +280,7 @@ $(document).ready(async () => {
     );
   } catch (error) {
     Logger.error("애플리케이션 초기화 중 치명적 오류:", error);
-    window.location.href = "errorPage.html";
+    // window.location.href = "errorPage.html";
     Logger.error(
       "애플리케이션을 초기화하는 중 오류가 발생했습니다. 페이지를 새로고침해주세요."
     );
