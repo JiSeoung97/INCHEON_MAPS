@@ -142,7 +142,8 @@ const MarkerService = (() => {
   };
   const elementMarkerIcon = (element) => {
     const name = element.name.split(" ")[1];
-    Logger.log();
+    Logger.log("name split : ",name);
+
     let icon;
     switch (name) {
       case "환전소":
