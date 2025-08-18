@@ -8,9 +8,7 @@ const utLocation = (() => {
       if (!navigator.geolocation) {
         reject(Logger.log("gps is not supported by this browser"));
         return;
-      }
-
-      if (navigator.geolocation) {
+      } else if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const userLocation = {
@@ -18,6 +16,7 @@ const utLocation = (() => {
               lng: position.coords.longitude,
             };
             // if (limitLocation(userLocation)) {
+            console.log(navigator.geolocation);
             Logger.log("userLocation : ", userLocation);
             resolve(userLocation);
             // } else {
@@ -52,7 +51,7 @@ const utLocation = (() => {
           },
           {
             enableHighAccuracy: true,
-            timeout: 5000,
+            timeout: 10000,
             maximumAge: 0,
           }
         );

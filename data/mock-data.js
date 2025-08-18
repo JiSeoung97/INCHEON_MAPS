@@ -998,6 +998,20 @@ const mockData = {
         floorInfo: "3층",
         description: "27번 게이트 부근",
       },
+      {
+        id: "foodCourt_1",
+        name: "동쪽 식당가",
+        position: { lat: 37.4507123, lng: 126.4522095 },
+        floorInfo: "3층",
+        description: "27번 게이트 부근",
+      },
+      {
+        id: "foodCourt_2",
+        name: "서쪽 식당가",
+        position: { lat: 37.4487798, lng: 126.44877 },
+        floorInfo: "3층",
+        description: "27번 게이트 부근",
+      },
     ],
   },
 

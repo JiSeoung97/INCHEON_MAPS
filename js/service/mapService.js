@@ -27,7 +27,6 @@ const MapService = (() => {
 
   const loadTranslateData = async (lang) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 0));
       BottomSheet.languageChan(languageData[lang]);
       return languageData[lang];
     } catch (error) {
@@ -112,17 +111,17 @@ const MapService = (() => {
         Logger.error("네이버 지도 API가 로드되지 않았습니다.");
         return null;
       }
-      let lang = sessionStorage.getItem("language");
-      firstlang = lang;
-      if (lang == null) {
-        languageText = "Language";
-        lang = "ko";
-        language = await loadTranslateData(lang);
-      } else {
-        language = await loadTranslateData(lang);
-        languageText = language[lang];
-      }
-      Logger.log("language load완료");
+      // let lang = sessionStorage.getItem("language");
+      // firstlang = lang;
+      // if (lang == null) {
+      //   languageText = "Language";
+      //   lang = "ko";
+      //   language = await loadTranslateData(lang);
+      // } else {
+      //   language = await loadTranslateData(lang);
+      //   languageText = language[lang];
+      // }
+      // Logger.log("language load완료");
       try {
         map = initMap();
         return map;
@@ -145,6 +144,7 @@ const MapService = (() => {
           language = await loadTranslateData(lang);
           languageText = language[lang];
         }
+        console.log("language Loaded");
         const data = await DataService.initData();
         PolylineService.init();
         await RecoService.recoGate();
