@@ -126,10 +126,7 @@ const MarkerService = (() => {
         map: null,
         title: null,
         icon: {
-          content:
-            '<div style ="display:flex;flex-direction:column;z-index:10;font-size:10px;justify-content:center;align-items:center;"><div style="height : 10px;width:10px;background-color:blue; border-radius:5px"></div>' +
-            element.name +
-            "</div>",
+          content: elementMarkerIcon(element),
           size: new naver.maps.Size(27, 35),
           anchor: new naver.maps.Point(0, 0),
         },
@@ -142,6 +139,22 @@ const MarkerService = (() => {
     elementsMarker.forEach((element) => {
       element.setMap(map);
     });
+  };
+  const elementMarkerIcon = (element) => {
+    const name = element.name.split(" ")[1];
+    let icon;
+    switch (name) {
+      case "환전소":
+        icon =
+          '<div style="width:24px; height:24px; border:1px solid #ffffff; background-color: #96B3F2 border-radius:50%; font-size:12px;color: #FFFFFF">₩</div>';
+      case "로밍센터":
+        icon =
+          '<div style="width:24px; height:24px; border:1px solid #ffffff; background-color: #8B99AC border-radius:50%; font-size:12px;color: #FFFFFF"><img src="../images/roam.svg" style="width:100%;height:100%;border-radius:50%"></div>';
+      case "식당가":
+        icon =
+          '<div style="width:24px; height:24px; border:1px solid #ffffff; background-color: #EF864F border-radius:50%; font-size:12px;color: #FFFFFF"><img src="../images/food_court.svg" style="width:100%;height:100%;border-radius:50%"></div>';
+    }
+    return icon;
   };
   const allElementhide = () => {
     elementsMarker.forEach((element) => {
