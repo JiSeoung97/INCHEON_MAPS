@@ -2,6 +2,7 @@ import MapService from "../service/mapService.js";
 import Utility from "../utility/utility.js";
 const InfoWindowService = (() => {
   let infoWindows = [];
+  let elementInfos = [];
   let language;
   const createInfoWindow = async (area, boardingGateNum) => {
     let infoWindow;
@@ -97,33 +98,38 @@ const InfoWindowService = (() => {
     }
   };
   const getElementContent = (area) => {
-    let name = language[area.name];
-    let location = language[area.description];
+    let name = area.id.split("_")[0].toString().trim();
+    let number = area.id.split("_")[1].toString().trim();
+    let transname = language[name];
+    let location = language[name + "location_" + number];
     const contents =
       '<div class="info-window shadow">' +
       "<h3>" +
-      name +
+      transname +
       "</h3>" +
       "<p>" +
       location +
       "</p>";
-    '<span style="left:auto;font-size:12px;color:#2E90FA">' +
+    '<span style="left:auto;font-size:12px;color: #2E90FA">' +
       language["more"] +
-      "></span>";
-    ("</div>");
+      "</span>" +
+      "</div>";
+    console.log(contents);
+    return contents;
   };
-  const elementInfo = async () => {
+  const elementInfo = (area) => {
     let infoWindow;
     infoWindow = new naver.maps.InfoWindow({
-      content: await getElementContent(area),
+      content: getElementContent(area),
       maxWidth: 300,
       backgroundColor: "#fff",
-      borderColor: Utility.congestionColor(area),
       disableAutopan: true,
       borderWidth: 0,
       borderRadius: 12,
       disableAnchor: false,
     });
+    elementInfos.push(infoWindow);
+    return infoWindow;
   };
   return {
     createInfoWindow: async (area, boardingGate = null) => {
@@ -134,6 +140,10 @@ const InfoWindowService = (() => {
     },
     getInfoWindows: () => {
       return infoWindows;
+    },
+    getElementInfo: (area) => {
+      language = MapService.languageReturn();
+      return elementInfo(area);
     },
   };
 })();

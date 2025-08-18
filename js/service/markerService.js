@@ -120,6 +120,7 @@ const MarkerService = (() => {
 
   const createElementMarker = () => {
     const elements = DataService.getAllElements();
+    let infoWindow;
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
         position: element.position,
@@ -128,10 +129,14 @@ const MarkerService = (() => {
         icon: {
           content: elementMarkerIcon(element),
           size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(0, 0),
+          anchor: new naver.maps.Point(17, 0),
         },
       });
+      infoWindow = InfoWindowService.getElementInfo(element);
       elementsMarker.push(marker);
+      naver.maps.Event.addListener(marker, "click", () => {
+        markerEvent(marker, infoWindow);
+      });
     });
   };
 
@@ -142,19 +147,23 @@ const MarkerService = (() => {
   };
   const elementMarkerIcon = (element) => {
     const name = element.name.split(" ")[1];
-    Logger.log("name split : ",name);
+    Logger.log("name split : ", name);
+
 
     let icon;
     switch (name) {
       case "환전소":
         icon =
-          '<div style="width:24px; height:24px; border:1px solid #ffffff; background-color: #96B3F2 border-radius:50%; font-size:12px;color: #FFFFFF">₩</div>';
+          '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #96B3F2;justify-content:center;text-align:center;align-items:center;border-radius:50%; font-size:12px;color: #FFFFFF">₩</div>';
+        break;
       case "로밍센터":
         icon =
-          '<div style="width:24px; height:24px; border:1px solid #ffffff; background-color: #8B99AC border-radius:50%; font-size:12px;color: #FFFFFF"><img src="../images/roam.svg" style="width:100%;height:100%;border-radius:50%"></div>';
+          '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #8B99AC;justify-content:center;align-items:center; border-radius:50%; font-size:12px;color: #FFFFFF"><img src="./images/roam.svg" style="width:90%;height:90%;border-radius:50%"></div>';
+        break;
       case "식당가":
         icon =
-          '<div style="width:24px; height:24px; border:1px solid #ffffff; background-color: #EF864F border-radius:50%; font-size:12px;color: #FFFFFF"><img src="../images/food_court.svg" style="width:100%;height:100%;border-radius:50%"></div>';
+          '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #EF864F;justify-content:center;align-items:center; border-radius:50%; font-size:12px;color: #FFFFFF"><img src="./images/food_court.svg" style="width:70%;height:70%;border-radius:50%"></div>';
+        break;
     }
     return icon;
   };
@@ -342,9 +351,6 @@ const MarkerService = (() => {
     if (infoWindow.getMap() != null) {
       infoWindow.close();
     } else {
-      infoWindows.forEach((iw) => {
-        iw.close();
-      });
       infoWindow.open(map, marker);
     }
   };
