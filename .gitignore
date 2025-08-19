@@ -1,6 +1,6 @@
 index.local.html
 .env dev
-dist/
+.dist/
 
 # gemini
 .gemini/

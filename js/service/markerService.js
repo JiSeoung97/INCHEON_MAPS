@@ -3,6 +3,7 @@ import MapService from "./mapService.js";
 import DataService from "./dataService.js";
 import Utility from "../utility/utility.js";
 import InfoWindowService from "../component/infoWindow.js";
+import ModalService from "./modalService.js";
 const MarkerService = (() => {
   let markers = [];
   let infoWindows = [];
@@ -120,7 +121,6 @@ const MarkerService = (() => {
 
   const createElementMarker = () => {
     const elements = DataService.getAllElements();
-    let infoWindow;
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
         position: element.position,
@@ -129,17 +129,38 @@ const MarkerService = (() => {
         icon: {
           content: elementMarkerIcon(element),
           size: new naver.maps.Size(27, 35),
-          anchor: new naver.maps.Point(17, 0),
+          anchor: new naver.maps.Point(13, 0),
         },
       });
-      infoWindow = InfoWindowService.getElementInfo(element);
+      const name = element.name.split(" ")[1];
+      if (name != "식당가") {
+        const infoWindow = InfoWindowService.getElementInfo(element);
+        naver.maps.Event.addListener(marker, "click", () => {
+          markerEvent(marker, infoWindow);
+        });
+      } else {
+        naver.maps.Event.addListener(marker, "click", () => {
+          elementEvent(marker);
+        });
+      }
       elementsMarker.push(marker);
-      naver.maps.Event.addListener(marker, "click", () => {
-        markerEvent(marker, infoWindow);
-      });
     });
   };
-
+  const elementEvent = (e) => {
+    const clickElement = $(e.target);
+    let category = clickElement.data("category");
+    if (
+      category == "환전소" ||
+      category == "로밍센터" ||
+      category == "도시락"
+    ) {
+      category = "util";
+    } else {
+      category = "food";
+    }
+    ModalService.langChange(category);
+    ModalService.adModalOpen();
+  };
   const allElementShow = () => {
     elementsMarker.forEach((element) => {
       element.setMap(map);
@@ -149,13 +170,13 @@ const MarkerService = (() => {
     const name = element.name.split(" ")[1];
     Logger.log("name split : ", name);
 
-
     let icon;
     switch (name) {
       case "환전소":
         icon =
           '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #96B3F2;justify-content:center;text-align:center;align-items:center;border-radius:50%; font-size:12px;color: #FFFFFF">₩</div>';
         break;
+      case "도시락":
       case "로밍센터":
         icon =
           '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #8B99AC;justify-content:center;align-items:center; border-radius:50%; font-size:12px;color: #FFFFFF"><img src="./images/roam.svg" style="width:90%;height:90%;border-radius:50%"></div>';
@@ -353,6 +374,11 @@ const MarkerService = (() => {
     } else {
       infoWindow.open(map, marker);
     }
+    $(".moreInfo")
+      .off("click")
+      .on("click", (e) => {
+        elementEvent(e);
+      });
   };
   const getMarkerIcon = (area, index) => {
     let departure = area.name.replace("출국장", "").split(" ");
