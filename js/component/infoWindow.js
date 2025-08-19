@@ -98,7 +98,7 @@ const InfoWindowService = (() => {
       );
     }
   };
-  const getElementContent = (area) => {\
+  const getElementContent = (area) => {
     try {
       let name = area.id.split("_")[0];
       let number = area.id.split("_")[1];
