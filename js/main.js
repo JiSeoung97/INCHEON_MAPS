@@ -55,6 +55,7 @@ $(document).ready(async () => {
       return { success: true, hasLocation: true };
     } catch (error) {
       Logger.warn("위치 권한 없음 : ", error);
+      console.log(error);
       try {
         map = await MapService.init();
         if (!map) {
@@ -169,7 +170,6 @@ $(document).ready(async () => {
             Logger.log("polyline create");
           }
           ModalService.boardingModalClose();
-          handleAdModal();
         }
       } catch (error) {
         Logger.error("탑승구 확인 처리 오류:", error);
@@ -207,7 +207,6 @@ $(document).ready(async () => {
 
     $(".confirm-btn").click(async () => {
       await handleBoardingGateConfirm();
-      handleAdModal();
     });
 
     $("#adClose").click(() => {
@@ -241,13 +240,6 @@ $(document).ready(async () => {
       });
     });
   };
-  const handleAdModal = () => {
-    if (sessionStorage.getItem("render")) {
-      ModalService.adModalOpen();
-    }
-    sessionStorage.setItem("render", true);
-  };
-
   try {
     Logger.log("애플리케이션 초기화 시작...");
 
@@ -267,9 +259,6 @@ $(document).ready(async () => {
 
     // 3. 이벤트 리스너 설정
     setupEventListeners();
-
-    // 4. 광고 모달 처리
-    // handleAdModal();
 
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();

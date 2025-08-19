@@ -1,4 +1,5 @@
 import MapService from "../service/mapService.js";
+import Logger from "../utility/logger.js";
 import Utility from "../utility/utility.js";
 const InfoWindowService = (() => {
   let infoWindows = [];
@@ -97,25 +98,28 @@ const InfoWindowService = (() => {
       );
     }
   };
-  const getElementContent = (area) => {
-    let name = area.id.split("_")[0].toString().trim();
-    let number = area.id.split("_")[1].toString().trim();
-    let transname = language[name];
-    let location = language[name + "location_" + number];
-    const contents =
-      '<div class="info-window shadow">' +
-      "<h3>" +
-      transname +
-      "</h3>" +
-      "<p>" +
-      location +
-      "</p>";
-    '<span style="left:auto;font-size:12px;color: #2E90FA">' +
-      language["more"] +
-      "</span>" +
-      "</div>";
-    console.log(contents);
-    return contents;
+  const getElementContent = (area) => {\
+    try {
+      let name = area.id.split("_")[0];
+      let number = area.id.split("_")[1];
+      let category = area.name.split(" ")[1];
+      let transname = language[name];
+      let location = language[name + "location_" + number];
+      const contents = `
+      <div class="info-window shadow">
+        <h3>${transname}</h3>
+        <p>${location}</p>
+        <p style="display:flex;align-items:end;justify-content:end;font-size:12px;color: #2E90FA">
+          <span class="moreInfo" data-category="${category}">
+            ${language["more"]} >
+          </span>
+        </p>
+      </div>`;
+
+      return contents;
+    } catch (error) {
+      Logger.error("info 만드는중 에러발생", error);
+    }
   };
   const elementInfo = (area) => {
     let infoWindow;
@@ -144,6 +148,9 @@ const InfoWindowService = (() => {
     getElementInfo: (area) => {
       language = MapService.languageReturn();
       return elementInfo(area);
+    },
+    getElementInfos: () => {
+      return elementInfos;
     },
   };
 })();

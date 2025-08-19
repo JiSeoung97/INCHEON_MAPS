@@ -972,7 +972,7 @@ const mockData = {
       },
       {
         id: "LG_1",
-        name: "LG U+ 로밍센터",
+        name: "LGU+ 로밍센터",
         position: { lat: 37.4498429, lng: 126.4514952 },
         floorInfo: "3층",
         description: "3출국장 부근",

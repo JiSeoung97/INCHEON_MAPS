@@ -24,7 +24,7 @@ const MapService = (() => {
   let selectedInfowindow = null;
   let zoomOutMarkers = [];
   let polylines = [];
-
+  let elementInfos = [];
   const loadTranslateData = async (lang) => {
     try {
       BottomSheet.languageChan(languageData[lang]);
@@ -191,6 +191,11 @@ const MapService = (() => {
           let latLng = { x: e.coord.x, y: e.coord.y };
           Logger.log(latLng);
           infoWindows = InfoWindowService.getInfoWindows();
+          elementInfos = InfoWindowService.getElementInfos();
+
+          elementInfos.forEach((elementInfo) => {
+            elementInfo.close();
+          });
           MarkerService.replaceAllMarkerIcon();
           if (MarkerService.getSelectedMarker() != null) {
             MarkerService.setSelectedMarker(null);

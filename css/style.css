@@ -356,9 +356,7 @@ table th:nth-child(3) {
 }
 #modelImg {
   height: 6rem;
-  width: 6rem;
-  border-radius: 50%;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+  width: 80%;
 }
 #modalClose {
   padding-top: 5px;
