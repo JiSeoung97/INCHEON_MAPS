@@ -121,6 +121,7 @@ const MarkerService = (() => {
 
   const createElementMarker = () => {
     const elements = DataService.getAllElements();
+    let infoWindow;
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
         position: element.position,
@@ -144,6 +145,9 @@ const MarkerService = (() => {
         });
       }
       elementsMarker.push(marker);
+      naver.maps.Event.addListener(marker, "click", () => {
+        markerEvent(marker, infoWindow);
+      });
     });
   };
   const elementEvent = (e) => {
@@ -169,6 +173,7 @@ const MarkerService = (() => {
   const elementMarkerIcon = (element) => {
     const name = element.name.split(" ")[1];
     Logger.log("name split : ", name);
+
 
     let icon;
     switch (name) {
