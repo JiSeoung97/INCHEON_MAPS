@@ -2,7 +2,6 @@ import Logger from "../utility/logger.js";
 import MapService from "./mapService.js";
 const ModalService = (() => {
   let language;
-
   const init = () => {
     language = MapService.languageReturn();
   };
@@ -13,11 +12,13 @@ const ModalService = (() => {
     const admodalBtn = document.getElementById("reco");
     const gateNum = document.getElementById("input-gateNum");
     const confirmBtn = document.getElementsByClassName("confirm-btn");
+    const modalImg = document.getElementById("modelImg");
     if (name == null) {
       confirmBtn[0].innerText = language["confirmBtn"];
       gateNum.innerText = language["gateNum"];
       subtext[0].innerText = language["subTitle"];
     } else {
+      modalImg.src = "./images/" + name + "ModalImg.svg";
       adtitle.innerText = language[name + "Title"];
       admodalSubtitle.innerText = language[name + "ModalTitle"];
       admodalBtn.innerHTML =

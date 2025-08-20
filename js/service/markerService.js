@@ -153,13 +153,11 @@ const MarkerService = (() => {
   const elementEvent = (e) => {
     const clickElement = $(e.target);
     let category = clickElement.data("category");
-    if (
-      category == "환전소" ||
-      category == "로밍센터" ||
-      category == "도시락"
-    ) {
-      category = "util";
-    } else {
+    if (category == "환전소") {
+      category = "exchange";
+    } else if (category == "로밍센터" || category == "도시락") {
+      category = "roam";
+    } else if (category == "식당가") {
       category = "food";
     }
     ModalService.langChange(category);
@@ -173,7 +171,6 @@ const MarkerService = (() => {
   const elementMarkerIcon = (element) => {
     const name = element.name.split(" ")[1];
     Logger.log("name split : ", name);
-
 
     let icon;
     switch (name) {
