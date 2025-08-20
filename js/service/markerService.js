@@ -164,7 +164,7 @@ const MarkerService = (() => {
       category = "exchange";
     } else if (category == "로밍센터" || category == "도시락") {
       category = "roam";
-    } else if (category == "식당가") {
+    } else {
       category = "food";
     }
     ModalService.langChange(category);
