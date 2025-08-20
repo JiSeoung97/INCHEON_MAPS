@@ -53,6 +53,9 @@ const languageData = {
     gateNum: "탑승구 번호를 입력해주세요.",
     exchangeTitle: "현명한 환전을 위한\n정보가 필요하세요?",
     foodTitle: "대기시간 동안\n식사 계획이 필요하세요?",
+    roamTitle: "해외에서 데이터 사용,\n스마트하게 해결하세요!",
+    roamModalTitle:
+      "여행 스타일에 맞는 데이터 플랜 대여와\n편리한 반납을 위한 정보까지 알려드려요!",
     exchangeModalTitle: "환율 동향부터 수수료 절약법까지 알려드려요!",
     foodModalTitle: "추천 맛집부터 리뷰 정보를 알려드려요!",
     modalBtn: "더 알아보기 ",
@@ -137,6 +140,9 @@ const languageData = {
     gateNum: "搭乗口番号を入力してください。",
     exchangeTitle: "賢く両替したいですか？",
     foodTitle: "お待ちの間、\nお食事の予定はお決まりですか",
+    roamTitle: "海外でのデータ使用、\nスマートに解決しましょう！",
+    roamModalTitle:
+      "旅行スタイルに合ったデータプランのレンタルと、\n便利な返却方法までご案内します！",
     exchangeModalTitle:
       "為替レートの動向から\n手数料を節約する方法までお教えします！",
     foodModalTitle: "おすすめのお店から\nレビュー情報までお任せください！",
@@ -222,6 +228,9 @@ const languageData = {
     gateNum: "请输入登机口号码。",
     exchangeTitle: "需要明智换汇的资讯吗？",
     foodTitle: "等待期间，\n您需要用餐计划吗？",
+    roamTitle: "想在海外用数据？\n我们为您提供聪明的解决方案！",
+    roamModalTitle:
+      "为您介绍适合您旅行风格的数据套餐，\n并提供方便的归还信息！",
     exchangeModalTitle: "我们为您提供汇率趋势和节省手续费的方法！",
     foodModalTitle: "从推荐餐厅到点评信息，\n 我们都能帮到您！",
     modalBtn: "了解更多 ",
@@ -306,6 +315,9 @@ const languageData = {
     gateNum: "Please enter your gate number.",
     exchangeTitle: "Need information for a smart\ncurrency exchange?",
     foodTitle: "Need a meal plan\nwhile you wait?",
+    roamTitle: "Using data abroad?\nWe've got you covered!",
+    roamModalTitle:
+      "We'll guide you to data plans that fit your trip and\nprovide info for easy returns!",
     exchangeModalTitle:
       "We provide details on exchange rate trends\n and tips on saving on fees!",
     foodModalTitle:
