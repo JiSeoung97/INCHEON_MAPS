@@ -49,7 +49,6 @@ $(document).ready(async () => {
       initBottomSheet();
       await initCustomControl();
       await initModalService();
-      MarkerService.elementSetting();
       Logger.log("map, modal init 완료");
 
       return { success: true, hasLocation: true };

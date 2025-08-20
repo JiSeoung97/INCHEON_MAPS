@@ -6,6 +6,7 @@ const ModalService = (() => {
     language = MapService.languageReturn();
   };
   const modalLangChange = (name = null) => {
+    language = MapService.languageReturn();
     const adtitle = document.getElementById("modalTryMeal");
     const admodalSubtitle = document.getElementById("modalTitle");
     const subtext = document.getElementsByClassName("subtext");

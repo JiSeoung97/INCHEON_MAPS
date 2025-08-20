@@ -17,7 +17,8 @@ const MarkerService = (() => {
   let selectedInfowindow;
   let selectedBoardingMarker;
   let boardingGateNum = null;
-  let elementsMarker = [];
+  let elementsMarkers = [];
+  let elementInfos = [];
   const createMarker = async (areaData, index, boardingGateNum) => {
     try {
       const data = DataService.getAllAreas();
@@ -121,11 +122,16 @@ const MarkerService = (() => {
 
   const createElementMarker = () => {
     const elements = DataService.getAllElements();
+    let mapOn = null;
+    map = MapService.getMap();
+    if (map.getZoom() == 20) {
+      mapOn = map;
+    }
     let infoWindow;
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
         position: element.position,
-        map: null,
+        map: mapOn,
         title: null,
         icon: {
           content: elementMarkerIcon(element),
@@ -139,12 +145,13 @@ const MarkerService = (() => {
         naver.maps.Event.addListener(marker, "click", () => {
           markerEvent(marker, infoWindow);
         });
+        elementInfos.push(infoWindow);
       } else {
         naver.maps.Event.addListener(marker, "click", () => {
           elementEvent(marker);
         });
       }
-      elementsMarker.push(marker);
+      elementsMarkers.push(marker);
       naver.maps.Event.addListener(marker, "click", () => {
         markerEvent(marker, infoWindow);
       });
@@ -164,7 +171,7 @@ const MarkerService = (() => {
     ModalService.adModalOpen();
   };
   const allElementShow = () => {
-    elementsMarker.forEach((element) => {
+    elementsMarkers.forEach((element) => {
       element.setMap(map);
     });
   };
@@ -191,7 +198,7 @@ const MarkerService = (() => {
     return icon;
   };
   const allElementhide = () => {
-    elementsMarker.forEach((element) => {
+    elementsMarkers.forEach((element) => {
       element.setMap(null);
     });
   };
@@ -420,6 +427,9 @@ const MarkerService = (() => {
       boardingMarkers.forEach((marker) => {
         marker.setMap(null);
       });
+      elementsMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
     } catch (error) {
       Logger.error("marker가 존재하지 않음");
     }
@@ -516,6 +526,7 @@ const MarkerService = (() => {
       return boardingMarkers;
     },
     elementSetting: () => {
+      elementsMarkers = [];
       createElementMarker();
     },
     allElementShow: () => {

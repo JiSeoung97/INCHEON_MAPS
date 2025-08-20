@@ -182,6 +182,7 @@ const MapService = (() => {
         await BottomSheet.changeMenu();
         await DragService.init();
         await Translate.translateMenu();
+        MarkerService.elementSetting();
         if (polylines[0] == null) {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
