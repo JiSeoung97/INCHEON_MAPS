@@ -124,14 +124,11 @@ const MarkerService = (() => {
     const elements = DataService.getAllElements();
     let mapOn = null;
     map = MapService.getMap();
-    if (map.getZoom() == 20) {
-      mapOn = map;
-    }
     let infoWindow;
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
         position: element.position,
-        map: mapOn,
+        map: null,
         title: null,
         icon: {
           content: elementMarkerIcon(element),
@@ -151,6 +148,9 @@ const MarkerService = (() => {
           elementEvent(marker);
         });
       }
+      if (map.getZoom() == 20) {
+        marker.setMap(map);
+      }
       elementsMarkers.push(marker);
       naver.maps.Event.addListener(marker, "click", () => {
         markerEvent(marker, infoWindow);
@@ -164,6 +164,8 @@ const MarkerService = (() => {
       category = "exchange";
     } else if (category == "로밍센터" || category == "도시락") {
       category = "roam";
+    } else if (category == "인도장") {
+      category = "duty";
     } else {
       category = "food";
     }
@@ -193,6 +195,10 @@ const MarkerService = (() => {
       case "식당가":
         icon =
           '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #EF864F;justify-content:center;align-items:center; border-radius:50%; font-size:12px;color: #FFFFFF"><img src="./images/food_court.svg" style="width:70%;height:70%;border-radius:50%"></div>';
+        break;
+      case "인도장":
+        icon =
+          '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #F3B239;justify-content:center;align-items:center; border-radius:50%; font-size:12px;color: #FFFFFF"><img src="./images/dutyFree.svg" style="width:70%;height:70%;border-radius:50%"></div>';
         break;
     }
     return icon;
