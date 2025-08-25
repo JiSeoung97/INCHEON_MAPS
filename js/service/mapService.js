@@ -25,6 +25,7 @@ const MapService = (() => {
   let zoomOutMarkers = [];
   let polylines = [];
   let elementInfos = [];
+  let isClickEvent = false;
   const loadTranslateData = async (lang) => {
     try {
       BottomSheet.languageChan(languageData[lang]);
@@ -39,10 +40,14 @@ const MapService = (() => {
       selectedInfowindow = InfoWindowService.getInfoWindows();
       MarkerService.replaceAllMarkerIcon();
       MarkerService.getZoomEvent();
+      let infowindows = InfoWindowService.getElementInfos();
       if (map.getZoom() < 18) {
         selectedInfowindow.forEach((infoWindow) => {
           infoWindow.setMap(null);
           MarkerService.allElementhide();
+        });
+        infowindows.forEach((info) => {
+          info.setMap(null);
         });
         PolylineService.deletePolyLine();
       } else if (map.getZoom() < 20) {
@@ -56,7 +61,29 @@ const MapService = (() => {
       }
     });
   };
+  const mapClickEvent = () => {
+    if (isClickEvent == false) {
+      naver.maps.Event.addListener(map, "click", function (e) {
+        isClickEvent = true;
+        let latLng = { x: e.coord.x, y: e.coord.y };
+        Logger.log(latLng);
+        infoWindows = InfoWindowService.getInfoWindows();
+        elementInfos = InfoWindowService.getElementInfos();
 
+        elementInfos.forEach((elementInfo) => {
+          elementInfo.close();
+        });
+        MarkerService.replaceAllMarkerIcon();
+        if (MarkerService.getSelectedMarker() != null) {
+          MarkerService.setSelectedMarker(null);
+        }
+        BottomSheet.resetAllBorderColor();
+        infoWindows.forEach((infoWindow) => {
+          infoWindow.close();
+        });
+      });
+    }
+  };
   const getBoardingGateIdx = (index) => {
     index = Number(index);
     return (
@@ -182,29 +209,13 @@ const MapService = (() => {
         await BottomSheet.changeMenu();
         await DragService.init();
         await Translate.translateMenu();
+        MarkerService.elementSetting();
         if (polylines[0] == null) {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
         }
         zoomEvent();
-        naver.maps.Event.addListener(map, "click", function (e) {
-          let latLng = { x: e.coord.x, y: e.coord.y };
-          Logger.log(latLng);
-          infoWindows = InfoWindowService.getInfoWindows();
-          elementInfos = InfoWindowService.getElementInfos();
-
-          elementInfos.forEach((elementInfo) => {
-            elementInfo.close();
-          });
-          MarkerService.replaceAllMarkerIcon();
-          if (MarkerService.getSelectedMarker() != null) {
-            MarkerService.setSelectedMarker(null);
-          }
-          BottomSheet.resetAllBorderColor();
-          infoWindows.forEach((infoWindow) => {
-            infoWindow.close();
-          });
-        });
+        mapClickEvent();
 
         await BottomSheet.showGateCongestion();
         Logger.log("setting 완료");

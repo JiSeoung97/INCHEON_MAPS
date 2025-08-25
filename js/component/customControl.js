@@ -57,7 +57,7 @@ const CustomControl = (() => {
       await MapService.setting();
       await MarkerService.showMarkers();
       MarkerService.getZoomEvent();
-
+      MarkerService.elementSetting();
       customControlAllDelete();
       createCustomControl();
       customControlEvent();
@@ -129,7 +129,7 @@ const CustomControl = (() => {
         ")</div>",
       ja:
         '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">日本語(' +
-        language["japenese"] +
+        language["japanese"] +
         ")</div>",
       zh:
         '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">简体中文(' +

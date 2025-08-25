@@ -17,7 +17,8 @@ const MarkerService = (() => {
   let selectedInfowindow;
   let selectedBoardingMarker;
   let boardingGateNum = null;
-  let elementsMarker = [];
+  let elementsMarkers = [];
+  let elementInfos = [];
   const createMarker = async (areaData, index, boardingGateNum) => {
     try {
       const data = DataService.getAllAreas();
@@ -121,6 +122,8 @@ const MarkerService = (() => {
 
   const createElementMarker = () => {
     const elements = DataService.getAllElements();
+    let mapOn = null;
+    map = MapService.getMap();
     let infoWindow;
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
@@ -139,12 +142,16 @@ const MarkerService = (() => {
         naver.maps.Event.addListener(marker, "click", () => {
           markerEvent(marker, infoWindow);
         });
+        elementInfos.push(infoWindow);
       } else {
         naver.maps.Event.addListener(marker, "click", () => {
           elementEvent(marker);
         });
       }
-      elementsMarker.push(marker);
+      if (map.getZoom() == 20) {
+        marker.setMap(map);
+      }
+      elementsMarkers.push(marker);
       naver.maps.Event.addListener(marker, "click", () => {
         markerEvent(marker, infoWindow);
       });
@@ -153,12 +160,12 @@ const MarkerService = (() => {
   const elementEvent = (e) => {
     const clickElement = $(e.target);
     let category = clickElement.data("category");
-    if (
-      category == "환전소" ||
-      category == "로밍센터" ||
-      category == "도시락"
-    ) {
-      category = "util";
+    if (category == "환전소") {
+      category = "exchange";
+    } else if (category == "로밍센터" || category == "도시락") {
+      category = "roam";
+    } else if (category == "인도장") {
+      category = "duty";
     } else {
       category = "food";
     }
@@ -166,14 +173,13 @@ const MarkerService = (() => {
     ModalService.adModalOpen();
   };
   const allElementShow = () => {
-    elementsMarker.forEach((element) => {
+    elementsMarkers.forEach((element) => {
       element.setMap(map);
     });
   };
   const elementMarkerIcon = (element) => {
     const name = element.name.split(" ")[1];
     Logger.log("name split : ", name);
-
 
     let icon;
     switch (name) {
@@ -190,11 +196,15 @@ const MarkerService = (() => {
         icon =
           '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #EF864F;justify-content:center;align-items:center; border-radius:50%; font-size:12px;color: #FFFFFF"><img src="./images/food_court.svg" style="width:70%;height:70%;border-radius:50%"></div>';
         break;
+      case "인도장":
+        icon =
+          '<div style="display:flex;width:24px; height:24px; border:1px solid #ffffff; background-color: #F3B239;justify-content:center;align-items:center; border-radius:50%; font-size:12px;color: #FFFFFF"><img src="./images/dutyFree.svg" style="width:70%;height:70%;border-radius:50%"></div>';
+        break;
     }
     return icon;
   };
   const allElementhide = () => {
-    elementsMarker.forEach((element) => {
+    elementsMarkers.forEach((element) => {
       element.setMap(null);
     });
   };
@@ -423,6 +433,9 @@ const MarkerService = (() => {
       boardingMarkers.forEach((marker) => {
         marker.setMap(null);
       });
+      elementsMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
     } catch (error) {
       Logger.error("marker가 존재하지 않음");
     }
@@ -519,6 +532,7 @@ const MarkerService = (() => {
       return boardingMarkers;
     },
     elementSetting: () => {
+      elementsMarkers = [];
       createElementMarker();
     },
     allElementShow: () => {
