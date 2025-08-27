@@ -1012,6 +1012,20 @@ const mockData = {
         floorInfo: "3층",
         description: "27번 게이트 부근",
       },
+      // {
+      //   id: "dutyFree_1",
+      //   name: "면세품 인도장",
+      //   position: { lat: 37.4470726, lng: 126.4484332 },
+      //   floorInfo: "4층",
+      //   description: "4층 면세지역 43번 게이트 부근",
+      // },
+      // {
+      //   id: "dutyFree_2",
+      //   name: "면세품 인도장",
+      //   position: { lat: 37.4504123, lng: 126.4537763 },
+      //   floorInfo: "4층",
+      //   description: "4층 면세지역 11번 게이트 부근",
+      // },
     ],
   },
 
