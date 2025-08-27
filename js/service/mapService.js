@@ -58,8 +58,8 @@ const MapService = (() => {
         MarkerService.allElementhide();
       } else {
         MarkerService.allElementShow();
-      }
-    });
+      } 
+    }); 
   };
   const mapClickEvent = () => {
     if (isClickEvent == false) {
