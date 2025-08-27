@@ -59,7 +59,7 @@ const MapService = (() => {
       } else {
         MarkerService.allElementShow();
       }
-    });햣
+    });
   };
   const mapClickEvent = () => {
     if (isClickEvent == false) {
