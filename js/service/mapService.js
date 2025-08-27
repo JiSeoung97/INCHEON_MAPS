@@ -50,13 +50,14 @@ const MapService = (() => {
           info.setMap(null);
         });
         PolylineService.deletePolyLine();
-      } else if (map.getZoom() <=20) {
+      } else if (map.getZoom() <20) {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
         });
         PolylineService.viewPolyLine();
         MarkerService.allElementhide();
       } else {
+        PolylineService.viewPolyLine();
         MarkerService.allElementShow();
       } 
     }); 
