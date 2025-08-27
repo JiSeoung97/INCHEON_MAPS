@@ -1,6 +1,7 @@
 index.local.html
 .env.development
 dist/
+node_modules
 
 # gemini
 .gemini/
