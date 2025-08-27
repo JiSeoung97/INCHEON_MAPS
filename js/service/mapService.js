@@ -44,8 +44,8 @@ const MapService = (() => {
       if (map.getZoom() < 18) {
         selectedInfowindow.forEach((infoWindow) => {
           infoWindow.setMap(null);
-          MarkerService.allElementhide();
         });
+        MarkerService.allElementhide();
         infowindows.forEach((info) => {
           info.setMap(null);
         });
