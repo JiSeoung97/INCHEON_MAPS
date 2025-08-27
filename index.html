@@ -71,23 +71,23 @@
         <p id="modalClose"><img id="adClose" src="./images/x.png" /></p>
         <div id="modal-contents">
           <div id="imgBox">
-            <img id="modelImg" src="./images/modal_img.jpg" />
+            <img id="modelImg" src="./images/adModalImg.svg" />
           </div>
           <div id="modalText">
             <p id="modalTryMeal">출국 전 든든한 한끼 어떠신가요?</p>
             <p id="modalTitle">인천공항 맛집 BEST 10!</p>
-            <button id="reco">
-              인천공항 맛집 보러가기
-              <img id="arrow-right" src="./images/arrow-right.png" />
-            </button>
           </div>
+          <button id="reco">
+            인천공항 맛집 보러가기
+            <img id="arrow-right" src="./images/more.svg" />
+          </button>
         </div>
       </div>
     </div>
-    <div id="modal-background">
+    <div id="modal-background" class="modal-overlay">
       <div class="modal">
         <div class="modal-header">
-          탑승구 번호를 입력해주세요
+          <span id="input-gateNum">탑승구 번호를 입력해주세요</span>
           <div class="modal-close">&times;</div>
         </div>
         <div class="input-container">
@@ -110,19 +110,29 @@
         <div class="reco-rank"></div>
       </table>
     </div>
-    <script src="js/utility/utility.js"></script>
-    <script src="js/markerService.js"></script>
-    <script src="js/infoWindowService.js"></script>
-    <script src="js/polylineService.js"></script>
-    <script src="js/language.js"></script>
-    <script src="data/mock-data2.js"></script>
-    <script src="data/mock-data.js"></script>
-    <script src="js/dataService.js"></script>
-    <script src="js/bottomSheet.js"></script>
-    <script src="js/mapService.js"></script>
-    <script src="js/customControl.js"></script>
-    <script src="js/modalService.js"></script>
-    <script src="js/main.js"></script>
+    <!--SCRIPTS-->
+    <script type="module" src="data/language.js"></script>
+    <script type="module" src="data/mock-data2.js"></script>
+    <script type="module" src="data/mock-data.js"></script>
+    <script type="module" src="js/utility/httpError.js"></script>
+    <script type="module" src="js/utility/logger.js"></script>
+    <script type="module" src="js/utility/utility.js"></script>
+    <script type="module" src="js/utility/location.js"></script>
+    <script type="module" src="js/service/dragService.js"></script>
+    <script type="module" src="js/service/recoService.js"></script>
+    <script type="module" src="js/utility/timeCalculator.js"></script>
+    <script type="module" src="js/utility/translate.js"></script>
+    <script type="module" src="js/service/markerService.js"></script>
+    <script type="module" src="js/component/infoWindow.js"></script>
+    <script type="module" src="js/service/polylineService.js"></script>
+
+    <script type="module" src="js/service/dataService.js"></script>
+    <script type="module" src="js/component/bottomSheet.js"></script>
+    <script type="module" src="js/service/modalService.js"></script>
+    <script type="module" src="js/service/mapService.js"></script>
+    <script type="module" src="js/component/customControl.js"></script>
+    <script type="module" src="js/main.js"></script>
+    <!--/SCRIPTS-->
     <script>
       // 페이지 로드 완료 후 실행
       window.addEventListener("load", function () {
@@ -131,8 +141,8 @@
         // 지도 컨테이너 확인
         var mapDiv = document.getElementById("map");
         console.log("지도 컨테이너:", mapDiv);
-
         // 네이버 Maps API 로드 확인
+
         if (typeof naver !== "undefined" && naver.maps) {
           console.log("네이버 Maps API 로드 성공");
         } else {

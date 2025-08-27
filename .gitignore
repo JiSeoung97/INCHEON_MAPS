@@ -1,9 +1,9 @@
 index.local.html
-.env dev
+.env.development
+dist/
+node_modules
 
 # gemini
 .gemini/
 .progress_text/
-congestion2.local.html
-mapService2.js
 test.txt

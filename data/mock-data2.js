@@ -1,5 +1,3 @@
-"use strict";
-
 const mockData2 = {
   data: [
     {
@@ -110,4 +108,4 @@ const mockData2 = {
   ],
 };
 
-window.mockData2 = mockData2;
+export default mockData2;

@@ -21,7 +21,7 @@ const mockData = {
         {
           id: "DG2_W",
           name: "2출국장 서편",
-          position: { lat: 37.45021, lng: 126.4531 },
+          position: { lat: 37.45016, lng: 126.45286 },
           congestion: "medium",
           count: 45,
           capacity: 80,
@@ -32,7 +32,7 @@ const mockData = {
         {
           id: "DG2_E",
           name: "2출국장 동편",
-          position: { lat: 37.450265, lng: 126.4536 },
+          position: { lat: 37.45021, lng: 126.45328 },
           congestion: "low",
           count: 12,
           capacity: 50,
@@ -43,7 +43,7 @@ const mockData = {
         {
           id: "DG3_W",
           name: "3출국장 서편",
-          position: { lat: 37.449925, lng: 126.45187 },
+          position: { lat: 37.44982, lng: 126.4516 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -54,7 +54,7 @@ const mockData = {
         {
           id: "DG3_E",
           name: "3출국장 동편",
-          position: { lat: 37.45008, lng: 126.45242 },
+          position: { lat: 37.44995, lng: 126.452 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -65,7 +65,7 @@ const mockData = {
         {
           id: "DG4_W",
           name: "4출국장 서편",
-          position: { lat: 37.448385, lng: 126.449415 },
+          position: { lat: 37.4486, lng: 126.44964 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -76,7 +76,7 @@ const mockData = {
         {
           id: "DG4_E",
           name: "4출국장 동편",
-          position: { lat: 37.448735, lng: 126.44979 },
+          position: { lat: 37.44884, lng: 126.44993 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -87,7 +87,7 @@ const mockData = {
         {
           id: "DG5_W",
           name: "5출국장 서편",
-          position: { lat: 37.44752, lng: 126.4488 },
+          position: { lat: 37.44773, lng: 126.44894 },
           congestion: "high",
           count: 120,
           capacity: 150,
@@ -98,7 +98,7 @@ const mockData = {
         {
           id: "DG5_E",
           name: "5출국장 동편",
-          position: { lat: 37.44792, lng: 126.449045 },
+          position: { lat: 37.44805, lng: 126.44918 },
           congestion: "veryhigh",
           count: 120,
           capacity: 150,
@@ -883,11 +883,157 @@ const mockData = {
       ],
     },
   ],
+  elements: {
+    name: "지도요소",
+    areas: [
+      {
+        id: "hana_1",
+        name: "하나은행 환전소",
+        position: { lat: 37.4502291, lng: 126.4533823 },
+        floorInfo: "3층",
+        description: "2출국장 부근",
+      },
+      {
+        id: "hana_2",
+        name: "하나은행 환전소",
+        position: { lat: 37.4476621, lng: 126.4498713 },
+        floorInfo: "3층",
+        description: "11번 출입구 부근",
+      },
+      {
+        id: "hana_3",
+        name: "하나은행 환전소",
+        position: { lat: 37.4491683, lng: 126.4485249 },
+        floorInfo: "3층",
+        description: "29번 게이트 부근",
+      },
+      {
+        id: "woori_1",
+        name: "우리은행 환전소",
+        position: { lat: 37.4494313, lng: 126.453074 },
+        floorInfo: "3층",
+        description: "4번 출입구 부근",
+      },
+      {
+        id: "woori_2",
+        name: "우리은행 환전소",
+        position: { lat: 37.4490982, lng: 126.4501464 },
+        floorInfo: "3층",
+        description: "4번출국장 부근",
+      },
+      {
+        id: "woori_3",
+        name: "우리은행 환전소",
+        position: { lat: 37.4508934, lng: 126.45195 },
+        floorInfo: "3층",
+        description: "11번 게이트 부근",
+      },
+      {
+        id: "KB_1",
+        name: "국민은행 환전소",
+        position: { lat: 37.447751, lng: 126.4487962 },
+        floorInfo: "3층",
+        description: "5출국장 부근",
+      },
+      {
+        id: "KB_2",
+        name: "국민은행 환전소",
+        position: { lat: 37.449689, lng: 126.451279 },
+        floorInfo: "3층",
+        description: "F카운터 부근",
+      },
+      {
+        id: "KB_3",
+        name: "국민은행 환전소",
+        position: { lat: 37.4508934, lng: 126.45195 },
+        floorInfo: "3층",
+        description: "12번 게이트 건너편 부근",
+      },
+      {
+        id: "KT_1",
+        name: "KT 로밍센터",
+        position: { lat: 37.4499395, lng: 126.4514591 },
+        floorInfo: "3층",
+        description: "3출국장 부근",
+      },
+      {
+        id: "KT_2",
+        name: "KT 로밍센터",
+        position: { lat: 37.4489191, lng: 126.4498721 },
+        floorInfo: "3층",
+        description: "4출국장 부근",
+      },
+      {
+        id: "wifi_1",
+        name: "와이파이 도시락",
+        position: { lat: 37.4477249, lng: 126.4487764 },
+        floorInfo: "3층",
+        description: "5출국장 부근",
+      },
+      {
+        id: "LG_1",
+        name: "LGU+ 로밍센터",
+        position: { lat: 37.4498429, lng: 126.4514952 },
+        floorInfo: "3층",
+        description: "3출국장 부근",
+      },
+      {
+        id: "SKT_1",
+        name: "SKT 로밍센터",
+        position: { lat: 37.4498159, lng: 126.451479 },
+        floorInfo: "3층",
+        description: "3출국장 부근",
+      },
+      {
+        id: "SKT_2",
+        name: "SKT 로밍센터",
+        position: { lat: 37.4489326, lng: 126.4499349 },
+        floorInfo: "3층",
+        description: "4출국장 부근",
+      },
+      {
+        id: "SKT_3",
+        name: "SKT 로밍센터",
+        position: { lat: 37.4500587, lng: 126.4505826 },
+        floorInfo: "3층",
+        description: "27번 게이트 부근",
+      },
+      {
+        id: "foodCourt_1",
+        name: "동쪽 식당가",
+        position: { lat: 37.4507123, lng: 126.4522095 },
+        floorInfo: "3층",
+        description: "27번 게이트 부근",
+      },
+      {
+        id: "foodCourt_2",
+        name: "서쪽 식당가",
+        position: { lat: 37.4487798, lng: 126.44877 },
+        floorInfo: "3층",
+        description: "27번 게이트 부근",
+      },
+      // {
+      //   id: "dutyFree_1",
+      //   name: "면세품 인도장",
+      //   position: { lat: 37.4470726, lng: 126.4484332 },
+      //   floorInfo: "4층",
+      //   description: "4층 면세지역 43번 게이트 부근",
+      // },
+      // {
+      //   id: "dutyFree_2",
+      //   name: "면세품 인도장",
+      //   position: { lat: 37.4504123, lng: 126.4537763 },
+      //   floorInfo: "4층",
+      //   description: "4층 면세지역 11번 게이트 부근",
+      // },
+    ],
+  },
 
   companyLocation: {
     name: "1번 키오스크",
     position: { lat: 37.447, lng: 126.4493 },
     description: "1출국장 5번출구 앞",
+    areas: [],
   },
 
   lastUpdated: new Date().toISOString(),
@@ -921,4 +1067,4 @@ const mockData = {
   },
 };
 
-window.mockData = mockData;
+export default mockData;

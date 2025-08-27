@@ -69,7 +69,10 @@ body {
   text-align: center;
   margin-bottom: 5px;
 }
-
+.info-window.shadow {
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
 .info-window p {
   margin-bottom: 5px;
 }
@@ -263,6 +266,7 @@ table th:nth-child(3) {
 }
 .menuBtn {
   font-size: 0.9rem;
+  cursor: pointer;
 }
 .menuBtn:nth-child(1),
 .menuBtn:nth-child(2) {
@@ -303,31 +307,56 @@ table th:nth-child(3) {
 }
 
 .modal-overlay {
+  visibility: hidden;
+  opacity: 0;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 150px;
-  display: none; /* 숨김 상태 */
-  align-items: flex-start;
+  height: 100%;
+  display: flex; /* 숨김 상태 */
+  background-color: #00000080;
   justify-content: center;
   z-index: 4000;
   padding-top: 20px;
+  transition: visibility 0.3s ease-in-out, opacity 0.3s ease-in-out;
+}
+
+.modal-overlay.show {
+  visibility: visible;
+  opacity: 1;
 }
 .modal-content {
+  top: 2.5rem;
   background: #fff;
-  border-radius: 15px;
-  width: 80%;
-  max-width: 25rem;
-  min-height: 150px; /* 필요에 따라 조절 */
+  border-radius: 1rem;
+  width: 22rem;
+  height: 25rem; /* 필요에 따라 조절 */
+  padding: 1rem;
   position: relative;
 }
 #imgBox {
   display: inline-flex;
-  height: 120px;
-  width: 30%;
+  height: 8rem;
+  width: 100%;
+  margin-bottom: 1rem;
   align-items: center;
   justify-content: center;
+}
+#modalTryMeal {
+  margin-bottom: 1rem;
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+#modalTitle {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00000080;
+}
+#modelImg {
+  height: 6rem;
+  width: 80%;
 }
 #modalClose {
   padding-top: 5px;
@@ -337,27 +366,22 @@ table th:nth-child(3) {
 }
 #modal-contents {
   display: flex;
+  flex-direction: column;
+  height: 100%;
   align-items: center;
 }
 #modalText {
   flex: 1;
 }
-#modalText p:nth-child(1) {
-  font-size: 12px;
-  text-align: left;
-  font-weight: bold;
-}
-#modalText p:nth-child(2) {
-  font-size: 18;
-  font-weight: bold;
-  text-align: left;
-  font-weight: bold;
-}
+
 #reco {
+  margin-bottom: 2.5rem;
+  margin-top: auto;
   padding-top: 5px;
   padding-bottom: 5px;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 1.25rem;
+  height: 3rem;
   width: 90%;
   border-radius: 5px;
   border: 3px;
@@ -378,8 +402,8 @@ table th:nth-child(3) {
   font-size: 10.29px;
 }
 #arrow-right {
-  padding-top: 3px;
-  height: 18px;
+  padding-top: 0.25rem;
+  height: 1.2rem;
   object-fit: cover;
 }
 #handle {
@@ -620,7 +644,7 @@ small {
   color: #2e90fa;
 }
 
-#modal-background {
+/* #modal-background {
   position: fixed;
   margin: 0;
   padding: 0;
@@ -631,7 +655,7 @@ small {
   align-items: center;
   z-index: 9998;
   width: 100%;
-}
+} */
 
 .btn-cancel {
   background-color: #fff;
@@ -673,10 +697,16 @@ small {
   background-color: #f3f4f6;
 }
 .modal {
+  display: flex;
+  flex-direction: column;
+  top: 10rem;
   background-color: #fff;
   border-radius: 16px;
   padding: 24px 16px 16px;
-  width: 300px;
+  justify-content: center;
+  align-items: center;
+  width: 20rem;
+  height: 18rem;
   text-align: center;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   position: relative;
@@ -701,7 +731,7 @@ small {
 }
 .input-container {
   position: relative;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
 }
 .gate-input {
   border: none;

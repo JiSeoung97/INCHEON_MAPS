@@ -1,4 +1,8 @@
-"use strict";
+import Logger from "./logger.js";
+import DataService from "../service/dataService.js";
+import MarkerService from "../service/markerService.js";
+import InfoWindowService from "../component/infoWindow.js";
+import MapService from "../service/mapService.js";
 
 const Utility = (() => {
   let map;
@@ -8,22 +12,27 @@ const Utility = (() => {
   function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
-  const getDistance = (area, boardingGateNum) => {
+  const getDistance = async (area, boardingGateNum, bottomSheet) => {
     try {
+      let startLocation = null;
       let targetLocation = null;
-      if (boardingGateNum == null) {
-        targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
-      } else {
-        const areas = DataService.getAllAreas();
-        areas.forEach((bArea) => {
-          if (bArea.name == "탑승게이트" + boardingGateNum) {
-            targetLocation = bArea.position;
+
+      targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+      startLocation = area;
+
+      if (bottomSheet) {
+        startLocation = area;
+        const datas = await DataService.getAllAreas();
+        datas.forEach((data) => {
+          if (data.name == "탑승게이트" + boardingGateNum) {
+            targetLocation = data.position;
           }
         });
       }
+
       if (targetLocation !== null) {
-        const lng1 = area.position.lng;
-        const lat1 = area.position.lat;
+        const lng1 = startLocation.position.lng;
+        const lat1 = startLocation.position.lat;
         const lng2 = targetLocation.lng;
         const lat2 = targetLocation.lat;
 
@@ -38,7 +47,6 @@ const Utility = (() => {
           Math.cos(degToRad(lat1)) *
             Math.cos(degToRad(lat2)) *
             Math.sin(dlng / 2) ** 2;
-
         const distance =
           Math.round(
             earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
@@ -46,7 +54,7 @@ const Utility = (() => {
         return distance;
       }
     } catch (error) {
-      console.error("위치권한이 필요합니다 : ", error);
+      Logger.error("위치권한이 필요합니다 : ", error);
     }
   };
 
@@ -67,7 +75,7 @@ const Utility = (() => {
     selectedMarker = MarkerService.getSelectedMarker();
     markers = MarkerService.getMarkers();
     var transition = {
-      duration: 800,
+      duration: 1000,
       easing: "easeOutCubic",
     };
     MarkerService.replaceAllMarkerIcon();
@@ -76,9 +84,8 @@ const Utility = (() => {
       markers[idx].position._lat - 0.0003,
       markers[idx].position._lng
     );
-    console.log(map);
     map.panTo(newPosition, transition);
-    await delay(800);
+    await delay(1000);
     setTimeout(() => {
       if (map.getZoom() <= 17) {
         map.setZoom(18, true);
@@ -91,7 +98,6 @@ const Utility = (() => {
     markers = MarkerService.getMarkers();
     let infoWindows = InfoWindowService.getInfoWindows();
     let selectedInfowindow = MarkerService.getSelectedInfowindow();
-    const areas = DataService.getAllAreas();
     let idx = index;
     if (index == null) {
       idx = infoWindows.length - 1;
@@ -100,7 +106,6 @@ const Utility = (() => {
       selectedInfowindow = infoWindows[idx];
       infoWindows[idx].open(map, markers[idx]);
     }
-    console.log(areas[idx]);
   };
   const translateAreaName = (areaName, language) => {
     if (areaName.includes("출국장")) {
@@ -148,8 +153,8 @@ const Utility = (() => {
     return gaugeColor;
   };
   return {
-    getDistance: (area, boardingGateNum = null) => {
-      return getDistance(area, boardingGateNum);
+    getDistance: async (area, boardingGateNum = null, bottomSheet = false) => {
+      return await getDistance(area, boardingGateNum, bottomSheet);
     },
     calculateMidPoint: (position1, position2) => {
       return calculateMidPoint(position1, position2);
@@ -171,3 +176,4 @@ const Utility = (() => {
     },
   };
 })();
+export default Utility;
