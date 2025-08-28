@@ -67,7 +67,7 @@ const MapService = (() => {
       naver.maps.Event.addListener(map, "click", function (e) {
         isClickEvent = true;
         let latLng = { x: e.coord.x, y: e.coord.y };
-        Logger.log(latLng);
+        console.log(latLng);
         infoWindows = InfoWindowService.getInfoWindows();
         elementInfos = InfoWindowService.getElementInfos();
 
@@ -139,17 +139,6 @@ const MapService = (() => {
         Logger.error("네이버 지도 API가 로드되지 않았습니다.");
         return null;
       }
-      // let lang = sessionStorage.getItem("language");
-      // firstlang = lang;
-      // if (lang == null) {
-      //   languageText = "Language";
-      //   lang = "ko";
-      //   language = await loadTranslateData(lang);
-      // } else {
-      //   language = await loadTranslateData(lang);
-      //   languageText = language[lang];
-      // }
-      // Logger.log("language load완료");
       try {
         map = initMap();
         return map;

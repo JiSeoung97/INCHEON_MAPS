@@ -17,7 +17,7 @@ const DataService = (() => {
 
     data.buildings.forEach((building) => {
       building.areas.forEach((area, idx) => {
-        if (idx !== 0 && idx !== 9) {
+        if (idx < 10) {
           area.congestion = congestions[idx];
         }
       });
@@ -47,25 +47,14 @@ const DataService = (() => {
       // ErrorHandler.handleSpecificError(error);
     }
   };
-  const calculateTotalWaitTime = (item) => {
-    const queueLength = parseInt(item.quelength) || 0;
-    const immigrationTime =
-      item.immigrationtime === "NA" ? 0 : parseInt(item.immigrationtime) || 0;
-    const expectedWaitTime =
-      item.espwaittime === "D" || item.espwaittime === "NA"
-        ? 0
-        : parseInt(item.espwaittime) || 0;
-
-    return queueLength * immigrationTime + expectedWaitTime;
-  };
 
   // 총 대기시간 기준 혼잡도 계산
   const calculateCongestionLevel = (item) => {
-    const totalWaitTime = calculateTotalWaitTime(item);
+    const totalWaitTime = item.waitTime;
     // 시간 기준 혼잡도 (초 단위)
-    if (totalWaitTime <= 600) return "low"; // 10분 이하
-    if (totalWaitTime <= 1800) return "medium"; // 30분 이하
-    if (totalWaitTime <= 3600) return "high"; // 1시간 이하
+    if (totalWaitTime <= 6) return "low"; // 6분 이하
+    if (totalWaitTime <= 8) return "medium"; // 8분 이하
+    if (totalWaitTime <= 10) return "high"; // 10분 이하
     return "veryhigh"; // 1시간 초과
   };
 

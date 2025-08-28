@@ -27,7 +27,7 @@ const MarkerService = (() => {
       let marker;
       if (boardingGateNum == null) {
         area = areaData.area || areaData;
-        if (index == 0 || index == 9) return;
+        if (index == 10) return;
         content = getMarkerIcon(areaData, index);
         if (index % 2 == 1) {
           marker = new naver.maps.Marker({
@@ -40,7 +40,7 @@ const MarkerService = (() => {
             icon: {
               content: content,
               size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(55, 30),
+              anchor: new naver.maps.Point(20, 30),
             },
           });
         } else {
@@ -54,7 +54,7 @@ const MarkerService = (() => {
             icon: {
               content: content,
               size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(20, 30),
+              anchor: new naver.maps.Point(55, 30),
             },
           });
         }
@@ -211,7 +211,7 @@ const MarkerService = (() => {
 
   const createZoomOutMarker = async (index) => {
     try {
-      if (index % 2 == 1 || index == 0) return;
+      if (index % 2 == 0) return;
 
       const data = DataService.getAllAreas();
       let position = Utility.calculateMidPoint(
@@ -406,7 +406,7 @@ const MarkerService = (() => {
       Logger.log("eastwest error");
     }
 
-    if (index % 2 == 1) {
+    if (index % 2 == 0) {
       return (
         '<div class = "markerIcon"style="display:flex ;z-index :11;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto;margin-top:10px"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +

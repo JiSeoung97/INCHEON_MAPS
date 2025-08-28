@@ -16,7 +16,7 @@ const BottomSheet = (() => {
       const areadata = [];
 
       allAreadata.forEach((area, idx) => {
-        if (idx != 0 && idx < 9) {
+        if (idx < 10) {
           areadata.push(area);
         }
       });
@@ -103,7 +103,7 @@ const BottomSheet = (() => {
   const changeBorderColor = async (index) => {
     try {
       const allareas = DataService.getAllAreas();
-      let idx = index + 1;
+      let idx = index;
       const div = document.querySelectorAll(".eastWest div");
 
       let eastWest = [];
@@ -228,6 +228,11 @@ const BottomSheet = (() => {
       </table>
     </div>
     <table id="contents">
+    <tr class="gate">
+        <th>${language["gate1"]}</th>
+        <th class="eastWest"></th>
+        <th class="eastWest"></th>
+      </tr>
       <tr class="gate">
         <th>${language["gate2"]}</th>
         <th class="eastWest"></th>

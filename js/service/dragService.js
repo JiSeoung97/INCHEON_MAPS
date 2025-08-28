@@ -11,7 +11,7 @@ const DragService = (() => {
   let bottomSheet;
   const POSITIONS = {
     CLOSED: 0,
-    OPEN: 0,
+    OPEN: 1,
   };
   function getEventY(e) {
     return e.type.includes("touch") ? e.touches[0].clientY : e.clientY;
