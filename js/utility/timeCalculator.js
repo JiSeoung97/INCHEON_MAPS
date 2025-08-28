@@ -66,29 +66,11 @@ const TimeCalculator = (() => {
           : `${boardingTime}${language["minute"]}`;
 
       // 대기 시간
-      const waitTime = foundApi.espwaittime === "D" ? 0 : foundApi.espwaittime;
-      const waitingMinutes = Math.floor(waitTime / 60);
-      totalTime += waitingMinutes;
-      const waitingTime = `${waitingMinutes}${language["minute"]}`;
+      const waitTime = Number(foundApi.waitTime)
+      totalTime += waitTime;
+      const waitingTime = `${waitTime}${language["minute"]}`;
 
-      // 출입국 시간
-      const immigrationTotal =
-        foundApi.immigrationtime === "NA"
-          ? 60
-          : foundApi.immigrationtime * foundApi.quelength;
-      const immigrationMinutes = Math.floor(immigrationTotal / 60);
-      totalTime += immigrationMinutes;
-      let estimatedTime =
-        immigrationMinutes + waitingMinutes + language["minute"];
-      const immigration =
-        immigrationTotal > 3600
-          ? `${Math.floor(immigrationTotal / 3600)}${
-              language["hour"]
-            } ${Math.floor((immigrationTotal % 3600) / 60)}${
-              language["minute"]
-            }`
-          : `${immigrationMinutes}${language["minute"]}`;
-
+      console.log(totalTime);
       // 총 시간
       const strTotal =
         totalTime > 60
@@ -99,7 +81,7 @@ const TimeCalculator = (() => {
 
       return {
         total: strTotal,
-        times: [hallWaiting, estimatedTime, boardingTimeStr],
+        times: [hallWaiting, waitingTime, boardingTimeStr],
       };
     } catch (error) {
       Logger.error("시간 계산 실패:", error);

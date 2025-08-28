@@ -3,12 +3,14 @@ import TimeCalculator from "../utility/timeCalculator.js";
 import mockData from "../../data/mock-data.js";
 import mockData2 from "../../data/mock-data2.js";
 import ErrorHandler from "../utility/httpError.js";
+import createAxiosInstance from "../../api/axios-instance.js"
 
 const DataService = (() => {
   let data = null;
   let apiDatas = null;
   let congestions = [];
   let elements = [];
+  let apiInstance;
   const updateCongestion = () => {
     if (!data) return;
     Array.from(apiDatas).forEach((apiData) => {
@@ -35,7 +37,7 @@ const DataService = (() => {
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
 
-      const result = await apiDatas.get(
+      const result = await apiInstance.get(
         "/service/DptgtSnsrDatT1/dptgtsnsrdatt1",
         { params: requestParams }
       );
@@ -61,6 +63,7 @@ const DataService = (() => {
   return {
     initData: async () => {
       data = mockData || null;
+      // apiInstance = createAxiosInstance(window.appConfig)
       apiDatas = mockData2.data[0].response.body.items.item || null;
       // await getAirportData();
       elements = data.elements.areas;
@@ -81,7 +84,7 @@ const DataService = (() => {
       return apiDatas;
     },
     getTotalWaitTime: (item) => {
-      return calculateTotalWaitTime(item);
+      return item.waitTime;
     },
     getCompanyLocation: () => {
       if (!data) {
