@@ -94,7 +94,7 @@ const Utility = (() => {
     MarkerService.replaceMarkerIcon(markers[idx]);
   };
 
-  const openWindowInfo = (index = null) => {
+  const openWindowInfo = (index) => {
     markers = MarkerService.getMarkers();
     let infoWindows = InfoWindowService.getInfoWindows();
     let selectedInfowindow = MarkerService.getSelectedInfowindow();
@@ -162,7 +162,7 @@ const Utility = (() => {
     moveGate: (index) => {
       moveGate(index);
     },
-    openWindowInfo: (index) => {
+    openWindowInfo: (index=null) => {
       openWindowInfo(index);
     },
     openBoardingWindowInfo: () => {

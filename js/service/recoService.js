@@ -9,17 +9,13 @@ const RecoService = (() => {
       const areas = DataService.getAllAreas();
       const apiData = DataService.getApiData();
       recoArray = [];
-      for (let i = 0; i < areas.length; i++) {
-        if (i < 10 && areas[i].id !== "DG1" && areas[i].id !== "DG6") {
+      for (let i = 0; i < 10; i++) {
           const distance = await getAreaDistance(areas[i]);
           const apiDataForArea = apiData.find(
-            (api) => api.deskname === areas[i].id
+            (api) => api.gateId=== areas[i].id
           );
-
           if (apiDataForArea) {
-            const waitingTime = Math.round(
-              DataService.getTotalWaitTime(apiDataForArea) / 60
-            );
+            const waitingTime = apiDataForArea.waitTime
 
             recoArray.push({
               name: areas[i].name,
@@ -27,12 +23,12 @@ const RecoService = (() => {
               position: areas[i].position,
             });
           }
-        }
+        
       }
 
       recoArray.sort((a, b) => a.time - b.time);
 
-      Logger.log("추천 게이트 계산 완료:", recoArray);
+      console.log("추천 게이트 계산 완료:", recoArray);
     } catch (error) {
       Logger.error("추천 게이트 계산 실패:", error);
     }
@@ -50,7 +46,7 @@ const RecoService = (() => {
   };
   const recoLikeIconView = () => {
     const data = DataService.getAllAreas();
-    const departureAreas = data.slice(1, 9);
+    const departureAreas = data.slice(0, 10);
     const eastWest = document.getElementsByClassName("eastWest");
     let idx;
     departureAreas.forEach((departure, index) => {

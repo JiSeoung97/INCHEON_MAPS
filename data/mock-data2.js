@@ -82,7 +82,7 @@ const mockData2 = {
                 tmp:""
               },
               {
-                gateId: "DG5_E", // 출국장
+                gateId: "DG5_W", // 출국장
                 occurrtime: "20250718143300", // 발생일시
                 terminalid: "1", // 터미널
                 waitLength: "17", // 대기인원수

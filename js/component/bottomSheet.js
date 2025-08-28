@@ -449,7 +449,7 @@ const BottomSheet = (() => {
       const datas = DataService.getAllAreas();
       const apiData = DataService.getApiData();
       const foundData = datas.find((data) => data.name === recoArray[idx].name);
-      const foundApi = apiData.find((data) => data.deskname === foundData.id);
+      const foundApi = apiData.find((data) => data.gateId === foundData.id);
 
       if (!foundData || !foundApi) {
         Logger.error("data를 찾을 수 없습니다");
