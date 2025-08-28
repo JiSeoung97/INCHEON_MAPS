@@ -11,7 +11,7 @@ const DragService = (() => {
   let bottomSheet;
   const POSITIONS = {
     CLOSED: 0,
-    OPEN: 1,
+    OPEN: 2,
   };
   function getEventY(e) {
     return e.type.includes("touch") ? e.touches[0].clientY : e.clientY;
@@ -58,7 +58,7 @@ const DragService = (() => {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    POSITIONS.OPEN = -5;
+    POSITIONS.OPEN = -3;
 
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
