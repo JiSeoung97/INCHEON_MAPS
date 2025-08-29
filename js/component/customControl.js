@@ -85,7 +85,7 @@ const CustomControl = (() => {
       languageText = language[selectedLang];
     }
     let marginBottom;
-    if(selectedLang =='ko'||selectedLang=="zh"){
+    if(selectedLang =='ko'){
       marginBottom= 12.5
     }else{
       marginBottom=14.5

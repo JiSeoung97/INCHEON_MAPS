@@ -8,7 +8,6 @@ import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
 import ErrorHandler from "./utility/httpError.js";
 import Utility from "./utility/utility.js";
-import PolylineService from "./service/polylineService.js";
 $(document).ready(async () => {
   // ErrorHandler.init();
 
