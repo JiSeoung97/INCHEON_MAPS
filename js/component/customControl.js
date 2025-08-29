@@ -59,6 +59,7 @@ const CustomControl = (() => {
       await MarkerService.showMarkers();
       MarkerService.getZoomEvent();
       MarkerService.elementSetting();
+      await ModalService.langChange();
       customControlAllDelete();
       createCustomControl();
       customControlEvent();
@@ -246,7 +247,6 @@ const CustomControl = (() => {
       mapLang.addEventListener("click", async () => {
         InfoWindowService.allInfoClose();
         await changeLanguage(selectedLangArray[index]);
-        await ModalService.langChange();
       });
     });
     mapLangs.forEach((mapLang) => {
