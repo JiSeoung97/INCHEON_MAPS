@@ -8,6 +8,7 @@ import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
 import ErrorHandler from "./utility/httpError.js";
 import Utility from "./utility/utility.js";
+import PolylineService from "./service/polylineService.js";
 $(document).ready(async () => {
   // ErrorHandler.init();
 
@@ -45,7 +46,7 @@ $(document).ready(async () => {
       }
       await MapService.setting();
       Logger.log("MapService 설정 완료");
-
+      PolylineService.init();
       initBottomSheet();
       await initCustomControl();
       await initModalService();

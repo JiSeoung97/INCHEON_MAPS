@@ -164,9 +164,7 @@ const MapService = (() => {
           language = await loadTranslateData(lang);
           languageText = language[lang];
         }
-        console.log("language Loaded");
         const data = await DataService.initData();
-        PolylineService.init();
         await RecoService.recoGate();
         await MarkerService.init();
         boardingGateNum = sessionStorage.getItem("boardingGate");

@@ -62,7 +62,7 @@ const DragService = (() => {
     if(lang =="ko"){
       POSITIONS.OPEN = -3;
     }else{
-      POSITIONS.OPEN = -5;
+      POSITIONS.OPEN = -1;
     }
 
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
