@@ -27,6 +27,7 @@ const CustomControl = (() => {
   let map;
   let movePosition = null;
   let userMarker = [];
+  let conSwitch = null;
   const positions = [
     naver.maps.Position.TOP_LEFT,
     naver.maps.Position.LEFT_TOP,
@@ -82,9 +83,14 @@ const CustomControl = (() => {
     } else {
       languageText = language[selectedLang];
     }
-
+    let marginBottom;
+    if(selectedLang =='ko'||selectedLang=="zh"){
+      marginBottom= 12.5
+    }else{
+      marginBottom=14.5
+    }
     const locationBtnHtml =
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:12.5rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:'+marginBottom+'rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
 
     let boarding;
     let moveGateBtn;
@@ -116,7 +122,7 @@ const CustomControl = (() => {
       '<img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">' +
       languageText +
       "</div>" +
-      '<img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;">' +
+      '<img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;margin-right:5px">' +
       "</div>";
     let languageList = {
       ko:
@@ -232,12 +238,13 @@ const CustomControl = (() => {
         icon.src = "./images/up.svg";
       }
     });
-    let conSwitch = null;
+    
     mapLangs = Array.from(
       langchangeCon.getElement().getElementsByClassName("mapLang")
     );
     mapLangs.forEach((mapLang, index) => {
       mapLang.addEventListener("click", async () => {
+        InfoWindowService.allInfoClose();
         await changeLanguage(selectedLangArray[index]);
         await ModalService.langChange();
       });
@@ -369,6 +376,10 @@ const CustomControl = (() => {
     customControlAllDelete: () => {
       customControlAllDelete();
     },
+    mapLangClose:()=>{
+      conSwitch = null;
+      langchangeCon.setMap(conSwitch);
+    }
   };
 })();
 

@@ -152,6 +152,14 @@ const InfoWindowService = (() => {
     getElementInfos: () => {
       return elementInfos;
     },
+    allInfoClose:()=>{
+      infoWindows.forEach((info)=>{
+        info.close();
+      })
+      elementInfos.forEach((info)=>{
+        info.close();
+      })
+    }
   };
 })();
 export default InfoWindowService;

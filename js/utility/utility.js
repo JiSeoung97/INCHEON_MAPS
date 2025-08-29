@@ -75,7 +75,7 @@ const Utility = (() => {
     selectedMarker = MarkerService.getSelectedMarker();
     markers = MarkerService.getMarkers();
     var transition = {
-      duration: 1000,
+      duration: 100,
       easing: "easeOutCubic",
     };
     MarkerService.replaceAllMarkerIcon();
@@ -85,7 +85,6 @@ const Utility = (() => {
       markers[idx].position._lng
     );
     map.panTo(newPosition, transition);
-    await delay(1000);
     setTimeout(() => {
       if (map.getZoom() <= 17) {
         map.setZoom(18, true);

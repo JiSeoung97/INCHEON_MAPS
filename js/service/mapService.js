@@ -8,6 +8,7 @@ import DragService from "./dragService.js";
 import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
 import languageData from "../../data/language.js";
+import CustomControl from "../component/customControl.js";
 
 const MapService = (() => {
   let map = null;
@@ -40,6 +41,7 @@ const MapService = (() => {
       selectedInfowindow = InfoWindowService.getInfoWindows();
       MarkerService.replaceAllMarkerIcon();
       MarkerService.getZoomEvent();
+      CustomControl.mapLangClose();
       let infowindows = InfoWindowService.getElementInfos();
       if (map.getZoom() < 18) {
         selectedInfowindow.forEach((infoWindow) => {
@@ -50,24 +52,25 @@ const MapService = (() => {
           info.setMap(null);
         });
         PolylineService.deletePolyLine();
-      } else if (map.getZoom() <20) {
+      } else if (map.getZoom()==18) {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
         });
         PolylineService.viewPolyLine();
-        MarkerService.allElementhide();
-      } else {
+      }else{
+        zoomOutMarkers.forEach((marker) => {
+          marker.setMap(null);
+        });
         PolylineService.viewPolyLine();
         MarkerService.allElementShow();
-      } 
+      }
     }); 
   };
   const mapClickEvent = () => {
     if (isClickEvent == false) {
       naver.maps.Event.addListener(map, "click", function (e) {
         isClickEvent = true;
-        let latLng = { x: e.coord.x, y: e.coord.y };
-        console.log(latLng);
+        CustomControl.mapLangClose();
         infoWindows = InfoWindowService.getInfoWindows();
         elementInfos = InfoWindowService.getElementInfos();
 

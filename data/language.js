@@ -172,7 +172,7 @@ const languageData = {
     KBlocation_1: "3階一般エリア 出国口5番付近",
     KBlocation_2: "3階一般エリア チェックインカウンターF付近",
     KBlocation_3: "3階免税エリア ゲート25番付近",
-    more: "もっと",
+    more: "もっと見る",
   },
   zh: {
     terminal: "第1旅客航站楼",

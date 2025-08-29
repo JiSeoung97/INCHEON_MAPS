@@ -4,6 +4,7 @@ import DataService from "../service/dataService.js";
 import TimeCalculator from "../utility/timeCalculator.js";
 import Translate from "../utility/translate.js";
 import Utility from "../utility/utility.js";
+import ModalService from "../service/modalService.js";
 const BottomSheet = (() => {
   let language;
   let departurehall = [];
@@ -268,7 +269,7 @@ const BottomSheet = (() => {
           <span id="selectHall">${language["selectHall"]}<small></small><img id="down" src="./images/dropDown.svg"></span>
         </div>
         <div class="time-info">
-          <span class="latingTime">-${language["minute"]}</span>
+          <span class="latingTime">- ${language["minute"]}</span>
         </div>
       </div>
       <div class="segment">
@@ -278,7 +279,7 @@ const BottomSheet = (() => {
           <span>${language["waitingTime"]}<small></small></span>
         </div>
         <div class="time-info">
-          <span class="latingTime">-${language["minute"]}</span>
+          <span class="latingTime">- ${language["minute"]}</span>
         </div>
       </div>
       <div class="segment" id="trainAlert">
@@ -296,7 +297,7 @@ const BottomSheet = (() => {
           </span>
         </div>
         <div class="time-info">
-          <span class="latingTime">-${language["minute"]}</span>
+          <span class="latingTime">- ${language["minute"]}</span>
         </div>
       </div>
     </div>`;
@@ -308,10 +309,7 @@ const BottomSheet = (() => {
 
       if (boardingGateCheck) {
         boardingGateCheck.addEventListener("click", () => {
-          const modal = document.getElementById("modal-background");
-          if (modal) {
-            modal.style.display = "flex";
-          }
+          ModalService.boardingModalOpen();
         });
       }
 
