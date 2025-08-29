@@ -805,7 +805,7 @@ small {
   position: absolute;
   left: 15px; /* 아이콘 위치에 맞게 조정 */
   top: 40px; /* 아이콘 아래 시작점 */
-  bottom: -15px; /* 다음 segment까지 */
+  bottom: -7px; /* 다음 segment까지 */
   width: 2px;
   border-left: 2px dashed #ccc;
   z-index: 1;
