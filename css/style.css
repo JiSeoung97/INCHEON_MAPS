@@ -5,8 +5,19 @@
   padding: 0;
   box-sizing: border-box;
 }
+@media(prefers-color-scheme:dark){
+  *{color-scheme: light only !important;}
+}
+
+:root{
+  color-scheme: light only !important;
+}
+html{
+  color-scheme: light only !important;
+}
 
 body {
+  color-scheme: light only !important;
   font-family: "Pretendard Variable", -apple-system, BlinkMacSystemFont,
     sans-serif;
   margin: 0;
