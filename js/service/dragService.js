@@ -102,7 +102,7 @@ const DragService = (() => {
     let newBottom = startBottom - deltaRem;
     // 경계 제한
     const minPosition = Math.max(POSITIONS.CLOSED - 7, -25); // 안전한 최소값
-    const maxPosition = Math.min(POSITIONS.OPEN + 2, 7); // 안전한 최대값
+    const maxPosition = Math.min(POSITIONS.OPEN + 2, 5); // 안전한 최대값
 
     newBottom = Math.max(minPosition, Math.min(maxPosition, newBottom));
     updatePosition(newBottom);
