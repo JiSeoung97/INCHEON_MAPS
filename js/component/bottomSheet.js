@@ -10,7 +10,7 @@ const BottomSheet = (() => {
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
-
+  let colorOn = null;
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();
@@ -130,6 +130,7 @@ const BottomSheet = (() => {
   };
   const resetAllBorderColor = () => {
     const div = document.querySelectorAll(".eastWest div");
+
     div.forEach((divBox) => {
       divBox.style.setProperty("border-color", "#E8E8E8");
     });
