@@ -27,7 +27,7 @@ const MapService = (() => {
   let polylines = [];
   let elementInfos = [];
   let isClickEvent = false;
-  
+
   const loadTranslateData = async (lang) => {
     try {
       BottomSheet.languageChan(languageData[lang]);
@@ -53,19 +53,19 @@ const MapService = (() => {
           info.setMap(null);
         });
         PolylineService.deletePolyLine();
-      } else if (map.getZoom()==18) {
+      } else if (map.getZoom() == 18) {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
         });
         PolylineService.viewPolyLine();
-      }else{
+      } else {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
         });
         PolylineService.viewPolyLine();
         MarkerService.allElementShow();
       }
-    }); 
+    });
   };
   const mapClickEvent = () => {
     if (isClickEvent == false) {
@@ -81,7 +81,10 @@ const MapService = (() => {
         if (MarkerService.getSelectedMarker() != null) {
           MarkerService.setSelectedMarker(null);
         }
-        BottomSheet.resetAllBorderColor();
+        let eW = document.getElementsByClassName("eastWest");
+        if (eW) {
+          BottomSheet.resetAllBorderColor();
+        }
         infoWindows.forEach((infoWindow) => {
           infoWindow.close();
         });
