@@ -264,7 +264,7 @@ const BottomSheet = (() => {
         <div class="total-time">${language["total"]} - ${language["minute"]}</div>
       </div>
       <div class="segment">
-        <img class="icon" src="./images/walk.png" />
+        <img class="icon" src="./images/walk.svg" />
         <span class="flag">${language["transfer"]}</span>
         <div id="reco-priority" class="segment-inner">
           <span id="selectHall">${language["selectHall"]}<small></small><img id="down" src="./images/dropDown.svg"></span>
@@ -274,7 +274,7 @@ const BottomSheet = (() => {
         </div>
       </div>
       <div class="segment">
-        <img class="icon" src="./images/ticket.png" />
+        <img class="icon" src="./images/ticket.svg" />
         <span class="flag">${language["Immigration"]}</span>
         <div class="segment-inner">
           <span>${language["waitingTime"]}<small></small></span>
@@ -289,7 +289,7 @@ const BottomSheet = (() => {
         <span>10${language["minute"]}</span>
       </div>
       <div class="segment">
-        <img class="icon" src="./images/walk.png" />
+        <img class="icon" src="./images/walk.svg" />
         <span class="flag">${language["walk"]}</span>
         <div id="segment-check" class="segment-inner">
           <span id="boardingGateCheck" style="display:flex;align-items:center;justify-content:center">
