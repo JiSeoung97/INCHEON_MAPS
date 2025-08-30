@@ -27,6 +27,7 @@ const MapService = (() => {
   let polylines = [];
   let elementInfos = [];
   let isClickEvent = false;
+  
   const loadTranslateData = async (lang) => {
     try {
       BottomSheet.languageChan(languageData[lang]);
@@ -73,7 +74,6 @@ const MapService = (() => {
         CustomControl.mapLangClose();
         infoWindows = InfoWindowService.getInfoWindows();
         elementInfos = InfoWindowService.getElementInfos();
-
         elementInfos.forEach((elementInfo) => {
           elementInfo.close();
         });

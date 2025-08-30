@@ -70,7 +70,6 @@ const TimeCalculator = (() => {
       totalTime += waitTime;
       const waitingTime = `${waitTime}${language["minute"]}`;
 
-      console.log(totalTime);
       // 총 시간
       const strTotal =
         totalTime > 60

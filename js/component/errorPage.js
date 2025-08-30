@@ -29,8 +29,6 @@ class ErrorPageHandler {
       timestamp: urlParams.timestamp || new Date().toISOString(),
       type: urlParams.type || "NETWORK_ERROR",
     };
-    console.log(urlParams);
-    console.log(this.errorInfo);
 
     Logger.log("받은 에러 정보:", this.errorInfo);
   }
@@ -56,7 +54,7 @@ class ErrorPageHandler {
       //   408: "네트워크 연결을 확인하고 다시 시도해주세요.",
       500: "잠시 후 다시 시도해주세요. 문제가 지속되면 관리자에게 문의하세요.",
       //   504: "네트워크 연결을 확인하고 다시 시도해주세요.",
-      NETWORKERROR: "인터넷 연결 상태를 확인하고 다시 시도해주세요.",
+      NETWORK_ERROR: "인터넷 연결 상태를 확인하고 다시 시도해주세요.",
       LOCATION_ERROR: "GPS 연결 상태를 확인하고 다시 시도해주세요",
       //   UNKNOWN: "페이지를 새로고침하거나 관리자에게 문의해주세요.",
     };
