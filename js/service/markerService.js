@@ -457,6 +457,7 @@ const MarkerService = (() => {
       }
       zoomOutMarkers = [];
       markers = [];
+      infoWindows = [];
       const allAreas = DataService.getAllAreas();
       for (let index = 0; index < allAreas.length; index++) {
         const area = allAreas[index];
