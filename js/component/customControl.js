@@ -65,6 +65,9 @@ const CustomControl = (() => {
       createCustomControl();
       customControlEvent();
       customControlSetMap();
+      if(map.getZoom()>=19){
+        MarkerService.allElementShow();
+      }
       
     } catch (error) {
       Logger.error("언어변경실패", error);
