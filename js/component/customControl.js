@@ -54,6 +54,7 @@ const CustomControl = (() => {
       boardingInfoWindows = [];
       infoWindows = [];
       zoomMarkers = [];
+      InfoWindowService.resetInfo();
       // 재설정
       await MapService.setting();
       await MarkerService.showMarkers();
@@ -64,6 +65,7 @@ const CustomControl = (() => {
       createCustomControl();
       customControlEvent();
       customControlSetMap();
+      
     } catch (error) {
       Logger.error("언어변경실패", error);
     }

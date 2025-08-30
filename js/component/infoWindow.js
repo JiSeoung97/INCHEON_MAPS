@@ -159,7 +159,10 @@ const InfoWindowService = (() => {
       elementInfos.forEach((info)=>{
         info.close();
       })
-    }
+    },
+    resetInfo:()=>{
+      infoWindows=[];
+    },
   };
 })();
 export default InfoWindowService;

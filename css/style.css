@@ -569,7 +569,7 @@ input[type="number"]::-webkit-inner-spin-button {
   width: 100%;
 }
 .title {
-  font-weight: bold;
+  font-weight: bold; 
   display: flex;
   height: 2.5rem;
   justify-content: space-between;
@@ -612,7 +612,7 @@ input[type="number"]::-webkit-inner-spin-button {
   font-size: 14px;
   display: flex;
   align-items: left;
-  margin-left: 10px;
+  margin-left: 3px;
   gap: 6px;
   border: 1px solid #ffffff;
 }
@@ -803,8 +803,8 @@ small {
   content: "";
   position: absolute;
   left: 15px; /* 아이콘 위치에 맞게 조정 */
-  top: 27px; /* 아이콘 아래 시작점 */
-  bottom: -15px; /* 다음 segment까지 */
+  top: 25px; /* 아이콘 아래 시작점 */
+  bottom: -20px; /* 다음 segment까지 */
   width: 2px;
   border-left: 2px dashed #ccc;
   z-index: 1;
