@@ -143,7 +143,6 @@ $(document).ready(async () => {
         const gateNum = document.getElementsByClassName("gate-input")[0];
         boardingGate = gateNum.value;
         Logger.log("입력된 탑승구:", boardingGate);
-
         if (MapService.boardingGateIdx(boardingGate)) {
           Logger.log("유효하지 않은 탑승구");
           MapService.alertGateNumCheck();
@@ -159,7 +158,6 @@ $(document).ready(async () => {
           CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
-
           // UI 업데이트
           updateBoardingGateUI();
           if (PolylineService.getBoardingPolyline() != null) {

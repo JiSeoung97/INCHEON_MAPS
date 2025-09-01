@@ -10,7 +10,6 @@ const BottomSheet = (() => {
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
-  let colorOn = null;
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();
