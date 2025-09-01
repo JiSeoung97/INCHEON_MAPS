@@ -66,7 +66,7 @@ const TimeCalculator = (() => {
           : `${boardingTime}${language["minute"]}`;
 
       // 대기 시간
-      const waitTime = Number(foundApi.waitTime)
+      const waitTime = Number(foundApi.waitTime);
       totalTime += waitTime;
       const waitingTime = `${waitTime}${language["minute"]}`;
 
@@ -112,7 +112,6 @@ const TimeCalculator = (() => {
     try {
       const total = document.getElementsByClassName("total-time");
       const latingTime = document.getElementsByClassName("latingTime");
-
       if (total[0]) {
         total[0].innerText = timeData.total;
       }

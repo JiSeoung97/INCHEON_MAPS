@@ -7,10 +7,13 @@ const utLocation = (() => {
   let lastKnownLocation = null;
   let locationCallbacks = [];
 
+  let option;
+  let isIOS;
+  let isAndroid;
   const getBrowserOptimizedOptions = () => {
     const userAgent = navigator.userAgent;
-    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-    const isAndroid = /Android/.test(userAgent);
+    isIOS = /iPad|iPhone|iPod/.test(userAgent);
+    isAndroid = /Android/.test(userAgent);
     const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
     const isChrome = /Chrome/.test(userAgent);
 
@@ -24,28 +27,28 @@ const utLocation = (() => {
 
     if (isIOS || isSafari) {
       Logger.log("iOS/Safari 최적화 적용");
-      return {
+      option = {
         enableHighAccuracy: false, // iOS는 false가 더 빠름
         timeout: 20000, // 20초
         maximumAge: 0,
       };
     } else if (isAndroid && isChrome) {
       Logger.log("Android Chrome 최적화 적용");
-      return {
+      option = {
         enableHighAccuracy: true, // Android Chrome은 정확함
         timeout: 12000, // 12초
         maximumAge: 0,
       };
     } else if (isAndroid) {
       Logger.log("Android 기타 브라우저 최적화 적용");
-      return {
+      option = {
         enableHighAccuracy: false, // 호환성 우선
         timeout: 15000, // 15초
         maximumAge: 0,
       };
     } else {
       Logger.log("데스크톱/기타 브라우저 기본 설정 적용");
-      return {
+      option = {
         enableHighAccuracy: true, // 데스크톱은 빠름
         timeout: 10000, // 10초
         maximumAge: 0,
@@ -59,11 +62,11 @@ const utLocation = (() => {
       () => {}, // 에러 무시
       { timeout: 1000, maximumAge: 0 }
     );
-    console.log("warmUp");
   };
 
   // 지속적 위치 추적 시작
   const startWatching = () => {
+    if (!isAndroid && !isIOS) return;
     if (watchId) return; // 이미 추적 중
 
     watchId = navigator.geolocation.watchPosition(
@@ -108,7 +111,6 @@ const utLocation = (() => {
         resolve(lastKnownLocation);
         return;
       }
-      const option = getBrowserOptimizedOptions();
       // 2. watchPosition이 실행 중이면 잠시 기다림
       if (watchId) {
         const timeoutId = setTimeout(() => {
@@ -200,6 +202,7 @@ const utLocation = (() => {
   };
   return {
     init: () => {
+      getBrowserOptimizedOptions(); // 사용자 브라우저 확인
       warmUpGPS(); // GPS 예열
       startWatching(); // 지속적 추적 시작
     },

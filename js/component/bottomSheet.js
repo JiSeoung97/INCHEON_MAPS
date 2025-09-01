@@ -10,7 +10,6 @@ const BottomSheet = (() => {
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
-  let colorOn = null;
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();
@@ -258,18 +257,20 @@ const BottomSheet = (() => {
     </table>`;
   };
   const createSecondMenuHTML = () => {
+    let getLang = sessionStorage.getItem("language");
+    let isLongText = getLang == "zh" || getLang == "en" ? `longText` : "";
     return `<div class="recoContainer">
       <div class="title">
         <div id="title-text">${language["estimatedTime"]}</div>
         <div class="total-time">${language["total"]} - ${language["minute"]}</div>
       </div>
-      <div class="segment">
+      <div class="segment ${isLongText}">
         <img class="icon" src="./images/walk.svg" />
         <span class="flag">${language["transfer"]}</span>
         <div id="reco-priority" class="segment-inner">
           <span id="selectHall">${language["selectHall"]}<small></small><img id="down" src="./images/dropDown.svg"></span>
         </div>
-        <div class="time-info">
+        <div class="time-info ${isLongText}">
           <span class="latingTime">- ${language["minute"]}</span>
         </div>
       </div>
