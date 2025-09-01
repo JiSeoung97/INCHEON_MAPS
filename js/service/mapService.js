@@ -53,6 +53,7 @@ const MapService = (() => {
           info.setMap(null);
         });
         PolylineService.deletePolyLine();
+        MarkerService.allElementShow();
       } else {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
