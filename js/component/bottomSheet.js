@@ -267,7 +267,7 @@ const BottomSheet = (() => {
       <div class="segment ${isLongText}">
         <img class="icon" src="./images/walk.svg" />
         <span class="flag">${language["transfer"]}</span>
-        <div id="reco-priority" class="segment-inner">
+        <div id="reco-priority" class="segment-inner ${isLongText}">
           <span id="selectHall">${language["selectHall"]}<small></small><img id="down" src="./images/dropDown.svg"></span>
         </div>
         <div class="time-info ${isLongText}">
