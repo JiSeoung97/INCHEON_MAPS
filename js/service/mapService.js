@@ -27,6 +27,7 @@ const MapService = (() => {
   let polylines = [];
   let elementInfos = [];
   let isClickEvent = false;
+  let setting = false;
 
   const loadTranslateData = async (lang) => {
     try {
@@ -196,7 +197,6 @@ const MapService = (() => {
 
         ampm = language["am"];
         await BottomSheet.changeMenu();
-        await DragService.init();
         await Translate.translateMenu();
         MarkerService.elementSetting();
         if (polylines[0] == null) {
@@ -207,6 +207,7 @@ const MapService = (() => {
         mapClickEvent();
 
         await BottomSheet.showGateCongestion();
+        await DragService.init();
         Logger.log("setting 완료");
       } catch (error) {
         Logger.error("data를 가져오는 도중 error발생 : ", error);
