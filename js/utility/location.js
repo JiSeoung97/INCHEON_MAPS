@@ -6,6 +6,7 @@ const utLocation = (() => {
   let watchId = null;
   let lastKnownLocation = null;
   let locationCallbacks = [];
+
   let option;
   let isIOS;
   let isAndroid;
