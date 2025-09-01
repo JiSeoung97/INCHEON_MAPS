@@ -65,7 +65,7 @@ const CustomControl = (() => {
       createCustomControl();
       customControlEvent();
       customControlSetMap();
-      if(map.getZoom()>=19){
+      if(map.getZoom()>=18){
         MarkerService.allElementShow();
       }
       
