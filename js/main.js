@@ -38,13 +38,12 @@ $(document).ready(async () => {
   const initializeServices = async () => {
     try {
       sessionStorage.setItem("render", true);
-      let userLocation = await utLocation.getCurrentPosition();
-      await utLocation.savedLocation(userLocation);
       Logger.log("사용자 위치 저장 완료");
       map = await MapService.init();
       if (!map) {
         throw new Error("지도 초기화 실패");
       }
+      let userLocation = await utLocation.getCurrentPosition();
       await MapService.setting();
       Logger.log("MapService 설정 완료");
       PolylineService.init();
@@ -56,7 +55,6 @@ $(document).ready(async () => {
       return { success: true, hasLocation: true };
     } catch (error) {
       Logger.warn("위치 권한 없음 : ", error);
-      console.log(error);
       try {
         map = await MapService.init();
         if (!map) {
