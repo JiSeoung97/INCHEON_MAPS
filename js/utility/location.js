@@ -129,13 +129,14 @@ const utLocation = (() => {
       // 3. 일반적인 getCurrentPosition (fallback)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-          (position) => {
+          async (position) => {
             const userLocation = {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
               timestamp: Date.now(),
             };
             // if (limitLocation(userLocation)) {
+            await savedLocation(userLocation);
             resolve(userLocation);
             // } else {
             //   alert("인천공항 내부에서만 이용할 수 있습니다.");
@@ -208,9 +209,6 @@ const utLocation = (() => {
     },
     getCurrentPosition: async () => {
       return await getCurrentPosition();
-    },
-    savedLocation: async (location) => {
-      await savedLocation(location);
     },
   };
 })();
