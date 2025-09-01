@@ -7,6 +7,51 @@ const utLocation = (() => {
   let lastKnownLocation = null;
   let locationCallbacks = [];
 
+  const getBrowserOptimizedOptions = () => {
+    const userAgent = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+    const isAndroid = /Android/.test(userAgent);
+    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+    const isChrome = /Chrome/.test(userAgent);
+
+    Logger.log("브라우저 감지:", {
+      userAgent: userAgent.substring(0, 50),
+      isIOS,
+      isAndroid,
+      isSafari,
+      isChrome,
+    });
+
+    if (isIOS || isSafari) {
+      Logger.log("iOS/Safari 최적화 적용");
+      return {
+        enableHighAccuracy: false, // iOS는 false가 더 빠름
+        timeout: 20000, // 20초
+        maximumAge: 0,
+      };
+    } else if (isAndroid && isChrome) {
+      Logger.log("Android Chrome 최적화 적용");
+      return {
+        enableHighAccuracy: true, // Android Chrome은 정확함
+        timeout: 12000, // 12초
+        maximumAge: 0,
+      };
+    } else if (isAndroid) {
+      Logger.log("Android 기타 브라우저 최적화 적용");
+      return {
+        enableHighAccuracy: false, // 호환성 우선
+        timeout: 15000, // 15초
+        maximumAge: 0,
+      };
+    } else {
+      Logger.log("데스크톱/기타 브라우저 기본 설정 적용");
+      return {
+        enableHighAccuracy: true, // 데스크톱은 빠름
+        timeout: 10000, // 10초
+        maximumAge: 0,
+      };
+    }
+  };
   // GPS 예열 함수
   const warmUpGPS = () => {
     navigator.geolocation.getCurrentPosition(
@@ -14,6 +59,7 @@ const utLocation = (() => {
       () => {}, // 에러 무시
       { timeout: 1000, maximumAge: 0 }
     );
+    console.log("warmUp");
   };
 
   // 지속적 위치 추적 시작
@@ -62,7 +108,7 @@ const utLocation = (() => {
         resolve(lastKnownLocation);
         return;
       }
-
+      const option = getBrowserOptimizedOptions();
       // 2. watchPosition이 실행 중이면 잠시 기다림
       if (watchId) {
         const timeoutId = setTimeout(() => {
@@ -119,11 +165,7 @@ const utLocation = (() => {
             ErrorHandler.handleSpecificError(error);
             reject(error);
           },
-          {
-            enableHighAccuracy: true,
-            timeout: 15000,
-            maximumAge: 0,
-          }
+          { option }
         );
       }
     });
