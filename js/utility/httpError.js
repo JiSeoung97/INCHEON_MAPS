@@ -1,7 +1,7 @@
 import Logger from "./logger.js";
 
 const ErrorHandler = (() => {
-  const ERROR_PAGE = "../../errorPage.html"; // 에러 발생 시 이동할 페이지
+  const ERROR_PAGE = "./errorPage.html"; // 에러 발생 시 이동할 페이지
 
   // 에러 코드에 따른 기본 메시지
   const getErrorMessage = (statusCode) => {
