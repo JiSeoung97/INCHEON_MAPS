@@ -81,12 +81,32 @@ async function bundleAndMinifyJS() {
  */
 async function bundleAndMinifyCSS() {
   console.log("- CSS 처리중...");
-  const cssFilePath = path.join(rootDir, "css", "style.css");
-  const cssCode = await fs.readFile(cssFilePath, "utf8");
+
+  // style.css 처리
+  const styleFilePath = path.join(rootDir, "css", "style.css");
+  const styleCode = await fs.readFile(styleFilePath, "utf8");
   console.log("  - [CSS] css/style.css 파일 읽었음");
 
-  const result = new CleanCSS().minify(cssCode);
-  return result.styles;
+  // error.css 처리 (추가)
+  const errorFilePath = path.join(rootDir, "css", "error.css");
+  const errorCode = await fs.readFile(errorFilePath, "utf8");
+  console.log("  - [CSS] css/error.css 파일 읽었음");
+
+  // 두 파일을 각각 압축
+  const styleResult = new CleanCSS().minify(styleCode);
+  const errorResult = new CleanCSS().minify(errorCode);
+
+  // 두 개의 압축된 CSS 파일 생성
+  await fs.outputFile(
+    path.join(distDir, "css", "style.min.css"),
+    styleResult.styles
+  );
+  await fs.outputFile(
+    path.join(distDir, "css", "error.min.css"),
+    errorResult.styles
+  );
+
+  return styleResult.styles; // 메인 CSS 반환
 }
 
 /**
@@ -104,27 +124,42 @@ async function copyStaticAssets() {
  * index.html 파일을 읽고, CSS와 JS 경로를 번들 파일로 교체한 후 저장합니다.
  */
 async function processHtml() {
+  // 두 HTML 파일 읽기
   let indexHtml = await fs.readFile(path.join(rootDir, "index.html"), "utf8");
   let errorHtml = await fs.readFile(
     path.join(rootDir, "errorPage.html"),
     "utf8"
   );
 
-  // [수정됨] 정규식의 오타를 수정했습니다. (stylFe.css -> style.css)
+  // ===== index.html 처리 =====
+  // CSS 경로 변경: style.css → style.min.css
   indexHtml = indexHtml.replace(
-    /<link.*href=".*css\/style.css".*>/,
+    /<link.*href=".*css\/style\.css".*>/,
     '<link rel="stylesheet" href="css/style.min.css">'
   );
+
+  // JS 번들 교체
   indexHtml = indexHtml.replace(
     /<!--SCRIPTS-->[\s\S]*?<!--\/SCRIPTS-->/,
     '<script src="js/bundle.min.js"></script>'
   );
+
+  // ===== errorPage.html 처리 =====
+  // CSS 경로 변경: error.css → error.min.css (분리 방식)
   errorHtml = errorHtml.replace(
-    /<link.*href=".\/error.css".*>/,
-    '<link rel = "style.sheet" href="css/style.min.css">'
+    /<link.*href="css\/error\.css".*>/,
+    '<link rel="stylesheet" href="css/error.min.css">'
   );
+
+  // errorPage JS 처리 (혹시 스크립트 태그가 있다면)
+  errorHtml = errorHtml.replace(
+    /<script.*src="js\/.*\.js".*><\/script>/g,
+    '<script src="js/bundle.min.js"></script>'
+  );
+
+  // ===== 파일 저장 =====
   await fs.writeFile(path.join(distDir, "index.html"), indexHtml, "utf8");
-  await fs.writeFile(path.join(distDir, "error.html"), errorHtml, "utf8");
+  await fs.writeFile(path.join(distDir, "errorPage.html"), errorHtml, "utf8");
 }
 
 // 빌드 함수 실행
