@@ -104,20 +104,27 @@ async function copyStaticAssets() {
  * index.html 파일을 읽고, CSS와 JS 경로를 번들 파일로 교체한 후 저장합니다.
  */
 async function processHtml() {
-  let indexhtml = await fs.readFile(path.join(rootDir, "index.html"), "utf8");
-  htmls.push(await fs.readFile(path.join(rootDir, "errorPage.html"), "utf8"));
+  let indexHtml = await fs.readFile(path.join(rootDir, "index.html"), "utf8");
+  let errorHtml = await fs.readFile(
+    path.join(rootDir, "errorPage.html"),
+    "utf8"
+  );
 
   // [수정됨] 정규식의 오타를 수정했습니다. (stylFe.css -> style.css)
-  indexhtml = html.replace(
+  indexHtml = indexHtml.replace(
     /<link.*href=".*css\/style.css".*>/,
     '<link rel="stylesheet" href="css/style.min.css">'
   );
-  indexhtml = html.replace(
+  indexHtml = indexHtml.replace(
     /<!--SCRIPTS-->[\s\S]*?<!--\/SCRIPTS-->/,
     '<script src="js/bundle.min.js"></script>'
   );
-
-  await fs.writeFile(path.join(distDir, "index.html"), html, "utf8");
+  errorHtml = errorHtml.replace(
+    /<link.*href=".\/error.css".*>/,
+    '<link rel = "style.sheet" href="css/style.min.css">'
+  );
+  await fs.writeFile(path.join(distDir, "index.html"), indexHtml, "utf8");
+  await fs.writeFile(path.join(distDir, "error.html"), errorHtml, "utf8");
 }
 
 // 빌드 함수 실행
