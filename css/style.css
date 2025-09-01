@@ -5,14 +5,16 @@
   padding: 0;
   box-sizing: border-box;
 }
-@media(prefers-color-scheme:dark){
-  *{color-scheme: light only !important;}
+@media (prefers-color-scheme: dark) {
+  * {
+    color-scheme: light only !important;
+  }
 }
 
-:root{
+:root {
   color-scheme: light only !important;
 }
-html{
+html {
   color-scheme: light only !important;
 }
 
@@ -569,7 +571,7 @@ input[type="number"]::-webkit-inner-spin-button {
   width: 100%;
 }
 .title {
-  font-weight: bold; 
+  font-weight: bold;
   display: flex;
   height: 2.5rem;
   justify-content: space-between;
@@ -604,6 +606,14 @@ input[type="number"]::-webkit-inner-spin-button {
   border-radius: 12px;
   background-color: #f1f3f5;
   margin-bottom: 8px;
+}
+.segment.longText {
+  height: 4.4rem;
+}
+.latingTime.longText {
+  align-self: flex-end;
+  width: 100%;
+  text-align: right;
 }
 .segment-inner {
   background-color: #fff;
