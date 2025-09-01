@@ -53,11 +53,6 @@ const MapService = (() => {
           info.setMap(null);
         });
         PolylineService.deletePolyLine();
-      } else if (map.getZoom() == 18) {
-        zoomOutMarkers.forEach((marker) => {
-          marker.setMap(null);
-        });
-        PolylineService.viewPolyLine();
       } else {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
