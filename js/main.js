@@ -10,7 +10,7 @@ import ErrorHandler from "./utility/httpError.js";
 import Utility from "./utility/utility.js";
 
 $(document).ready(async () => {
-  // ErrorHandler.init();
+  ErrorHandler.init();
 
   let appConfig = {};
 
