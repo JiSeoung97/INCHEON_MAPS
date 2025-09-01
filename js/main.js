@@ -11,6 +11,7 @@ import Utility from "./utility/utility.js";
 
 $(document).ready(async () => {
   ErrorHandler.init();
+  utLocation.init();
 
   let appConfig = {};
 
