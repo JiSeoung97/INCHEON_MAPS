@@ -3,21 +3,137 @@ import ErrorHandler from "./httpError.js";
 import { LocationError } from "./customError.js";
 
 const utLocation = (() => {
+  let watchId = null;
+  let lastKnownLocation = null;
+  let locationCallbacks = [];
+
+  const getBrowserOptimizedOptions = () => {
+    const userAgent = navigator.userAgent;
+    const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+    const isAndroid = /Android/.test(userAgent);
+    const isSafari = /Safari/.test(userAgent) && !/Chrome/.test(userAgent);
+    const isChrome = /Chrome/.test(userAgent);
+
+    Logger.log("브라우저 감지:", {
+      userAgent: userAgent.substring(0, 50),
+      isIOS,
+      isAndroid,
+      isSafari,
+      isChrome,
+    });
+
+    if (isIOS || isSafari) {
+      Logger.log("iOS/Safari 최적화 적용");
+      return {
+        enableHighAccuracy: false, // iOS는 false가 더 빠름
+        timeout: 20000, // 20초
+        maximumAge: 0,
+      };
+    } else if (isAndroid && isChrome) {
+      Logger.log("Android Chrome 최적화 적용");
+      return {
+        enableHighAccuracy: true, // Android Chrome은 정확함
+        timeout: 12000, // 12초
+        maximumAge: 0,
+      };
+    } else if (isAndroid) {
+      Logger.log("Android 기타 브라우저 최적화 적용");
+      return {
+        enableHighAccuracy: false, // 호환성 우선
+        timeout: 15000, // 15초
+        maximumAge: 0,
+      };
+    } else {
+      Logger.log("데스크톱/기타 브라우저 기본 설정 적용");
+      return {
+        enableHighAccuracy: true, // 데스크톱은 빠름
+        timeout: 10000, // 10초
+        maximumAge: 0,
+      };
+    }
+  };
+  // GPS 예열 함수
+  const warmUpGPS = () => {
+    navigator.geolocation.getCurrentPosition(
+      () => {}, // 결과 무시
+      () => {}, // 에러 무시
+      { timeout: 1000, maximumAge: 0 }
+    );
+    console.log("warmUp");
+  };
+
+  // 지속적 위치 추적 시작
+  const startWatching = () => {
+    if (watchId) return; // 이미 추적 중
+
+    watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        lastKnownLocation = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          timestamp: Date.now(),
+        };
+
+        // 등록된 콜백들에게 위치 업데이트 알림
+        locationCallbacks.forEach((callback) => {
+          callback(lastKnownLocation);
+        });
+      },
+      (error) => {
+        Logger.error("위치 추적 중 오류:", error);
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 20000,
+        maximumAge: 0,
+      }
+    );
+  };
+
+  // 위치 추적 중단
+  const stopWatching = () => {
+    if (watchId) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+    }
+  };
+
   const getCurrentPosition = () => {
     return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject(Logger.log("gps is not supported by this browser"));
+      // 1. 최근 위치가 있으면 즉시 반환 (5초 이내)
+      if (
+        lastKnownLocation &&
+        Date.now() - lastKnownLocation.timestamp < 5000
+      ) {
+        resolve(lastKnownLocation);
         return;
-      } else if (navigator.geolocation) {
+      }
+      const option = getBrowserOptimizedOptions();
+      // 2. watchPosition이 실행 중이면 잠시 기다림
+      if (watchId) {
+        const timeoutId = setTimeout(() => {
+          reject(new Error("TIMEOUT"));
+        }, 8000);
+
+        const callback = (location) => {
+          clearTimeout(timeoutId);
+          locationCallbacks = locationCallbacks.filter((cb) => cb !== callback);
+          resolve(location);
+        };
+
+        locationCallbacks.push(callback);
+        return;
+      }
+      // 3. 일반적인 getCurrentPosition (fallback)
+      if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const userLocation = {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
+              timestamp: Date.now(),
             };
             // if (limitLocation(userLocation)) {
-            console.log(navigator.geolocation);
-            Logger.log("userLocation : ", userLocation);
             resolve(userLocation);
             // } else {
             //   alert("인천공항 내부에서만 이용할 수 있습니다.");
@@ -49,11 +165,7 @@ const utLocation = (() => {
             ErrorHandler.handleSpecificError(error);
             reject(error);
           },
-          {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 0,
-          }
+          { option }
         );
       }
     });
@@ -87,6 +199,10 @@ const utLocation = (() => {
     );
   };
   return {
+    init: () => {
+      warmUpGPS(); // GPS 예열
+      startWatching(); // 지속적 추적 시작
+    },
     getCurrentPosition: async () => {
       return await getCurrentPosition();
     },
