@@ -9,6 +9,7 @@ const DragService = (() => {
   let currentBottom = 0;
   let currentPosition;
   let bottomSheet;
+  let dragOn = false;
   const POSITIONS = {
     CLOSED: 0,
     OPEN: 2,
@@ -58,10 +59,10 @@ const DragService = (() => {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    let lang=sessionStorage.getItem('language')
-    if(lang =="ko"){
+    let lang = sessionStorage.getItem("language");
+    if (lang == "ko") {
       POSITIONS.OPEN = -3;
-    }else{
+    } else {
       POSITIONS.OPEN = -1;
     }
 
@@ -151,14 +152,17 @@ const DragService = (() => {
     peekElement = document.getElementsByClassName("peek");
   }
   function bottomSheetEvent() {
-    handle.addEventListener("mousedown", startDrag);
-    document.addEventListener("mousemove", drag);
-    document.addEventListener("mouseup", endDrag);
+    if (!dragOn) {
+      handle.addEventListener("mousedown", startDrag);
+      document.addEventListener("mousemove", drag);
+      document.addEventListener("mouseup", endDrag);
 
-    // 터치 이벤트 (passive: false로 설정)
-    handle.addEventListener("touchstart", startDrag, { passive: false });
-    document.addEventListener("touchmove", drag, { passive: false });
-    document.addEventListener("touchend", endDrag, { passive: false });
+      // 터치 이벤트 (passive: false로 설정)
+      handle.addEventListener("touchstart", startDrag, { passive: false });
+      document.addEventListener("touchmove", drag, { passive: false });
+      document.addEventListener("touchend", endDrag, { passive: false });
+      dragOn = true;
+    }
   }
   return {
     init: async () => {

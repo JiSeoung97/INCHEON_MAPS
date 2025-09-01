@@ -77,10 +77,10 @@ $(document).ready(async () => {
       }
     }
   };
-  const initBottomSheet = () => {
+  const initBottomSheet = async () => {
     try {
       Logger.log("bottomSheet init");
-      BottomSheet.init();
+      await BottomSheet.init();
     } catch (error) {
       Logger.error("bottomSheet init fail : ", error);
     }
