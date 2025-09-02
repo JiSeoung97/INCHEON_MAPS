@@ -43,7 +43,9 @@ $(document).ready(async () => {
       if (!map) {
         throw new Error("지도 초기화 실패");
       }
+      alert("init getCurrent이전");
       let userLocation = await utLocation.getCurrentPosition();
+      alert("init getCurrent이후");
       await MapService.setting();
       Logger.log("MapService 설정 완료");
       PolylineService.init();
@@ -54,7 +56,7 @@ $(document).ready(async () => {
 
       return { success: true, hasLocation: true };
     } catch (error) {
-      Logger.warn("위치 권한 없음 : ", error);
+      alert("위치 권한 없음 : ", error);
       try {
         map = await MapService.init();
         if (!map) {
