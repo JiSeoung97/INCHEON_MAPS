@@ -114,21 +114,45 @@ const utLocation = (() => {
       // 2. watchPosition이 실행 중이면 잠시 기다림
 
       if (watchId) {
-        const timeoutId = setTimeout(() => {
-          alert("모바일 디버깅 : timeout");
-          reject(new Error("TIMEOUT"));
-        }, 8000);
-        const callback = (location) => {
-          clearTimeout(timeoutId);
-          locationCallbacks = locationCallbacks.filter((cb) => cb !== callback);
-          resolve(location);
-        };
-        locationCallbacks.push(callback);
-        return;
-      }
-      // 3. 일반적인 getCurrentPosition (fallback)
-      alert(navigator.geolocation, "위치 가져오기 직전");
-      if (navigator.geolocation) {
+        // 병렬 처리: 빠른 것을 먼저 채택
+        Promise.race([
+          // 방법1: watchPosition 콜백 대기 (빠른 응답 기대)
+          new Promise((resolve, reject) => {
+            const timeoutId = setTimeout(() => {
+              reject(new Error("WATCH_TIMEOUT"));
+            }, 5000); // 5초로 단축
+
+            const callback = (location) => {
+              clearTimeout(timeoutId);
+              locationCallbacks = locationCallbacks.filter(
+                (cb) => cb !== callback
+              );
+              resolve(location);
+            };
+            locationCallbacks.push(callback);
+          }),
+
+          // 방법2: 3초 후 일반 getCurrentPosition 실행 (안전망)
+          new Promise((resolve, reject) => {
+            setTimeout(() => {
+              navigator.geolocation.getCurrentPosition(
+                (position) => {
+                  const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                    timestamp: Date.now(),
+                  };
+                  resolve(userLocation);
+                },
+                reject,
+                option
+              );
+            }, 3000);
+          }),
+        ])
+          .then(resolve)
+          .catch(reject);
+      } else {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
             const userLocation = {
