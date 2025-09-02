@@ -76,7 +76,7 @@ const utLocation = (() => {
           lng: position.coords.longitude,
           timestamp: Date.now(),
         };
-
+        alert(position.coords.latitude);
         // 등록된 콜백들에게 위치 업데이트 알림
         locationCallbacks.forEach((callback) => {
           callback(lastKnownLocation);
