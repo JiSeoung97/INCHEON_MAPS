@@ -73,13 +73,7 @@ const CustomControl = (() => {
       Logger.error("언어변경실패", error);
     }
   };
-  const deletecustomControl = () => {
-    const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
-    positions.forEach((position) => {
-      map.controls[position].clear();
-    });
-    map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
-  };
+
   const createCustomControl = () => {
     const selectedLang = sessionStorage.getItem("language");
     language = MapService.languageReturn();

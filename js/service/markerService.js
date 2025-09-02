@@ -152,9 +152,6 @@ const MarkerService = (() => {
         marker.setMap(map);
       }
       elementsMarkers.push(marker);
-      naver.maps.Event.addListener(marker, "click", () => {
-        markerEvent(marker, infoWindow);
-      });
     });
   };
   const elementEvent = (e) => {
