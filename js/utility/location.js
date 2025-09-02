@@ -115,11 +115,12 @@ const utLocation = (() => {
         return;
       }
       // 2. watchPosition이 실행 중이면 잠시 기다림
+
       if (watchId) {
         const timeoutId = setTimeout(() => {
           reject(new Error("TIMEOUT"));
         }, 8000);
-
+        alert("watchID 있음");
         const callback = (location) => {
           clearTimeout(timeoutId);
           locationCallbacks = locationCallbacks.filter((cb) => cb !== callback);
@@ -139,6 +140,7 @@ const utLocation = (() => {
               timestamp: Date.now(),
             };
             // if (limitLocation(userLocation)) {
+            alert(userLocation, "userLoca가져왔음");
             await savedLocation(userLocation);
             resolve(userLocation);
             // } else {
@@ -212,6 +214,7 @@ const utLocation = (() => {
       startWatching(); // 지속적 추적 시작
     },
     getCurrentPosition: async () => {
+      alert("getCurrentPosition 중");
       return await getCurrentPosition();
     },
   };
