@@ -46,6 +46,7 @@ const utLocation = (() => {
         timeout: 15000, // 15초
         maximumAge: 0,
       };
+      alert("android");
     } else {
       Logger.log("데스크톱/기타 브라우저 기본 설정 적용");
       option = {
