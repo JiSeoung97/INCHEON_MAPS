@@ -277,9 +277,7 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
       try {
-        alert("getCurrentPosition 이전");
         const userPos = await utLocation.getCurrentPosition();
-        alert(userPos);
         if (locaOn) {
           setTimeout(() => {}, 1000);
           locaOn = false;
