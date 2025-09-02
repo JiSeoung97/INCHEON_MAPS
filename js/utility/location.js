@@ -5,8 +5,6 @@ import { LocationError } from "./customError.js";
 const utLocation = (() => {
   let watchId = null;
   let lastKnownLocation = null;
-  let locationCallbacks = [];
-
   let option;
   let isIOS = null;
   let isAndroid = null;
@@ -74,19 +72,11 @@ const utLocation = (() => {
         lastKnownLocation = {
           lat: position.coords.latitude,
           lng: position.coords.longitude,
-          timestamp: Date.now(),
         };
-        alert(position.coords.latitude);
-        // 등록된 콜백들에게 위치 업데이트 알림
-        locationCallbacks.forEach((callback) => {
-          callback(lastKnownLocation);
-        });
       },
       (error) => {
         Logger.error("위치 추적 중 오류:", error);
-        alert(
-          `watch에서 오류가 생겼음 코드 :  ${error.code} 메시지 : ${error.message}`
-        );
+        stopWatching();
       },
       option
     );
@@ -102,99 +92,53 @@ const utLocation = (() => {
 
   const getCurrentPosition = () => {
     return new Promise((resolve, reject) => {
-      // 1. 최근 위치가 있으면 즉시 반환 (5초 이내)
-      if (
-        lastKnownLocation &&
-        Date.now() - lastKnownLocation.timestamp < 5000
-      ) {
+      // 1. watch가 실행중이고 최근 위치가 있으면 최근위치 전송
+      if (lastKnownLocation && watchId) {
         resolve(lastKnownLocation);
         return;
       }
-      // 2. watchPosition이 실행 중이면 잠시 기다림
-
-      if (watchId) {
-        // 병렬 처리: 빠른 것을 먼저 채택
-        Promise.race([
-          // 방법1: watchPosition 콜백 대기 (빠른 응답 기대)
-          new Promise((resolve, reject) => {
-            const timeoutId = setTimeout(() => {
-              reject();
-            }, 50000); // 50초
-
-            const callback = (location) => {
-              clearTimeout(timeoutId);
-              locationCallbacks = locationCallbacks.filter(
-                (cb) => cb !== callback
-              );
-              resolve(location);
-            };
-            locationCallbacks.push(callback);
-          }),
-
-          // 방법2: 3초 후 일반 getCurrentPosition 실행 (안전망)
-          new Promise((resolve, reject) => {
-            setTimeout(() => {
-              navigator.geolocation.getCurrentPosition(
-                (position) => {
-                  const userLocation = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude,
-                    timestamp: Date.now(),
-                  };
-                  resolve(userLocation);
-                },
-                reject,
-                option
-              );
-            }, 10000); // 10초
-          }),
-        ])
-          .then(resolve)
-          .catch(reject);
-      } else {
-        navigator.geolocation.getCurrentPosition(
-          async (position) => {
-            const userLocation = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-              timestamp: Date.now(),
-            };
-            // if (limitLocation(userLocation)) {
-            await savedLocation(userLocation);
-            resolve(userLocation);
-            // } else {
-            //   alert("인천공항 내부에서만 이용할 수 있습니다.");
-            // try {
-            //   throw new LocationError(
-            //     "인천공항 내부에서만 이용할 수 있습니다."
-            //   );
-            // } catch (error) {
-            //   ErrorHandler.handleSpecificError(error);
-            // }
-            // }
-          },
-          (error) => {
-            Logger.error("위치 정보 가져오기 실패", error);
-            switch (error.code) {
-              case 1: // PERMISSION_DENIED
-                alert("위치 정보 제공을 거부하셨습니다. 설정을 확인해주세요.");
-                break;
-              case 2: // POSITION_UNAVAILABLE
-                alert("현재 위치를 확인할 수 없습니다. ");
-                break;
-              case 3: // TIMEOUT
-                alert("위치 정보를 가져오는 데 시간이 초과되었습니다.");
-                break;
-              default:
-                alert("알 수 없는 오류로 위치 정보를 가져올 수 없습니다.");
-                break;
-            }
-            ErrorHandler.handleSpecificError(error);
-            reject(error);
-          },
-          option
-        );
-      }
+      // 2. watch가 실행중이지 않다면 기존 로직으로 실행
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const userLocation = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          // if (limitLocation(userLocation)) {
+          await savedLocation(userLocation);
+          resolve(userLocation);
+          // } else {
+          //   alert("인천공항 내부에서만 이용할 수 있습니다.");
+          // try {
+          //   throw new LocationError(
+          //     "인천공항 내부에서만 이용할 수 있습니다."
+          //   );
+          // } catch (error) {
+          //   ErrorHandler.handleSpecificError(error);
+          // }
+          // }
+        },
+        (error) => {
+          Logger.error("위치 정보 가져오기 실패", error);
+          switch (error.code) {
+            case 1: // PERMISSION_DENIED
+              alert("위치 정보 제공을 거부하셨습니다. 설정을 확인해주세요.");
+              break;
+            case 2: // POSITION_UNAVAILABLE
+              alert("현재 위치를 확인할 수 없습니다. ");
+              break;
+            case 3: // TIMEOUT
+              alert("위치 정보를 가져오는 데 시간이 초과되었습니다.");
+              break;
+            default:
+              alert("알 수 없는 오류로 위치 정보를 가져올 수 없습니다.");
+              break;
+          }
+          ErrorHandler.handleSpecificError(error);
+          reject(error);
+        },
+        option
+      );
     });
   };
   const savedLocation = async (location) => {
