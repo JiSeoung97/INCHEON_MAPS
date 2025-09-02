@@ -127,6 +127,7 @@ const utLocation = (() => {
         return;
       }
       // 3. 일반적인 getCurrentPosition (fallback)
+      alert(navigator.geolocation, "위치 가져오기 직전");
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
