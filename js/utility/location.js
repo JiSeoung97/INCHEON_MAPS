@@ -84,13 +84,11 @@ const utLocation = (() => {
       },
       (error) => {
         Logger.error("위치 추적 중 오류:", error);
-        alert("watch에서 오류가 생겼음", error);
+        alert(
+          `watch에서 오류가 생겼음 코드 :  ${error.code} 메시지 : ${error.message}`
+        );
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 20000,
-        maximumAge: 0,
-      }
+      option
     );
   };
 
