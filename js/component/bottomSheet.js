@@ -375,8 +375,11 @@ const BottomSheet = (() => {
     return new Promise((resolve) => {
       try {
         const train = document.getElementById("trainAlert");
+        const seg = document.getElementsByClassName("segment");
+        const lastChild = seg.length - 1;
         if (boardingGateNum > 100 && boardingGateNum < 133) {
           train.style.display = "flex";
+          seg[lastChild].classList.add("train");
         }
         resolve();
       } catch (error) {
