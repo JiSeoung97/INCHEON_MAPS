@@ -38,14 +38,12 @@ $(document).ready(async () => {
   const initializeServices = async () => {
     try {
       sessionStorage.setItem("render", true);
-      Logger.log("사용자 위치 저장 완료");
       map = await MapService.init();
       if (!map) {
         throw new Error("지도 초기화 실패");
       }
-      alert("init getCurrent이전");
-      let userLocation = await utLocation.getCurrentPosition();
-      alert("init getCurrent이후");
+      await utLocation.getCurrentPosition();
+      Logger.log("사용자 위치 저장 완료");
       await MapService.setting();
       Logger.log("MapService 설정 완료");
       PolylineService.init();

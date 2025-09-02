@@ -115,6 +115,7 @@ const utLocation = (() => {
 
       if (watchId) {
         const timeoutId = setTimeout(() => {
+          alert("모바일 디버깅 : timeout");
           reject(new Error("TIMEOUT"));
         }, 8000);
         const callback = (location) => {
@@ -122,7 +123,6 @@ const utLocation = (() => {
           locationCallbacks = locationCallbacks.filter((cb) => cb !== callback);
           resolve(location);
         };
-
         locationCallbacks.push(callback);
         return;
       }
@@ -137,7 +137,6 @@ const utLocation = (() => {
               timestamp: Date.now(),
             };
             // if (limitLocation(userLocation)) {
-            alert(userLocation, "userLoca가져왔음");
             await savedLocation(userLocation);
             resolve(userLocation);
             // } else {
@@ -211,7 +210,6 @@ const utLocation = (() => {
       startWatching(); // 지속적 추적 시작
     },
     getCurrentPosition: async () => {
-      alert("getCurrentPosition 중");
       return await getCurrentPosition();
     },
   };
