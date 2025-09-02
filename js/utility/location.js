@@ -84,6 +84,7 @@ const utLocation = (() => {
       },
       (error) => {
         Logger.error("위치 추적 중 오류:", error);
+        alert("watch에서 오류가 생겼음");
       },
       {
         enableHighAccuracy: true,
@@ -119,7 +120,7 @@ const utLocation = (() => {
           // 방법1: watchPosition 콜백 대기 (빠른 응답 기대)
           new Promise((resolve, reject) => {
             const timeoutId = setTimeout(() => {
-              reject(new Error("WATCH_TIMEOUT"));
+              reject();
             }, 50000); // 50초
 
             const callback = (location) => {
