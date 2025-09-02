@@ -28,6 +28,7 @@ const CustomControl = (() => {
   let movePosition = null;
   let userMarker = [];
   let conSwitch = null;
+  let locaOn = true;
   const positions = [
     naver.maps.Position.TOP_LEFT,
     naver.maps.Position.LEFT_TOP,
@@ -65,10 +66,9 @@ const CustomControl = (() => {
       createCustomControl();
       customControlEvent();
       customControlSetMap();
-      if(map.getZoom()>=18){
+      if (map.getZoom() >= 18) {
         MarkerService.allElementShow();
       }
-      
     } catch (error) {
       Logger.error("언어변경실패", error);
     }
@@ -90,13 +90,15 @@ const CustomControl = (() => {
       languageText = language[selectedLang];
     }
     let marginBottom;
-    if(selectedLang =='ko'){
-      marginBottom= 12.5
-    }else{
-      marginBottom=17
+    if (selectedLang == "ko") {
+      marginBottom = 12.5;
+    } else {
+      marginBottom = 17;
     }
     const locationBtnHtml =
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:'+marginBottom+'rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:' +
+      marginBottom +
+      'rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
 
     let boarding;
     let moveGateBtn;
@@ -244,7 +246,7 @@ const CustomControl = (() => {
         icon.src = "./images/up.svg";
       }
     });
-    
+
     mapLangs = Array.from(
       langchangeCon.getElement().getElementsByClassName("mapLang")
     );
@@ -276,7 +278,11 @@ const CustomControl = (() => {
     naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
       try {
         const userPos = await utLocation.getCurrentPosition();
-
+        alert(userPos);
+        if (locaOn) {
+          setTimeout(() => {}, 1000);
+          locaOn = false;
+        }
         const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
         if (userPos) {
           map.getCenter();
@@ -381,10 +387,10 @@ const CustomControl = (() => {
     customControlAllDelete: () => {
       customControlAllDelete();
     },
-    mapLangClose:()=>{
+    mapLangClose: () => {
       conSwitch = null;
       langchangeCon.setMap(conSwitch);
-    }
+    },
   };
 })();
 
