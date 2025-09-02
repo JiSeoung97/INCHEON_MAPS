@@ -43,7 +43,7 @@ const utLocation = (() => {
       Logger.log("Android 기타 브라우저 최적화 적용");
       option = {
         enableHighAccuracy: false, // 호환성 우선
-        timeout: 15000, // 15초
+        timeout: 150000, // 150초
         maximumAge: 0,
       };
     } else {
@@ -120,7 +120,7 @@ const utLocation = (() => {
           new Promise((resolve, reject) => {
             const timeoutId = setTimeout(() => {
               reject(new Error("WATCH_TIMEOUT"));
-            }, 5000); // 5초로 단축
+            }, 50000); // 50초
 
             const callback = (location) => {
               clearTimeout(timeoutId);
@@ -147,7 +147,7 @@ const utLocation = (() => {
                 reject,
                 option
               );
-            }, 3000);
+            }, 10000); // 10초
           }),
         ])
           .then(resolve)
