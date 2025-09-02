@@ -228,14 +228,6 @@ const utLocation = (() => {
   };
   return {
     init: () => {
-      navigator.permissions.query({ name: "geolocation" }).then(
-        () => {
-          alert("위치 권한 있음");
-        },
-        (error) => {
-          alert("위치 권한 오류 ", error.code + "-" + error.message);
-        }
-      );
       getBrowserOptimizedOptions(); // 사용자 브라우저 확인
       setTimeout(() => {}, 1000);
       warmUpGPS(); // GPS 예열
