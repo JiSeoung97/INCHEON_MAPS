@@ -306,10 +306,11 @@ table th:nth-child(3) {
 }
 
 .tabs table tr th {
-  font-size: 13px;
+  font-size: 12px;
   color: #00000080;
   font-weight: 500;
   width: 50%;
+  justify-content: center;
 }
 .tabs table tr th:last-child {
   text-align: right;
@@ -607,6 +608,9 @@ input[type="number"]::-webkit-inner-spin-button {
   background-color: #f1f3f5;
   margin-bottom: 8px;
 }
+.segment.train {
+  border-radius: 0px 0px 12px 12px;
+}
 .segment.longText {
   justify-content: center;
 }
@@ -825,8 +829,8 @@ small {
   content: "";
   position: absolute;
   left: 15px; /* 아이콘 위치에 맞게 조정 */
-  top: 25px; /* 아이콘 아래 시작점 */
-  bottom: -20px; /* 다음 segment까지 */
+  top: 24px; /* 아이콘 아래 시작점 */
+  bottom: -13px; /* 다음 segment까지 */
   width: 2px;
   border-left: 2px dashed #ccc;
   z-index: 1;
