@@ -409,7 +409,11 @@ const BottomSheet = (() => {
     try {
       const reco = document.getElementById("reco-select");
       const selectHall = document.getElementById("selectHall");
-
+      const latingTime = document.getElementsByClassName("latingTime");
+      const lang = sessionStorage.getItem("language");
+      if (lang == "en" || lang == "zh") {
+        latingTime[0].classList.add("longText");
+      }
       if (reco) reco.style.display = "none";
 
       if (selectHall && recoArray[idx]) {

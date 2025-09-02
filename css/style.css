@@ -608,21 +608,30 @@ input[type="number"]::-webkit-inner-spin-button {
   margin-bottom: 8px;
 }
 .segment.longText {
-  height: 4.4rem;
+  justify-content: center;
+}
+.latingTime:not(.longText) {
+  width: fit-content;
 }
 .latingTime.longText {
+  display: inline-block;
   align-self: flex-end;
-  width: 100%;
-  text-align: right;
+  width: min-content;
+  height: min-content;
+  text-align: end;
+}
+.segment.longText {
+  flex-direction: row;
 }
 .segment-inner {
   background-color: #fff;
   padding: 6px 12px;
   border-radius: 16px;
-  font-size: 14px;
+  font-size: 13px;
   display: flex;
   align-items: left;
   margin-left: 3px;
+  margin-right: auto;
   gap: 6px;
   border: 1px solid #ffffff;
 }
@@ -634,7 +643,7 @@ input[type="number"]::-webkit-inner-spin-button {
   align-items: center;
   margin-left: auto;
   gap: 6px;
-  font-size: 13px;
+  font-size: 12px;
 }
 .total-time {
   background-color: #333;
