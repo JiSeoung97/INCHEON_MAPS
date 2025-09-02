@@ -55,8 +55,6 @@ const utLocation = (() => {
         maximumAge: 0,
       };
     }
-    alert(option.timeout);
-    console.log(option);
   };
   // GPS 예열 함수
   const warmUpGPS = () => {
