@@ -54,7 +54,15 @@ $(document).ready(async () => {
 
       return { success: true, hasLocation: true };
     } catch (error) {
-      alert("위치 권한 없음 : ", error);
+      Logger.error("위치 권한 없음 : ", error);
+      navigator.permissions.query({ name: "geolocation" }).then(
+        () => {
+          alert("위치 권한 있음");
+        },
+        (error) => {
+          alert("위치 권한 오류 ", error.code + "-" + error.message);
+        }
+      );
       try {
         map = await MapService.init();
         if (!map) {
