@@ -193,7 +193,7 @@ const utLocation = (() => {
             ErrorHandler.handleSpecificError(error);
             reject(error);
           },
-          { option }
+          option
         );
       }
     });
