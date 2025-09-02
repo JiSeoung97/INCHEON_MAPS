@@ -46,7 +46,6 @@ const utLocation = (() => {
         timeout: 15000, // 15초
         maximumAge: 0,
       };
-      alert("android");
     } else {
       Logger.log("데스크톱/기타 브라우저 기본 설정 적용");
       option = {
@@ -118,7 +117,6 @@ const utLocation = (() => {
         const timeoutId = setTimeout(() => {
           reject(new Error("TIMEOUT"));
         }, 8000);
-        alert("watchID 있음");
         const callback = (location) => {
           clearTimeout(timeoutId);
           locationCallbacks = locationCallbacks.filter((cb) => cb !== callback);
@@ -129,6 +127,7 @@ const utLocation = (() => {
         return;
       }
       // 3. 일반적인 getCurrentPosition (fallback)
+      alert(navigator.geolocation, "위치 가져오기 직전");
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
