@@ -8,8 +8,8 @@ const utLocation = (() => {
   let locationCallbacks = [];
 
   let option;
-  let isIOS;
-  let isAndroid;
+  let isIOS = null;
+  let isAndroid = null;
   const getBrowserOptimizedOptions = () => {
     const userAgent = navigator.userAgent;
     isIOS = /iPad|iPhone|iPod/.test(userAgent);
@@ -46,7 +46,6 @@ const utLocation = (() => {
         timeout: 15000, // 15초
         maximumAge: 0,
       };
-      alert("android");
     } else {
       Logger.log("데스크톱/기타 브라우저 기본 설정 적용");
       option = {
@@ -55,6 +54,8 @@ const utLocation = (() => {
         maximumAge: 0,
       };
     }
+    alert(option.timeout);
+    console.log(option);
   };
   // GPS 예열 함수
   const warmUpGPS = () => {
@@ -205,6 +206,7 @@ const utLocation = (() => {
   return {
     init: () => {
       getBrowserOptimizedOptions(); // 사용자 브라우저 확인
+      setTimeout(() => {}, 1000);
       warmUpGPS(); // GPS 예열
       startWatching(); // 지속적 추적 시작
     },
