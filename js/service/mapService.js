@@ -28,6 +28,7 @@ const MapService = (() => {
   let elementInfos = [];
   let isClickEvent = false;
   let setting = false;
+  let boardingInfo = null;
 
   const loadTranslateData = async (lang) => {
     try {
@@ -68,11 +69,6 @@ const MapService = (() => {
       naver.maps.Event.addListener(map, "click", function (e) {
         isClickEvent = true;
         CustomControl.mapLangClose();
-        infoWindows = InfoWindowService.getInfoWindows();
-        elementInfos = InfoWindowService.getElementInfos();
-        elementInfos.forEach((elementInfo) => {
-          elementInfo.close();
-        });
         MarkerService.replaceAllMarkerIcon();
         if (MarkerService.getSelectedMarker() != null) {
           MarkerService.setSelectedMarker(null);
@@ -81,9 +77,7 @@ const MapService = (() => {
         if (eW) {
           BottomSheet.resetAllBorderColor();
         }
-        infoWindows.forEach((infoWindow) => {
-          infoWindow.close();
-        });
+        InfoWindowService.allInfoClose();
       });
     }
   };
@@ -225,25 +219,23 @@ const MapService = (() => {
     alertGateNumCheck: () => {
       alert(language["checkNum"]);
     },
-    moveBoardingGate: (boardingGateNum) => {
-      const areaData = DataService.getAllAreas();
-
+    moveBoardingGate: () => {
       var transition = {
         duration: 800,
         easing: "easeOutCubic",
       };
       boardingMarkers = MarkerService.getBoardingMarker();
+      console.log("BM : ", boardingMarkers[0]);
+      console.log("BM.position : ", boardingMarkers[0].position);
       MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
       let movePosition;
-      Array.from(areaData).forEach((area) => {
-        if (area.name == "탑승게이트" + boardingGateNum) {
-          movePosition = naver.maps.LatLng(
-            area.position.lat - 0.0003,
-            area.position.lng
-          );
-          map.panTo(movePosition, transition);
-        }
-      });
+
+      movePosition = naver.maps.LatLng(
+        boardingMarkers[0].position._lat - 0.0003,
+        boardingMarkers[0].position._lng
+      );
+      map.panTo(movePosition, transition);
+
       return movePosition;
     },
     getCurrentPosition: async () => {
