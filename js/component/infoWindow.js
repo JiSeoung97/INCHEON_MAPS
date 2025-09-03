@@ -7,6 +7,7 @@ const InfoWindowService = (() => {
   let elementInfos = [];
   let boardingInfo = null;
   let language;
+  let bInfoOn = false;
   const createInfoWindow = async (area, boardingGateNum) => {
     let infoWindow;
     if (boardingGateNum == null) {
@@ -176,7 +177,13 @@ const InfoWindowService = (() => {
     boardingInfoOpen: () => {
       let markers = MarkerService.getBoardingMarker();
       let map = MapService.getMap();
-      boardingInfo.open(map, markers[0]);
+      if (!bInfoOn) {
+        boardingInfo.open(map, markers[0]);
+        bInfoOn = true;
+      } else {
+        boardingInfo.close();
+        bInfoOn = false;
+      }
     },
     resetBoardingInfo: () => {
       boardingInfo = null;

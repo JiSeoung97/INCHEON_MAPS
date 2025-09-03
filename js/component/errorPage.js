@@ -19,7 +19,6 @@ class ErrorPageHandler {
   // URL에서 에러 정보 추출
   loadErrorInfo() {
     const urlParams = JSON.parse(sessionStorage.getItem("errorData"));
-    console.log(urlParams);
     this.errorInfo = {
       errorCode: urlParams.errorCode || urlParams.code || "NETWORK_ERROR",
       errorMessage:
@@ -83,7 +82,6 @@ class ErrorPageHandler {
       referrer: document.referrer,
       viewedAt: new Date().toISOString(),
     };
-
 
     // 개발 환경에서 콘솔에 상세 정보 출력
     Logger.log("에러 코드:", this.errorInfo.errorCode);

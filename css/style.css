@@ -238,10 +238,10 @@ table th:nth-child(3) {
 }
 .eastWest {
   min-height: 100px;
-  height: auto;
+  height: 2.5rem;
 }
 .eastWest div {
-  height: auto;
+  height: 2.4rem;
 }
 .eastWest div h4 {
   font-size: 0.9rem;

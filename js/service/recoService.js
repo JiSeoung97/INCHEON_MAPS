@@ -10,25 +10,22 @@ const RecoService = (() => {
       const apiData = DataService.getApiData();
       recoArray = [];
       for (let i = 0; i < 10; i++) {
-          const distance = await getAreaDistance(areas[i]);
-          const apiDataForArea = apiData.find(
-            (api) => api.gateId=== areas[i].id
-          );
-          if (apiDataForArea) {
-            const waitingTime = apiDataForArea.waitTime
+        const distance = await getAreaDistance(areas[i]);
+        const apiDataForArea = apiData.find(
+          (api) => api.gateId === areas[i].id
+        );
+        if (apiDataForArea) {
+          const waitingTime = apiDataForArea.waitTime;
 
-            recoArray.push({
-              name: areas[i].name,
-              time: distance + waitingTime,
-              position: areas[i].position,
-            });
-          }
-        
+          recoArray.push({
+            name: areas[i].name,
+            time: distance + waitingTime,
+            position: areas[i].position,
+          });
+        }
       }
 
       recoArray.sort((a, b) => a.time - b.time);
-
-      console.log("추천 게이트 계산 완료:", recoArray);
     } catch (error) {
       Logger.error("추천 게이트 계산 실패:", error);
     }

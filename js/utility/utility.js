@@ -8,6 +8,7 @@ const Utility = (() => {
   let map;
   let markers = [];
   let selectedMarker = null;
+  let infoOn = false;
 
   function delay(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -94,14 +95,20 @@ const Utility = (() => {
   };
 
   const openWindowInfo = (index) => {
-    if (index == null) {
-      let boardingInfo = InfoWindowService.getBoardingInfo();
-      let boardingMarker = MarkerService.getBoardingMarker();
-      boardingInfo.open(map, boardingMarker[0]);
+    if (!infoOn) {
+      if (index == null) {
+        let boardingInfo = InfoWindowService.getBoardingInfo();
+        let boardingMarker = MarkerService.getBoardingMarker();
+        boardingInfo.open(map, boardingMarker[0]);
+      } else {
+        markers = MarkerService.getMarkers();
+        let infoWindows = InfoWindowService.getInfoWindows();
+        infoWindows[index].open(map, markers[index]);
+      }
+      infoOn = true;
     } else {
-      markers = MarkerService.getMarkers();
-      let infoWindows = InfoWindowService.getInfoWindows();
-      infoWindows[index].open(map, markers[index]);
+      InfoWindowService.allInfoClose();
+      infoOn = false;
     }
   };
   const translateAreaName = (areaName, language) => {

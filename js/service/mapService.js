@@ -173,12 +173,10 @@ const MapService = (() => {
         infoWindows = [];
         boardingInfoWindows = [];
         zoomOutMarkers = [];
-        console.log("boardingGage 확인------------- : ", boardingGateNum);
         if (boardingGateNum != null) {
           boardingMarkers = await MarkerService.createBoardingMarker(
             boardingGateNum
           );
-          console.log("boardingGate가 있어!!!!!!!!!!!");
           await PolylineService.createBoardingPolyline(boardingMarkers);
           PolylineService.setPolyline();
         } else {
@@ -225,8 +223,6 @@ const MapService = (() => {
         easing: "easeOutCubic",
       };
       boardingMarkers = MarkerService.getBoardingMarker();
-      console.log("BM : ", boardingMarkers[0]);
-      console.log("BM.position : ", boardingMarkers[0].position);
       MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
       let movePosition;
 
