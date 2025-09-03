@@ -1,10 +1,13 @@
 import MapService from "../service/mapService.js";
 import Logger from "../utility/logger.js";
 import Utility from "../utility/utility.js";
+import MarkerService from "../service/markerService.js";
 const InfoWindowService = (() => {
   let infoWindows = [];
   let elementInfos = [];
+  let boardingInfo = null;
   let language;
+  let bInfoOn = false;
   const createInfoWindow = async (area, boardingGateNum) => {
     let infoWindow;
     if (boardingGateNum == null) {
@@ -18,6 +21,7 @@ const InfoWindowService = (() => {
         borderRadius: 12,
         disableAnchor: false,
       });
+      infoWindows.push(infoWindow);
     } else {
       infoWindow = new naver.maps.InfoWindow({
         content: await getInfoWindowContent(area, boardingGateNum),
@@ -29,8 +33,9 @@ const InfoWindowService = (() => {
         borderRadius: 12,
         disableAnchor: false,
       });
+      boardingInfo = infoWindow;
     }
-    infoWindows.push(infoWindow);
+
     return infoWindow;
   };
   const getInfoWindowContent = async (areaData, boardingGateNum) => {
@@ -152,16 +157,36 @@ const InfoWindowService = (() => {
     getElementInfos: () => {
       return elementInfos;
     },
-    allInfoClose:()=>{
-      infoWindows.forEach((info)=>{
+    allInfoClose: () => {
+      infoWindows.forEach((info) => {
         info.close();
-      })
-      elementInfos.forEach((info)=>{
+      });
+      elementInfos.forEach((info) => {
         info.close();
-      })
+      });
+      if (boardingInfo != null) {
+        boardingInfo.close();
+      }
     },
-    resetInfo:()=>{
-      infoWindows=[];
+    resetInfo: () => {
+      infoWindows = [];
+    },
+    getBoardingInfo: () => {
+      return boardingInfo;
+    },
+    boardingInfoOpen: () => {
+      let markers = MarkerService.getBoardingMarker();
+      let map = MapService.getMap();
+      if (!bInfoOn) {
+        boardingInfo.open(map, markers[0]);
+        bInfoOn = true;
+      } else {
+        boardingInfo.close();
+        bInfoOn = false;
+      }
+    },
+    resetBoardingInfo: () => {
+      boardingInfo = null;
     },
   };
 })();

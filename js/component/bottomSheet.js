@@ -95,9 +95,9 @@ const BottomSheet = (() => {
     const direction = isEast ? language["east"] : language["west"];
 
     return `<div style="text-align: center;border:${congestionInfo.border}">
+    <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-10px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
       <p class="gatePoint">${direction}</p>
       <h4 style="color:${congestionInfo.textColor}">${congestionInfo.text}</h4>
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-38px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
     </div>`;
   };
   const changeBorderColor = async (index) => {

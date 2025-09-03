@@ -29,6 +29,7 @@ const CustomControl = (() => {
   let userMarker = [];
   let conSwitch = null;
   let locaOn = true;
+  let customEventOn = false;
   const positions = [
     naver.maps.Position.TOP_LEFT,
     naver.maps.Position.LEFT_TOP,
@@ -191,6 +192,11 @@ const CustomControl = (() => {
     });
   };
   const customControlEvent = async () => {
+    if (customEventOn) {
+      return;
+    }
+
+    customEventOn = true;
     let mapLangs;
 
     naver.maps.Event.addDOMListener(boardingInfo.getElement(), "click", () => {
@@ -261,9 +267,9 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
-        movePosition = MapService.moveBoardingGate(boardingGateNum);
+        movePosition = MapService.moveBoardingGate();
         Logger.log(boardingGateNum);
-        Utility.openBoardingWindowInfo();
+        InfoWindowService.boardingInfoOpen();
       } else {
         ModalService.boardingModalOpen();
       }
@@ -323,10 +329,26 @@ const CustomControl = (() => {
   const customControlAllDelete = () => {
     try {
       const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
+
+      if (locaCon) {
+        naver.maps.Event.clearInstanceListeners(locaCon);
+      }
+      if (moveGateCon) {
+        naver.maps.Event.clearInstanceListeners(moveGateCon);
+      }
+      if (boardingInfo) {
+        naver.maps.Event.clearInstanceListeners(boardingInfo);
+      }
+      if (selectLangCon) {
+        naver.maps.Event.clearInstanceListeners(selectLangCon);
+      }
+      if (langchangeCon) {
+        naver.maps.Event.clearInstanceListeners(langchangeCon);
+      }
       positions.forEach((position) => {
         map.controls[position].clear();
       });
-
+      customEventOn = false;
       map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
     } catch (error) {
       Logger.error(`커스텀 컨트롤 삭제 실패:`, error);
