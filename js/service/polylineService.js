@@ -51,6 +51,8 @@ const PolylineService = (() => {
   };
 
   const setPolyline = () => {
+    console.log("set Polyline", boardingPolyline);
+    console.log("map????? : ", map);
     boardingPolyline.setMap(map);
   };
 
@@ -75,6 +77,7 @@ const PolylineService = (() => {
   return {
     init: () => {
       map = MapService.getMap();
+      console.log("map 가져왔음 polyline : ", map);
     },
     createPolyline: (markers) => {
       if (polylines.length == 0) {

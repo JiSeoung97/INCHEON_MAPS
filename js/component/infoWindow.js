@@ -163,7 +163,9 @@ const InfoWindowService = (() => {
       elementInfos.forEach((info) => {
         info.close();
       });
-      boardingInfo.close();
+      if (boardingInfo != null) {
+        boardingInfo.close();
+      }
     },
     resetInfo: () => {
       infoWindows = [];

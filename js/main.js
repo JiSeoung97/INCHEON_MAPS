@@ -44,9 +44,9 @@ $(document).ready(async () => {
       }
       await utLocation.getCurrentPosition();
       Logger.log("사용자 위치 저장 완료");
+      PolylineService.init();
       await MapService.setting();
       Logger.log("MapService 설정 완료");
-      PolylineService.init();
       initBottomSheet();
       await initCustomControl();
       await initModalService();
