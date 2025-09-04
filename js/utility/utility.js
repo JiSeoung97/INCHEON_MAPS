@@ -8,6 +8,7 @@ const Utility = (() => {
   let map;
   let markers = [];
   let selectedMarker = null;
+  let infoOn = false;
 
   const getDistance = async (area, boardingGateNum, bottomSheet) => {
     try {
