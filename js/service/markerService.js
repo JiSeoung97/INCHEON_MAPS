@@ -4,6 +4,7 @@ import DataService from "./dataService.js";
 import Utility from "../utility/utility.js";
 import InfoWindowService from "../component/infoWindow.js";
 import ModalService from "./modalService.js";
+import PolylineService from "./polylineService.js";
 const MarkerService = (() => {
   let markers = [];
   let infoWindows = [];
@@ -87,6 +88,8 @@ const MarkerService = (() => {
       );
       naver.maps.Event.addListener(marker, "click", () => {
         markerEvent(marker, infoWindow);
+        console.log(index);
+        PolylineService.selectPolyline(index);
       });
       if (boardingGateNum == null) {
         markers.push(marker);

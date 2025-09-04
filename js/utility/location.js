@@ -26,21 +26,21 @@ const utLocation = (() => {
     if (isIOS || isSafari) {
       Logger.log("iOS/Safari 최적화 적용");
       option = {
-        enableHighAccuracy: false, // iOS는 false가 더 빠름
-        timeout: 20000, // 20초
+        enableHighAccuracy: true, // iOS는 false가 더 빠름
+        timeout: 200000, // 200초
         maximumAge: 0,
       };
     } else if (isAndroid && isChrome) {
       Logger.log("Android Chrome 최적화 적용");
       option = {
         enableHighAccuracy: true, // Android Chrome은 정확함
-        timeout: 12000, // 12초
+        timeout: 120000, // 120초
         maximumAge: 0,
       };
     } else if (isAndroid) {
       Logger.log("Android 기타 브라우저 최적화 적용");
       option = {
-        enableHighAccuracy: false, // 호환성 우선
+        enableHighAccuracy: true, // 호환성 우선
         timeout: 150000, // 150초
         maximumAge: 0,
       };
@@ -48,7 +48,7 @@ const utLocation = (() => {
       Logger.log("데스크톱/기타 브라우저 기본 설정 적용");
       option = {
         enableHighAccuracy: true, // 데스크톱은 빠름
-        timeout: 10000, // 10초
+        timeout: 100000, // 100초
         maximumAge: 0,
       };
     }

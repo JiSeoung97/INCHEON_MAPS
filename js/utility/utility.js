@@ -10,9 +10,6 @@ const Utility = (() => {
   let selectedMarker = null;
   let infoOn = false;
 
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
   const getDistance = async (area, boardingGateNum, bottomSheet) => {
     try {
       let startLocation = null;
@@ -72,6 +69,11 @@ const Utility = (() => {
 
   const moveGate = async (index) => {
     map = MapService.getMap();
+    if (map.getZoom() <= 17) {
+      setTimeout(() => {
+        map.setZoom(18, true);
+      }, 100);
+    }
     let idx = index;
     selectedMarker = MarkerService.getSelectedMarker();
     markers = MarkerService.getMarkers();
@@ -86,29 +88,26 @@ const Utility = (() => {
       markers[idx].position._lng
     );
     map.panTo(newPosition, transition);
-    setTimeout(() => {
-      if (map.getZoom() <= 17) {
-        map.setZoom(18, true);
-      }
-    }, 100);
     MarkerService.replaceMarkerIcon(markers[idx]);
   };
 
   const openWindowInfo = (index) => {
-    if (!infoOn) {
-      if (index == null) {
-        let boardingInfo = InfoWindowService.getBoardingInfo();
-        let boardingMarker = MarkerService.getBoardingMarker();
+    if (index == null) {
+      let boardingInfo = InfoWindowService.getBoardingInfo();
+      let boardingMarker = MarkerService.getBoardingMarker();
+      if (boardingInfo.getMap() == null) {
         boardingInfo.open(map, boardingMarker[0]);
       } else {
-        markers = MarkerService.getMarkers();
-        let infoWindows = InfoWindowService.getInfoWindows();
-        infoWindows[index].open(map, markers[index]);
+        boardingInfo.close();
       }
-      infoOn = true;
     } else {
-      InfoWindowService.allInfoClose();
-      infoOn = false;
+      markers = MarkerService.getMarkers();
+      let infoWindows = InfoWindowService.getInfoWindows();
+      if (infoWindows[index].getMap() == null) {
+        infoWindows[index].open(map, markers[index]);
+      } else {
+        infoWindows[index].close();
+      }
     }
   };
   const translateAreaName = (areaName, language) => {

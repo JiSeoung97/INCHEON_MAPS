@@ -78,6 +78,7 @@ const MapService = (() => {
           BottomSheet.resetAllBorderColor();
         }
         InfoWindowService.allInfoClose();
+        PolylineService.hideUserPoly();
       });
     }
   };
@@ -195,6 +196,7 @@ const MapService = (() => {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
         }
+        await PolylineService.createUserPolyline();
         zoomEvent();
         mapClickEvent();
 

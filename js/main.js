@@ -170,7 +170,7 @@ $(document).ready(async () => {
         }
       } catch (error) {
         Logger.error("탑승구 확인 처리 오류:", error);
-        alert("탑승구 설정 중 오류가 발생했습니다.");
+        MapService.alertGateNumCheck();
       }
     };
 
@@ -231,6 +231,7 @@ $(document).ready(async () => {
           Utility.moveGate(index);
           Utility.openWindowInfo(index);
           BottomSheet.changeBorderColor(index);
+          PolylineService.selectPolyline(index);
         } catch (error) {
           Logger.error(`게이트 ${index} 클릭 처리 오류:`, error);
         }
