@@ -5,6 +5,7 @@ import TimeCalculator from "../utility/timeCalculator.js";
 import Translate from "../utility/translate.js";
 import Utility from "../utility/utility.js";
 import ModalService from "../service/modalService.js";
+import PolylineService from "../service/polylineService.js";
 const BottomSheet = (() => {
   let language;
   let departurehall = [];
@@ -152,8 +153,10 @@ const BottomSheet = (() => {
       Array.from(updatedGates).forEach((gate, index) => {
         gate.addEventListener("click", async () => {
           try {
+            console.log(index);
             Utility.moveGate(index);
             Utility.openWindowInfo(index);
+            PolylineService.selectPolyline(index);
             await changeBorderColor(index);
           } catch (error) {
             Logger.error(`게이트 ${index} 클릭 처리 오류:`, error);
