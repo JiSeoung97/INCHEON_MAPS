@@ -55,6 +55,7 @@ const PolylineService = (() => {
     }
   };
 
+
   const updatePolyline = async (position, boardingGateNum) => {
     const markers = MarkerService.getMarkers();
     let areas = DataService.getAllAreas();
@@ -62,6 +63,7 @@ const PolylineService = (() => {
       const area = areas.find(
         (area) => area.name === "탑승게이트" + boardingGateNum
       );
+
       boardingPolyline.setPath([area.position, position]);
     } else {
       let xy = { x: boardingMarker.position.x, y: boardingMarker.position.y };
@@ -82,6 +84,7 @@ const PolylineService = (() => {
       markerPolylines[index].setMap(null);
     }
   };
+
   const setPolyline = () => {
     boardingPolyline.setMap(map);
   };
