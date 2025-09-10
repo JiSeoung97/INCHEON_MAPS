@@ -8,9 +8,10 @@ import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
 import ErrorHandler from "./utility/httpError.js";
 import Utility from "./utility/utility.js";
+import DataService from "./service/dataService.js";
 
 $(document).ready(async () => {
-  ErrorHandler.init();
+  // ErrorHandler.init();
   utLocation.init();
 
   let appConfig = {};
@@ -32,6 +33,8 @@ $(document).ready(async () => {
       );
     }
   };
+  await loadConfig();
+  const data = await DataService.initData();
   let map;
   let boardingGate = sessionStorage.getItem("boardingGate");
   let btnIdx = 0;
@@ -159,7 +162,8 @@ $(document).ready(async () => {
           // UI 업데이트
           updateBoardingGateUI();
           if (PolylineService.getBoardingPolyline() != null) {
-            await PolylineService.updatePolyline(boardingGate);
+            let loca = await utLocation.getCurrentPosition();
+            await PolylineService.updatePolyline(boardingGate, loca);
             Logger.log("polyline update");
           } else {
             await PolylineService.createBoardingPolyline(boardingMarker);
@@ -241,7 +245,7 @@ $(document).ready(async () => {
   try {
     Logger.log("애플리케이션 초기화 시작...");
 
-    await loadConfig();
+    // await loadConfig();
     // 1. 서비스 초기화
     const initResult = await initializeServices();
 

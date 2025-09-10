@@ -95,8 +95,8 @@ const TimeCalculator = (() => {
       };
     }
   };
-  const padZero = () => {
-    String(num).padStart(2, "0");
+  const padZero = (num) => {
+    return String(num).padStart(2, "0");
   };
   const formatCurrentDateTime = () => {
     const now = new Date();
@@ -106,6 +106,9 @@ const TimeCalculator = (() => {
     const hours = padZero(now.getHours());
     const minutes = padZero(now.getMinutes());
     const seconds = padZero(now.getSeconds());
+    Logger.log(
+      `formating time : ${year}${month}${day}${hours}${minutes}${seconds}`
+    );
     return `${year}${month}${day}${hours}${minutes}${seconds}`;
   };
   const updateTimeDisplay = async (timeData) => {

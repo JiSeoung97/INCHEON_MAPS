@@ -278,6 +278,7 @@ const CustomControl = (() => {
     naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
       try {
         const userPos = await utLocation.getCurrentPosition();
+        boardingGateNum = sessionStorage.getItem("boardingGate");
         if (locaOn) {
           setTimeout(() => {}, 1000);
           locaOn = false;
@@ -306,8 +307,10 @@ const CustomControl = (() => {
           userMarker.push(marker);
           const boardingPolyline = PolylineService.getBoardingPolyline();
           Logger.log("boardingPolyline : ", boardingPolyline);
-          if (boardingPolyline != null) {
-            PolylineService.updatePolyline();
+          if (boardingPolyline == null) {
+            PolylineService.updatePolyline(userPos, null);
+          } else {
+            PolylineService.updatePolyline(userPos, boardingGateNum);
           }
         } else {
           alert("위치 정보가 없습니다.");
