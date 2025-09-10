@@ -13,6 +13,10 @@ const DataService = (() => {
   let apiInstance;
   const updateCongestion = () => {
     if (!data) return;
+    if (!apiDatas || !Array.isArray(apiDatas)) {
+      console.log("apiDatas가 null이거나 배열이 아님:", apiDatas);
+      return;
+    }
     Array.from(apiDatas).forEach((apiData) => {
       congestions.push(calculateCongestionLevel(apiData));
     });
@@ -26,22 +30,22 @@ const DataService = (() => {
     });
 
     data.lastUpdated = new Date().toISOString();
-
+    console.log("data : ", data);
     return data;
   };
   const getAirportData = async () => {
     try {
       Logger.log("time formating", TimeCalculator.formatCurrentDateTime());
       const requestParams = {
-        _type: "json",
+        type: "json",
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
       Logger.log("request : ", requestParams.accessKey);
       const result = await apiInstance.get("/getDepartureCongestion", {
         params: requestParams,
       });
-      Logger.log("response : ", result.data);
-      apiDatas = result.data.response.body.items.item || null;
+      console.log("response : ", result.data);
+      apiDatas = result.data.response.body.items || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
       Logger.error("혼잡도 api데이터 로드 실패 :", error);

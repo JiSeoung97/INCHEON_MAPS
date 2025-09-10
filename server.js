@@ -34,7 +34,7 @@ app.get("/api/airport/getDepartureCongestion", async (req, res) => {
     );
     console.log("apiKey : ", process.env.AIR_API_KEY);
     console.log("air_API_KEy : ", process.env.AIR_API_KEY);
-    console.log("request params : ", req.query);
+    console.log("request params : ", JSON.stringify(req.query, null, 2));
     const axios = require("axios");
     const targetUrl = `${process.env.API_BASE_URL}${req.path.replace(
       "/api/airport",
@@ -43,6 +43,10 @@ app.get("/api/airport/getDepartureCongestion", async (req, res) => {
     const response = await axios.get(targetUrl, {
       params: { ...req.query, serviceKey: process.env.AIR_API_KEY },
     });
+    console.log("응답 상태", response.status);
+    console.log("상태 텍스트 : ", response.statusText);
+    console.log("response.data : ", response.data);
+    console.log("response.config : ", response.config);
     res.json(response.data);
   } catch (error) {
     console.error("프록시 에러:", error);

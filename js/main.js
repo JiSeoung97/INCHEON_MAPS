@@ -11,7 +11,7 @@ import Utility from "./utility/utility.js";
 import DataService from "./service/dataService.js";
 
 $(document).ready(async () => {
-  ErrorHandler.init();
+  // ErrorHandler.init();
   utLocation.init();
 
   let appConfig = {};
