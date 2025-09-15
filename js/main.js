@@ -46,9 +46,6 @@ $(document).ready(async () => {
         throw new Error("지도 초기화 실패");
       }
 
-      // 위치 로딩을 백그라운드로 이동
-      startBackgroundLocationLoading();
-
       PolylineService.init();
       await MapService.setting();
       Logger.log("MapService 설정 완료");
@@ -291,6 +288,8 @@ $(document).ready(async () => {
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();
     // BottomSheet.recoLikeIconView();
+    // 6.
+    startBackgroundLocationLoading();
     Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     Logger.log(
       "지도가 초기화되었습니다. '마커 추가하기' 버튼을 클릭하여 시작하세요."
