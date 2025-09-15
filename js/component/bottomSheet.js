@@ -29,7 +29,7 @@ const BottomSheet = (() => {
       }
 
       // 200ms 후에 실행 (기존 setTimeout을 Promise로 변경)
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      await new Promise((resolve) => setTimeout(resolve, 50));
 
       for (const [index, conData] of areadata.entries()) {
         if (index >= contentsEl.length) continue;

@@ -146,31 +146,24 @@ const CustomControl = (() => {
         ")</div>",
     };
 
-    selectedLangArray = [];
-    langArray.forEach((lang) => {
-      if (lang == selectedLang) {
-        selectedLangArray.push(selectedLang);
-        firstlang = lang;
-      }
-    });
-    langArray.forEach((lang) => {
-      if (lang != selectedLang) {
-        selectedLangArray.push(lang);
-      }
-    });
+    // 성능 최적화: 배열 처리 단순화
+    firstlang = selectedLang;
+    selectedLangArray = [
+      selectedLang,
+      ...langArray.filter((lang) => lang !== selectedLang),
+    ];
     const langImgArray = createLanguageArrayWithSelectiveImg(
       languageList,
       firstlang
     );
 
-    let langChan = "";
-    selectedLangArray.forEach((lang) => {
-      langImgArray.forEach((langImg) => {
-        if (langImg[0] == lang) {
-          langChan += langImg[1];
-        }
-      });
-    });
+    // 성능 최적화: 이중 반복문 단순화
+    const langChan = selectedLangArray
+      .map(
+        (lang) => langImgArray.find((langImg) => langImg[0] === lang)?.[1] || ""
+      )
+      .join("");
+
     const languageChange =
       '<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem">' +
       langChan +

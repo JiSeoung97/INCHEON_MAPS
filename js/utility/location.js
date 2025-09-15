@@ -345,7 +345,7 @@ const utLocation = (() => {
       setTimeout(() => {
         warmUpGPS(); // GPS 예열
         startWatching(); // 지속적 추적 시작
-      }, 1000);
+      }, 100);
 
       // 페이지 종료 시 정리
       window.addEventListener("beforeunload", stopWatching);

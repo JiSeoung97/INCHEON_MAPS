@@ -15,7 +15,12 @@ const Utility = (() => {
       let startLocation = null;
       let targetLocation = null;
 
-      targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+      const savedLocation = sessionStorage.getItem("myLocation");
+      if (!savedLocation) {
+        return "📍 위치 확인 중...";
+      }
+
+      targetLocation = JSON.parse(savedLocation);
       startLocation = area;
 
       if (bottomSheet) {

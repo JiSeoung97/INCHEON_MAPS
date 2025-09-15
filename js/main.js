@@ -45,8 +45,7 @@ $(document).ready(async () => {
       if (!map) {
         throw new Error("지도 초기화 실패");
       }
-      await utLocation.getCurrentPosition();
-      Logger.log("사용자 위치 저장 완료");
+
       PolylineService.init();
       await MapService.setting();
       Logger.log("MapService 설정 완료");
@@ -92,7 +91,7 @@ $(document).ready(async () => {
         setTimeout(async () => {
           await CustomControl.init();
           resolve();
-        }, 100);
+        }, 50);
       } catch (error) {
         Logger.error("CustomControl init error", error);
       }
@@ -161,14 +160,20 @@ $(document).ready(async () => {
           await MarkerService.showMarkers();
           // UI 업데이트
           updateBoardingGateUI();
-          if (PolylineService.getBoardingPolyline() != null) {
-            let loca = await utLocation.getCurrentPosition();
-            await PolylineService.updatePolyline(boardingGate, loca);
-            Logger.log("polyline update");
+          // 위치는 백그라운드에서 처리하므로 세션에서 가져옴
+          const savedLocation = sessionStorage.getItem("myLocation");
+          if (savedLocation) {
+            const loca = JSON.parse(savedLocation);
+            if (PolylineService.getBoardingPolyline() != null) {
+              await PolylineService.updatePolyline(loca, boardingGate);
+              Logger.log("polyline update");
+            } else {
+              await PolylineService.createBoardingPolyline(boardingMarker);
+              PolylineService.setPolyline();
+              Logger.log("polyline create");
+            }
           } else {
-            await PolylineService.createBoardingPolyline(boardingMarker);
-            PolylineService.setPolyline();
-            Logger.log("polyline create");
+            Logger.log("위치 정보 대기 중, 폴리라인은 나중에 생성됩니다");
           }
           ModalService.boardingModalClose();
         }
@@ -242,6 +247,24 @@ $(document).ready(async () => {
       });
     });
   };
+
+  // 백그라운드 위치 로딩 함수
+  const startBackgroundLocationLoading = async () => {
+    Logger.log("📍 백그라운드에서 위치 로딩 시작...");
+
+    try {
+      const userLocation = await utLocation.getCurrentPosition();
+      Logger.log("✅ 위치 로딩 완료:", userLocation);
+
+      // 탑승구가 설정된 경우 폴리라인 업데이트
+      const boardingGate = sessionStorage.getItem("boardingGate");
+      if (boardingGate) {
+        await PolylineService.updatePolyline(userLocation, boardingGate);
+      }
+    } catch (error) {
+      Logger.log("⚠️ 위치 로딩 실패, 기본 기능으로 계속 진행");
+    }
+  };
   try {
     Logger.log("애플리케이션 초기화 시작...");
 
@@ -265,6 +288,8 @@ $(document).ready(async () => {
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();
     // BottomSheet.recoLikeIconView();
+    // 6.
+    startBackgroundLocationLoading();
     Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     Logger.log(
       "지도가 초기화되었습니다. '마커 추가하기' 버튼을 클릭하여 시작하세요."
