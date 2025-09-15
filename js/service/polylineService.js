@@ -55,7 +55,6 @@ const PolylineService = (() => {
     }
   };
 
-
   const updatePolyline = async (position, boardingGateNum) => {
     const markers = MarkerService.getMarkers();
     let areas = DataService.getAllAreas();
@@ -145,6 +144,7 @@ const PolylineService = (() => {
         boardingPolyline = null;
       }
       await createBoardingPolyline(boardingMarker, userLocation, index);
+      setPolyline();
     },
     updatePolyline: async (position, boardingGateNum = null) => {
       await updatePolyline(position, boardingGateNum);
