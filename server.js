@@ -16,7 +16,7 @@ const path = require("path");
 // 1. 환경 변수 설정 (.env 파일 로드)
 
 const app = express();
-const PORT = 3000; // 서버를 열 포트 번호
+const PORT = 5500; // 서버를 열 포트 번호
 
 // 2. 프론트엔드에 환경 변수를 전달할 API 경로(Endpoint) 생성
 app.get("/api/config", (req, res) => {
