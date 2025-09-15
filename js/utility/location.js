@@ -1,6 +1,7 @@
 import Logger from "./logger.js";
 import ErrorHandler from "./httpError.js";
 import { LocationError } from "./customError.js";
+import MarkerService from "../service/markerService.js";
 
 const utLocation = (() => {
   let watchId = null;
@@ -377,7 +378,7 @@ const utLocation = (() => {
             ? `${location.improvement.toFixed(1)}m`
             : "N/A",
         });
-
+        MarkerService.createMarker();
         return location;
       } catch (error) {
         Logger.error("위치 획득 실패:", error);

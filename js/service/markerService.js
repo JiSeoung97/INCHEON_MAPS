@@ -470,6 +470,27 @@ const MarkerService = (() => {
     getMarkers: () => {
       return markers;
     },
+    createMarker: async () => {
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      markers = [];
+      InfoWindowService.resetInfo();
+      infoWindows = [];
+      areas = [];
+      const allAreas = DataService.getAllAreas();
+      for (let index = 0; index < 10; index++) {
+        const area = allAreas[index];
+        areas.push(area);
+        await createMarker(area, index);
+      }
+      const zoomLevel = map.getZoom();
+      if (zoomLevel >= 18) {
+        markers.forEach((marker) => {
+          marker.setMap(map);
+        });
+      }
+    },
     createBoardingMarker: async (boardingGateNum) => {
       if (boardingMarkers[0] != null) {
         boardingMarkers[0].setMap(null);

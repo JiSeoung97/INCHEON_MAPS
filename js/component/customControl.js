@@ -392,8 +392,8 @@ const CustomControl = (() => {
       InfoWindowService.getInfoWindows();
       MarkerService.getMarkers();
       createCustomControl();
-      await customControlEvent();
       customControlSetMap();
+      customControlEvent();
     },
     customControlAllDelete: () => {
       customControlAllDelete();
