@@ -23,6 +23,14 @@
     }
   },
   "parameters": {
+    "AMPLIFY_function_congestionProxy_airApiKey": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "congestionProxy"
+        }
+      ]
+    },
     "AMPLIFY_function_congestionProxy_apiBaseUrl": {
       "usedBy": [
         {
@@ -40,14 +48,6 @@
       ]
     },
     "AMPLIFY_function_congestionProxy_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "congestionProxy"
-        }
-      ]
-    },
-    "AMPLIFY_function_congestionProxy_secretsPathAmplifyAppId": {
       "usedBy": [
         {
           "category": "function",

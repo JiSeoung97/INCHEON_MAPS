@@ -14,10 +14,10 @@
     "categories": {
       "function": {
         "congestionProxy": {
-          "apiBaseUrl": "https://apis.data.go.kr/B551177/statusOfDepartureCongestion",
-          "secretsPathAmplifyAppId": "d366ymasbf6a29",
           "deploymentBucketName": "amplify-incheonmaps-dev-7fefb-deployment",
-          "s3Key": "amplify-builds/congestionProxy-42355664644a63717276-build.zip"
+          "s3Key": "amplify-builds/congestionProxy-744a67564f34676e3751-build.zip",
+          "apiBaseUrl": "https://apis.data.go.kr/B551177/statusOfDepartureCongestion",
+          "airApiKey": "83e40c4e2710ba2076cd3309c126efc43a4cc373825107d388e2bb0553dbb298"
         }
       },
       "api": {

@@ -4,9 +4,11 @@
     {
       "cloudFormationParameterName": "apiBaseUrl",
       "environmentVariableName": "API_BASE_URL"
+    },
+    {
+      "cloudFormationParameterName": "airApiKey",
+      "environmentVariableName": "AIR_API_KEY"
     }
   ],
-  "secretNames": [
-    "AIR_API_KEY"
-  ]
+  "secretNames": []
 }
