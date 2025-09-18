@@ -41,7 +41,7 @@ const DataService = (() => {
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
       Logger.log("request : ", requestParams.accessKey);
-      const result = await apiInstance.get("/getDepartureCongestion", {
+      const result = await apiInstance.get("/api/airport/getDepartureCongestion", {
         params: requestParams,
       });
       console.log("response : ", result.data);

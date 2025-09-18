@@ -14,8 +14,6 @@ $(document).ready(async () => {
   // ErrorHandler.init();
   utLocation.init();
 
-  let appConfig = {};
-
   // 서버의 /api/config 경로로 요청을 보내 환경 변수를 가져오는 함수
   const loadConfig = async () => {
     try {
@@ -23,9 +21,8 @@ $(document).ready(async () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      appConfig = await response.json();
-      window.appConfig = appConfig;
-      Logger.log("서버 환경 설정 로드 완료:", appConfig);
+      window.appConfig = await response.json();
+      Logger.log("서버 환경 설정 로드 완료:", window.appConfig);
     } catch (error) {
       Logger.error(
         "서버 환경 설정을 불러오는 데 실패했습니다. 기본 설정으로 실행합니다.",
@@ -34,7 +31,7 @@ $(document).ready(async () => {
     }
   };
   await loadConfig();
-  const data = await DataService.initData();
+  await DataService.initData();
   let map;
   let boardingGate = sessionStorage.getItem("boardingGate");
   let btnIdx = 0;

@@ -1,0 +1,12 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "apiBaseUrl",
+      "environmentVariableName": "API_BASE_URL"
+    }
+  ],
+  "secretNames": [
+    "AIR_API_KEY"
+  ]
+}

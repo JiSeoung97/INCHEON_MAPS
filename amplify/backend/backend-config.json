@@ -1,0 +1,59 @@
+{
+  "api": {
+    "apiProxy": {
+      "dependsOn": [
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "congestionProxy"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "function": {
+    "congestionProxy": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_congestionProxy_apiBaseUrl": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "congestionProxy"
+        }
+      ]
+    },
+    "AMPLIFY_function_congestionProxy_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "congestionProxy"
+        }
+      ]
+    },
+    "AMPLIFY_function_congestionProxy_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "congestionProxy"
+        }
+      ]
+    },
+    "AMPLIFY_function_congestionProxy_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "congestionProxy"
+        }
+      ]
+    }
+  }
+}

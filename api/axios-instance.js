@@ -1,7 +1,7 @@
 // 설정 객체를 인자로 받아, 그에 맞는 axios 인스턴스를 생성하는 함수
 function createAxiosInstance(config) {
   const instance = axios.create({
-    baseURL: "/api/airport", // 서버에서 받은 baseURL 사용
+    baseURL: "https://f7zndrait3.execute-api.ap-northeast-2.amazonaws.com/dev", // 새로 생성된 API Gateway 주소
     timeout: 5000,
     headers: {
       type: "json",
