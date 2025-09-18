@@ -1,8 +1,6 @@
 import Logger from "../utility/logger.js";
 import TimeCalculator from "../utility/timeCalculator.js";
 import mockData from "../../data/mock-data.js";
-import mockData2 from "../../data/mock-data2.js";
-import ErrorHandler from "../utility/httpError.js";
 import createAxiosInstance from "../../api/axios-instance.js";
 
 const DataService = (() => {
@@ -41,15 +39,17 @@ const DataService = (() => {
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
       Logger.log("request : ", requestParams.accessKey);
-      const result = await apiInstance.get("/api/airport/getDepartureCongestion", {
-        params: requestParams,
-      });
+      const result = await apiInstance.get(
+        "/api/airport/getDepartureCongestion",
+        {
+          params: requestParams,
+        }
+      );
       console.log("response : ", result.data);
       apiDatas = result.data.response.body.items || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
       Logger.error("혼잡도 api데이터 로드 실패 :", error);
-      // ErrorHandler.handleSpecificError(error);
     }
   };
 
@@ -66,17 +66,20 @@ const DataService = (() => {
   return {
     initData: async () => {
       data = mockData || null;
-      Logger.log(window.appConfig);
-      apiInstance = createAxiosInstance(window.appConfig);
-      apiDatas = mockData2.data[0].response.body.items.item || null;
-      Logger.log(apiDatas);
-      await getAirportData();
-      Logger.log("api : ", apiDatas);
-      elements = data.elements.areas;
       if (!data) {
         Logger.error("모킹 데이터 로드 실패함");
         return null;
       }
+      elements = data.elements.areas;
+
+      apiInstance = createAxiosInstance();
+
+      await getAirportData();
+
+      if (!apiDatas) {
+        Logger.error("실시간 혼잡도 API 데이터 로드에 실패했습니다.");
+      }
+
       updateCongestion();
       return data;
     },
