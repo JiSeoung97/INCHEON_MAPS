@@ -15,7 +15,7 @@
       "function": {
         "congestionProxy": {
           "deploymentBucketName": "amplify-incheonmaps-dev-7fefb-deployment",
-          "s3Key": "amplify-builds/congestionProxy-305937743356386e504a-build.zip",
+          "s3Key": "amplify-builds/congestionProxy-76667a6e497872614572-build.zip",
           "apiBaseUrl": "https://apis.data.go.kr/B551177/statusOfDepartureCongestion",
           "airApiKey": "83e40c4e2710ba2076cd3309c126efc43a4cc373825107d388e2bb0553dbb298"
         }
