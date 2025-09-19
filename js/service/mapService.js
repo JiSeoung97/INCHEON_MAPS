@@ -29,6 +29,7 @@ const MapService = (() => {
   let isClickEvent = false;
   let setting = false;
   let boardingInfo = null;
+  let dataCnt = 0;
 
   const loadTranslateData = async (lang) => {
     try {
@@ -158,15 +159,18 @@ const MapService = (() => {
           language = await loadTranslateData(lang);
           languageText = language[lang];
         }
-        const data = await DataService.initData();
+        if (dataCnt !== 0) {
+          const data = await DataService.initData();
+          if (!data) {
+            Logger.log("데이터 초기화 실패", "error");
+            return map;
+          }
+        }
+        dataCnt++;
         await RecoService.recoGate();
         await MarkerService.init();
         boardingGateNum = sessionStorage.getItem("boardingGate");
         Logger.log("boardingGateNum :", boardingGateNum);
-        if (!data) {
-          Logger.log("데이터 초기화 실패", "error");
-          return map;
-        }
         const allAreas = DataService.getAllAreas();
         await MarkerService.allMarkerDelete();
         markers = [];
@@ -196,7 +200,7 @@ const MapService = (() => {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
         }
-        await PolylineService.createUserPolyline();
+        PolylineService.createUserPolyline();
         zoomEvent();
         mapClickEvent();
 

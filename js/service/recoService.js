@@ -4,9 +4,10 @@ import Utility from "../utility/utility.js";
 
 const RecoService = (() => {
   let recoArray = [];
+  let areas;
   const recoGate = async () => {
     try {
-      const areas = DataService.getAllAreas();
+      areas = DataService.getAllAreas();
       const apiData = DataService.getApiData();
       recoArray = [];
       for (let i = 0; i < 10; i++) {
@@ -27,6 +28,13 @@ const RecoService = (() => {
 
       recoArray.sort((a, b) => a.time - b.time);
     } catch (error) {
+      for (let i = 0; i < 3; i++) {
+        recoArray.push({
+          name: areas[i].name,
+          time: distance + waitingTime,
+          position: areas[i].position,
+        });
+      }
       Logger.error("추천 게이트 계산 실패:", error);
     }
   };

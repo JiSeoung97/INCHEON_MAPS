@@ -69,7 +69,6 @@ app.get("/", (req, res) => {
 // 4. 현재 폴더의 모든 정적 파일(html, css, js, images 등)을 제공
 //    이 부분이 프로젝트 구조 전체를 웹에서 접근 가능하게 해줍니다.
 app.use(express.static(path.join(__dirname)));
-ㅇ;
 // 5. 서버 실행
 app.listen(PORT, () => {
   console.log(

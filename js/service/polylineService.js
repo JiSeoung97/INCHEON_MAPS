@@ -9,6 +9,7 @@ const PolylineService = (() => {
   let boardingMarker;
   let boardingPolyline = null;
   let markerPolylines = [];
+  let userLocation = null;
   const createPolyline = (markers) => {
     for (let i = 0; i < markers.length; i += 2) {
       let polyline = new naver.maps.Polyline({
@@ -41,6 +42,7 @@ const PolylineService = (() => {
         strokeStyle: "longdash",
       });
     } else {
+      console.log(position);
       let markerPolyline = new naver.maps.Polyline({
         map: null,
         path: [position, marker.position],
@@ -62,9 +64,9 @@ const PolylineService = (() => {
       const area = areas.find(
         (area) => area.name === "탑승게이트" + boardingGateNum
       );
-
       boardingPolyline.setPath([area.position, position]);
     } else {
+      boardingMarker = MarkerService.getBoardingMarker();
       let xy = { x: boardingMarker.position.x, y: boardingMarker.position.y };
       boardingPolyline.setPath([xy, position]);
     }
@@ -77,7 +79,7 @@ const PolylineService = (() => {
       markerPolylines.forEach((polyline) => {
         polyline.setMap(null);
       });
-      console.log(index);
+      console.log("markerPolylines[index].setMap(map) : ", markerPolylines);
       markerPolylines[index].setMap(map);
     } else {
       markerPolylines[index].setMap(null);
@@ -119,9 +121,9 @@ const PolylineService = (() => {
         createPolyline(markers);
       }
     },
-    createUserPolyline: async () => {
+    createUserPolyline: () => {
       if (markerPolylines.length == 0) {
-        const userLocation = await utLocation.getCurrentPosition();
+        userLocation = JSON.parse(sessionStorage.getItem("myLocation"));
         let markers = MarkerService.getMarkers();
         markers.forEach(async (marker, index) => {
           await createBoardingPolyline(marker, userLocation, index);
@@ -138,7 +140,7 @@ const PolylineService = (() => {
       viewPolyLine();
     },
     createBoardingPolyline: async (boardingMarker, index = null) => {
-      const userLocation = await utLocation.getCurrentPosition();
+      userLocation = JSON.parse(sessionStorage.getItem("myLocation"));
       if (boardingPolyline != null) {
         boardingPolyline.setMap(null);
         boardingPolyline = null;
