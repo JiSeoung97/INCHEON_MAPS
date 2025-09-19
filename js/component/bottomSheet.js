@@ -490,7 +490,6 @@ const BottomSheet = (() => {
         setTimeout(() => {}, 1000);
         locaOn = false;
       }
-      console.log("requestControl click");
       const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
       if (userPos) {
         map.getCenter();
