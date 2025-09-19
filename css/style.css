@@ -454,7 +454,7 @@ table th:nth-child(3) {
   height: 2.3rem;
   background-color: transparent;
   justify-content: end;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
 }
 #requestLocation {
   height: 2rem;
