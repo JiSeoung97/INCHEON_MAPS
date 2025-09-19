@@ -436,13 +436,44 @@ table th:nth-child(3) {
   min-height: 30rem;
   max-width: 430px;
   align-self: center;
-  background: white;
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
   border-bottom: 1px #000;
   z-index: 1000;
   transition: transform 0.3s ease;
   overflow: hidden;
+}
+#bottomContainer {
+  min-height: 30rem;
+  max-width: 430px;
+  align-self: center;
+  background: white;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+}
+#locationContainer {
+  display: flex;
+  height: 2.3rem;
+  background-color: transparent;
+  justify-content: end;
+  padding-bottom: 10px;
+}
+#requestLocation {
+  height: 2rem;
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 1rem 1rem 1rem 1rem;
+  margin-right: 10px;
+}
+#gps-black {
+  height: 25px;
+  width: 25px;
+}
+#gps-blue {
+  display: none;
+  height: 25px;
+  width: 25px;
 }
 #handleImg {
   width: 4vh;

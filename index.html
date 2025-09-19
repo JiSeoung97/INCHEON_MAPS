@@ -22,49 +22,57 @@
     <div class="container">
       <div id="map"></div>
       <div id="bottomSheet">
-        <div id="handle" class="peek">
-          <img id="handleImg" src="./images/handle.png" />
+        <div id="locationContainer">
+          <div id="requestLocation">
+            <img id="gps-black" src="images/gps_black.svg" />
+            <img id="gps-blue" src="images/gps_blue.svg" />
+          </div>
         </div>
-        <table id="menu" class="peek">
-          <tr>
-            <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
-            <th class="menuBtn" data-idx="1">약도 보기</th>
-          </tr>
-        </table>
-        <div id="controls">
-          <div class="tabs">
-            <table>
-              <tr>
-                <th id="congestionEx">
-                  • 제1여객터미널 혼잡도
-                  <span id="questionMark">?</span>
-                </th>
-                <th><p id="nTime"></p></th>
+        <div id="bottomContainer">
+          <div id="handle" class="peek">
+            <img id="handleImg" src="./images/handle.png" />
+          </div>
+          <table id="menu" class="peek">
+            <tr>
+              <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
+              <th class="menuBtn" data-idx="1">약도 보기</th>
+            </tr>
+          </table>
+          <div id="controls">
+            <div class="tabs">
+              <table>
+                <tr>
+                  <th id="congestionEx">
+                    • 제1여객터미널 혼잡도
+                    <span id="questionMark">?</span>
+                  </th>
+                  <th><p id="nTime"></p></th>
+                </tr>
+              </table>
+            </div>
+            <table id="contents">
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
+              </tr>
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
+              </tr>
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
+              </tr>
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
               </tr>
             </table>
           </div>
-          <table id="contents">
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-          </table>
         </div>
       </div>
     </div>

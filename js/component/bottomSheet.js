@@ -6,11 +6,17 @@ import Translate from "../utility/translate.js";
 import Utility from "../utility/utility.js";
 import ModalService from "../service/modalService.js";
 import PolylineService from "../service/polylineService.js";
+import MapService from "../service/mapService.js";
+import utLocation from "../utility/location.js";
 const BottomSheet = (() => {
   let language;
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
+  let locaOn = true;
+  let userOn = false;
+  let map = null;
+  let userMarker = [];
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();
@@ -51,7 +57,7 @@ const BottomSheet = (() => {
     const congestionMap = {
       none: {
         color: "#999",
-        border: "1px solid #999",
+        border: "1px solid #E8E8E8",
         textColor: "#99999",
         text: language["none"],
       },
@@ -153,7 +159,10 @@ const BottomSheet = (() => {
       Array.from(updatedGates).forEach((gate, index) => {
         gate.addEventListener("click", async () => {
           try {
-            console.log(index);
+            if (userOn) {
+              utLocation.getCurrentPosition();
+              userOn = true;
+            }
             Utility.moveGate(index);
             Utility.openWindowInfo(index);
             PolylineService.selectPolyline(index);
@@ -472,9 +481,64 @@ const BottomSheet = (() => {
     }
   };
 
+  // requestControl
+  const requestControlEvent = async () => {
+    try {
+      const userPos = await utLocation.getCurrentPosition();
+      boardingGateNum = sessionStorage.getItem("boardingGate");
+      if (locaOn) {
+        setTimeout(() => {}, 1000);
+        locaOn = false;
+      }
+      console.log("requestControl click");
+      const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
+      if (userPos) {
+        map.getCenter();
+        map.setCenter(latLng);
+        const marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(latLng),
+          map: null,
+          title: "내 위치",
+          icon: {
+            content:
+              '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+            size: new naver.maps.Size(27, 35),
+            anchor: new naver.maps.Point(7, 14),
+          },
+        });
+        if (userMarker[0] != null) {
+          userMarker.forEach((uMarker) => {
+            uMarker.setMap(null);
+          });
+        }
+        marker.setMap(map);
+        userMarker.push(marker);
+        const boardingPolyline = PolylineService.getBoardingPolyline();
+        if (boardingPolyline == null) {
+          PolylineService.updatePolyline(userPos, null);
+        } else {
+          PolylineService.updatePolyline(userPos, boardingGateNum);
+        }
+      } else {
+        alert("위치 정보가 없습니다.");
+      }
+    } catch (error) {
+      alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
+      Logger.log("위치 권한 오류: " + error.message, "error");
+    }
+  };
+  const locationEvent = () => {
+    const requestLocation = document.getElementById("requestLocation");
+    requestLocation.addEventListener("click", async () => {
+      await requestControlEvent();
+    });
+  };
+
   return {
     init: async () => {
       recoArray = await RecoService.recoGate();
+      map = MapService.getMap();
+      locationEvent();
     },
     languageChan: (lang) => {
       language = lang;

@@ -28,7 +28,7 @@ const CustomControl = (() => {
   let movePosition = null;
   let userMarker = [];
   let conSwitch = null;
-  let locaOn = true;
+  // let locaOn = true;
   let customEventOn = false;
   const positions = [
     naver.maps.Position.TOP_LEFT,
@@ -90,60 +90,51 @@ const CustomControl = (() => {
     } else {
       marginBottom = 17;
     }
-    const locationBtnHtml =
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:' +
-      marginBottom +
-      'rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+    // const locationBtnHtml = `<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom :
+    //   ${marginBottom}
+    //   rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>`;
 
     let boarding;
     let moveGateBtn;
 
     if (boardingGateNum != null) {
-      moveGateBtn =
-        '<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >' +
-        '<img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px">' +
-        '<img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px">' +
-        language["boardingGate"] +
-        " : " +
-        boardingGateNum +
-        "</div>";
+      moveGateBtn = `<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >
+        <img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px"> 
+        <img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px"> 
+        ${language["boardingGate"]}
+         : ${boardingGateNum}
+        </div>`;
       boarding =
         '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     } else {
-      moveGateBtn =
-        '<div id ="boardingInfo-none" style="display:flex;height : 2rem ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">' +
-        language["boardingGate"] +
-        " : </div>";
+      moveGateBtn = `<div id ="boardingInfo-none" style="display:flex;height : 2rem ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">
+        ${language["boardingGate"]} 
+         : </div>`;
       boarding =
         '<div id="moveBoardingGate" style="display: none ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     }
-    const selectLang =
-      '<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;' +
-      'background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">' +
-      '<div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left; ' +
-      'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">' +
-      '<img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">' +
-      languageText +
-      "</div>" +
-      '<img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;margin-right:5px">' +
-      "</div>";
+    const selectLang = `<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;
+      background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">
+      <div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left;
+      overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">
+      <img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">
+      ${languageText} 
+      </div>
+      <img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;margin-right:5px">
+      </div>`;
     let languageList = {
-      ko:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">한국어(' +
-        language["korean"] +
-        ")</div>",
-      en:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">English(' +
-        language["english"] +
-        ")</div>",
-      ja:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">日本語(' +
-        language["japanese"] +
-        ")</div>",
-      zh:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">简体中文(' +
-        language["chinese"] +
-        ")</div>",
+      ko: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">한국어(
+        ${language["korean"]}
+        )</div>`,
+      en: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">영어(
+        ${language["english"]}
+        )</div>`,
+      ja: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">일본어(
+        ${language["japanese"]}
+        )</div>`,
+      zh: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">중국어(
+        ${language["chinese"]}
+        )</div>`,
     };
 
     // 성능 최적화: 배열 처리 단순화
@@ -164,13 +155,12 @@ const CustomControl = (() => {
       )
       .join("");
 
-    const languageChange =
-      '<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem">' +
-      langChan +
-      "</div>";
-    locaCon = new naver.maps.CustomControl(locationBtnHtml, {
-      position: naver.maps.Position.RIGHT_CENTER,
-    });
+    const languageChange = `<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem"> 
+      ${langChan}
+      </div>`;
+    // locaCon = new naver.maps.CustomControl(locationBtnHtml, {
+    //   position: naver.maps.Position.RIGHT_CENTER,
+    // });
     moveGateCon = new naver.maps.CustomControl(moveGateBtn, {
       position: naver.maps.Position.TOP_RIGHT,
     });
@@ -268,55 +258,55 @@ const CustomControl = (() => {
       }
     });
 
-    naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
-      try {
-        const userPos = await utLocation.getCurrentPosition();
-        boardingGateNum = sessionStorage.getItem("boardingGate");
-        if (locaOn) {
-          setTimeout(() => {}, 1000);
-          locaOn = false;
-        }
-        const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
-        if (userPos) {
-          map.getCenter();
-          map.setCenter(latLng);
-          const marker = new naver.maps.Marker({
-            position: new naver.maps.LatLng(latLng),
-            map: null,
-            title: "내 위치",
-            icon: {
-              content:
-                '<img src="./images/user_Location.png" style="width:30px;height:30px">',
-              size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(7, 14),
-            },
-          });
-          if (userMarker[0] != null) {
-            userMarker.forEach((uMarker) => {
-              uMarker.setMap(null);
-            });
-          }
-          marker.setMap(map);
-          userMarker.push(marker);
-          const boardingPolyline = PolylineService.getBoardingPolyline();
-          Logger.log("boardingPolyline : ", boardingPolyline);
-          if (boardingPolyline == null) {
-            PolylineService.updatePolyline(userPos, null);
-          } else {
-            PolylineService.updatePolyline(userPos, boardingGateNum);
-          }
-        } else {
-          alert("위치 정보가 없습니다.");
-        }
-      } catch (error) {
-        alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
-        Logger.log("위치 권한 오류: " + error.message, "error");
-      }
-    });
+    // naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
+    //   try {
+    //     const userPos = await utLocation.getCurrentPosition();
+    //     boardingGateNum = sessionStorage.getItem("boardingGate");
+    //     if (locaOn) {
+    //       setTimeout(() => {}, 1000);
+    //       locaOn = false;
+    //     }
+    //     const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
+    //     if (userPos) {
+    //       map.getCenter();
+    //       map.setCenter(latLng);
+    //       const marker = new naver.maps.Marker({
+    //         position: new naver.maps.LatLng(latLng),
+    //         map: null,
+    //         title: "내 위치",
+    //         icon: {
+    //           content:
+    //             '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+    //           size: new naver.maps.Size(27, 35),
+    //           anchor: new naver.maps.Point(7, 14),
+    //         },
+    //       });
+    //       if (userMarker[0] != null) {
+    //         userMarker.forEach((uMarker) => {
+    //           uMarker.setMap(null);
+    //         });
+    //       }
+    //       marker.setMap(map);
+    //       userMarker.push(marker);
+    //       const boardingPolyline = PolylineService.getBoardingPolyline();
+    //       Logger.log("boardingPolyline : ", boardingPolyline);
+    //       if (boardingPolyline == null) {
+    //         PolylineService.updatePolyline(userPos, null);
+    //       } else {
+    //         PolylineService.updatePolyline(userPos, boardingGateNum);
+    //       }
+    //     } else {
+    //       alert("위치 정보가 없습니다.");
+    //     }
+    //   } catch (error) {
+    //     alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
+    //     Logger.log("위치 권한 오류: " + error.message, "error");
+    //   }
+    // });
   };
   const customControlSetMap = () => {
     setTimeout(() => {
-      locaCon.setMap(map);
+      // locaCon.setMap(map);
       boardingInfo.setMap(map);
       selectLangCon.setMap(map);
       moveGateCon.setMap(map);
@@ -326,9 +316,9 @@ const CustomControl = (() => {
     try {
       const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
 
-      if (locaCon) {
-        naver.maps.Event.clearInstanceListeners(locaCon);
-      }
+      // if (locaCon) {
+      //   naver.maps.Event.clearInstanceListeners(locaCon);
+      // }
       if (moveGateCon) {
         naver.maps.Event.clearInstanceListeners(moveGateCon);
       }
