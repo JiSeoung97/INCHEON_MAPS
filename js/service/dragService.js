@@ -39,6 +39,7 @@ const DragService = (() => {
         marginBottom +
         paddingTop +
         paddingBottom +
+        pxToRem(25) +
         50;
       totalHeight += height;
     });

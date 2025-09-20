@@ -42,7 +42,6 @@ const PolylineService = (() => {
         strokeStyle: "longdash",
       });
     } else {
-      console.log(position);
       let markerPolyline = new naver.maps.Polyline({
         map: null,
         path: [position, marker.position],
@@ -79,7 +78,6 @@ const PolylineService = (() => {
       markerPolylines.forEach((polyline) => {
         polyline.setMap(null);
       });
-      console.log("markerPolylines[index].setMap(map) : ", markerPolylines);
       markerPolylines[index].setMap(map);
     } else {
       markerPolylines[index].setMap(null);

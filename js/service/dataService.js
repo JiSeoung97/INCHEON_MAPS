@@ -12,7 +12,6 @@ const DataService = (() => {
   const updateCongestion = () => {
     if (!data) return;
     if (!apiDatas || !Array.isArray(apiDatas)) {
-      console.log("apiDatas가 null이거나 배열이 아님:", apiDatas);
       return;
     }
     Array.from(apiDatas).forEach((apiData) => {
@@ -28,7 +27,6 @@ const DataService = (() => {
     });
 
     data.lastUpdated = new Date().toISOString();
-    console.log("data : ", data);
     return data;
   };
   const getAirportData = async () => {
@@ -45,7 +43,6 @@ const DataService = (() => {
           params: requestParams,
         }
       );
-      console.log("response : ", result.data);
       apiDatas = result.data.response.body.items || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
