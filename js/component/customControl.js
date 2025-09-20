@@ -90,9 +90,6 @@ const CustomControl = (() => {
     } else {
       marginBottom = 17;
     }
-    // const locationBtnHtml = `<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom :
-    //   ${marginBottom}
-    //   rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>`;
 
     let boarding;
     let moveGateBtn;
@@ -158,9 +155,7 @@ const CustomControl = (() => {
     const languageChange = `<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem"> 
       ${langChan}
       </div>`;
-    // locaCon = new naver.maps.CustomControl(locationBtnHtml, {
-    //   position: naver.maps.Position.RIGHT_CENTER,
-    // });
+
     moveGateCon = new naver.maps.CustomControl(moveGateBtn, {
       position: naver.maps.Position.TOP_RIGHT,
     });
@@ -257,52 +252,6 @@ const CustomControl = (() => {
         ModalService.boardingModalOpen();
       }
     });
-
-    // naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
-    //   try {
-    //     const userPos = await utLocation.getCurrentPosition();
-    //     boardingGateNum = sessionStorage.getItem("boardingGate");
-    //     if (locaOn) {
-    //       setTimeout(() => {}, 1000);
-    //       locaOn = false;
-    //     }
-    //     const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
-    //     if (userPos) {
-    //       map.getCenter();
-    //       map.setCenter(latLng);
-    //       const marker = new naver.maps.Marker({
-    //         position: new naver.maps.LatLng(latLng),
-    //         map: null,
-    //         title: "내 위치",
-    //         icon: {
-    //           content:
-    //             '<img src="./images/user_Location.png" style="width:30px;height:30px">',
-    //           size: new naver.maps.Size(27, 35),
-    //           anchor: new naver.maps.Point(7, 14),
-    //         },
-    //       });
-    //       if (userMarker[0] != null) {
-    //         userMarker.forEach((uMarker) => {
-    //           uMarker.setMap(null);
-    //         });
-    //       }
-    //       marker.setMap(map);
-    //       userMarker.push(marker);
-    //       const boardingPolyline = PolylineService.getBoardingPolyline();
-    //       Logger.log("boardingPolyline : ", boardingPolyline);
-    //       if (boardingPolyline == null) {
-    //         PolylineService.updatePolyline(userPos, null);
-    //       } else {
-    //         PolylineService.updatePolyline(userPos, boardingGateNum);
-    //       }
-    //     } else {
-    //       alert("위치 정보가 없습니다.");
-    //     }
-    //   } catch (error) {
-    //     alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
-    //     Logger.log("위치 권한 오류: " + error.message, "error");
-    //   }
-    // });
   };
   const customControlSetMap = () => {
     setTimeout(() => {
@@ -316,9 +265,6 @@ const CustomControl = (() => {
     try {
       const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
 
-      // if (locaCon) {
-      //   naver.maps.Event.clearInstanceListeners(locaCon);
-      // }
       if (moveGateCon) {
         naver.maps.Event.clearInstanceListeners(moveGateCon);
       }

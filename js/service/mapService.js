@@ -126,6 +126,9 @@ const MapService = (() => {
   return {
     init: async () => {
       Logger.log("MapService 초기화 시작");
+      const urlParams = new URLSearchParams(window.location.search);
+      let lang = urlParams.get("lang");
+      sessionStorage.setItem("language", lang);
 
       const mapElement = document.getElementById("map");
       if (!mapElement) {
