@@ -19,6 +19,9 @@ const BottomSheet = (() => {
   let userMarker = [];
   const showGateCongestion = async () => {
     try {
+      // 스켈레톤 UI 표시
+      showSkeletonUI();
+
       const allAreadata = DataService.getAllAreas();
       const areadata = [];
 
@@ -34,8 +37,8 @@ const BottomSheet = (() => {
         return;
       }
 
-      // 200ms 후에 실행 (기존 setTimeout을 Promise로 변경)
-      await new Promise((resolve) => setTimeout(resolve, 50));
+      // 최소 1초간 스켈레톤 UI 표시 (사용자 경험 향상)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       for (const [index, conData] of areadata.entries()) {
         if (index >= contentsEl.length) continue;
@@ -48,6 +51,9 @@ const BottomSheet = (() => {
 
         contentsEl[index].innerHTML = htmlContents;
       }
+
+      // 실제 컨텐츠 표시
+      hideSkeletonUI();
       RecoService.recoLikeIconView();
     } catch (error) {
       Logger.error("게이트 혼잡도 표시 실패:", error);
@@ -531,6 +537,37 @@ const BottomSheet = (() => {
     requestLocation.addEventListener("click", async () => {
       await requestControlEvent();
     });
+  };
+
+  // 스켈레톤 UI 제어 함수들
+  const showSkeletonUI = () => {
+    const skeleton = document.getElementById("congestion-skeleton");
+    const contents = document.getElementById("contents");
+
+    if (skeleton) {
+      skeleton.classList.remove("hidden");
+      skeleton.classList.add("loading-skeleton");
+    }
+
+    if (contents) {
+      contents.classList.add("hidden");
+      contents.classList.remove("congestion-content");
+    }
+  };
+
+  const hideSkeletonUI = () => {
+    const skeleton = document.getElementById("congestion-skeleton");
+    const contents = document.getElementById("contents");
+
+    if (skeleton) {
+      skeleton.classList.add("hidden");
+      skeleton.classList.remove("loading-skeleton");
+    }
+
+    if (contents) {
+      contents.classList.remove("hidden");
+      contents.classList.add("congestion-content");
+    }
   };
 
   return {

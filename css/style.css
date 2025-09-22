@@ -130,6 +130,92 @@ body {
   background-color: #999;
 }
 
+/* 스켈레톤 UI 애니메이션 */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.6),
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: shimmer 1.5s infinite;
+}
+
+/* 혼잡도 테이블 스켈레톤 - div 구조 */
+#congestion-skeleton {
+  width: 100%;
+}
+
+.skeleton-congestion-row {
+  display: flex;
+  height: 3rem;
+  align-items: center;
+  border-bottom: 1px solid #2121221a;
+  padding: 6px;
+}
+
+.skeleton-congestion-cell {
+  height: 2.4rem;
+  border-radius: 10px;
+  margin-right: 2%;
+}
+
+/* 원본 테이블과 동일한 너비 비율 */
+.skeleton-gate-name {
+  width: 30%;
+}
+
+.skeleton-gate-status {
+  width: 35%;
+}
+
+.skeleton-gate-time {
+  width: 33%;
+}
+
+/* 스켈레톤 숨김/표시 */
+.loading-skeleton {
+  display: block;
+}
+
+.loading-skeleton.hidden {
+  display: none;
+}
+
+.congestion-content {
+  display: table;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+.congestion-content.hidden {
+  display: none;
+}
+
 /* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
   .controls button {
