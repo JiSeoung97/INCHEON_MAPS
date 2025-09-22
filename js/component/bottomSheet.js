@@ -38,7 +38,7 @@ const BottomSheet = (() => {
       }
 
       // 최소 1초간 스켈레톤 UI 표시 (사용자 경험 향상)
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       for (const [index, conData] of areadata.entries()) {
         if (index >= contentsEl.length) continue;
