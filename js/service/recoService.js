@@ -25,8 +25,8 @@ const RecoService = (() => {
           });
         }
       }
-
       recoArray.sort((a, b) => a.time - b.time);
+      console.log(recoArray);
     } catch (error) {
       for (let i = 0; i < 3; i++) {
         recoArray.push({
@@ -41,6 +41,7 @@ const RecoService = (() => {
   const getAreaDistance = async (area) => {
     try {
       const distanceStr = await Utility.getDistance(area);
+      console.log(distanceStr);
       return Math.round(
         Number(distanceStr.replace("M", "").replace(",", "")) / 70
       );
@@ -59,6 +60,7 @@ const RecoService = (() => {
         idx = index;
       }
     });
+    console.log(eastWest[idx]);
     eastWest[idx].getElementsByClassName("like-icon")[0].style.display = "flex";
   };
 

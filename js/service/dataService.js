@@ -21,7 +21,11 @@ const DataService = (() => {
     data.buildings.forEach((building) => {
       building.areas.forEach((area, idx) => {
         if (idx < 10) {
-          area.congestion = congestions[idx];
+          if (idx % 2 == 0) {
+            area.congestion = congestions[idx + 1];
+          } else {
+            area.congestion = congestions[idx - 1];
+          }
         }
       });
     });
@@ -44,6 +48,7 @@ const DataService = (() => {
         }
       );
       apiDatas = result.data.response.body.items || null;
+      console.log("apiData : ", result.data);
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
       Logger.error("혼잡도 api데이터 로드 실패 :", error);
