@@ -103,7 +103,7 @@ const MapService = (() => {
 
   const initMap = () => {
     const mapOptions = {
-      center: new naver.maps.LatLng(37.44703, 126.4515),
+      center: new naver.maps.LatLng(37.44553, 126.4515),
       zoom: 16,
       mapTypes: new naver.maps.MapTypeRegistry({
         normal: naver.maps.NaverStyleMapTypeOptions.getVectorMap(),
