@@ -30,6 +30,7 @@ const MapService = (() => {
   let setting = false;
   let boardingInfo = null;
   let dataCnt = 0;
+  let elementSettingOn = false;
 
   const loadTranslateData = async (lang) => {
     try {
@@ -42,6 +43,10 @@ const MapService = (() => {
 
   const zoomEvent = () => {
     naver.maps.Event.addListener(map, "zoom_changed", () => {
+      if (!elementSettingOn) {
+        MarkerService.elementSetting();
+        elementSettingOn = true;
+      }
       selectedInfowindow = InfoWindowService.getInfoWindows();
       MarkerService.replaceAllMarkerIcon();
       MarkerService.getZoomEvent();
@@ -198,7 +203,6 @@ const MapService = (() => {
         ampm = language["am"];
         await BottomSheet.changeMenu();
         await Translate.translateMenu();
-        MarkerService.elementSetting();
         if (polylines[0] == null) {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
@@ -245,6 +249,9 @@ const MapService = (() => {
     },
     getCurrentPosition: async () => {
       return await getCurrentPosition();
+    },
+    setElementSet: (bool) => {
+      elementSettingOn = bool;
     },
   };
 })();

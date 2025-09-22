@@ -1,7 +1,9 @@
 import Logger from "../utility/logger.js";
 import MapService from "./mapService.js";
+import MarkerService from "./markerService.js";
 const ModalService = (() => {
   let language;
+  let modalOn = false;
   const init = () => {
     language = MapService.languageReturn();
   };
@@ -26,9 +28,13 @@ const ModalService = (() => {
         language["modalBtn"] +
         '<img id="arrow-right" src="./images/more.svg" />';
     }
+    MarkerService.setSelectedMarker(false);
   };
 
   const modalOpen = (index) => {
+    if (modalOn) {
+      document.getElementById("adClose").src = "images/x.png";
+    }
     const modal = document.getElementsByClassName("modal-overlay");
     modal[index].classList.add("show");
   };
