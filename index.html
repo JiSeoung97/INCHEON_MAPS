@@ -10,6 +10,10 @@
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
       rel="stylesheet"
     />
+    <link rel="preload" href="images/gps_black.svg" as="images" />
+    <link rel="preload" href="images/send_black.svg" as="images" />
+    <link rel="preload" href="images/flight_blue.svg" as="images" />
+    <link rel="preload" href="images/like_icon.svg" as="images" />
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.10.0/dist/axios.min.js"></script>
     <script
@@ -78,17 +82,17 @@
     </div>
     <div id="adModal" class="modal-overlay">
       <div class="modal-content">
-        <p id="modalClose"><img id="adClose" src="./images/x.png" /></p>
+        <p id="modalClose"><img id="adClose" /></p>
         <div id="modal-contents">
           <div id="imgBox">
-            <img id="modelImg" src="./images/food_court.svg" />
+            <img id="modelImg" />
           </div>
           <div id="modalText">
             <p id="modalTryMeal"></p>
             <p id="modalTitle"></p>
           </div>
           <button id="reco">
-            <img id="arrow-right" src="./images/more.svg" />
+            <img id="arrow-right" />
           </button>
         </div>
       </div>

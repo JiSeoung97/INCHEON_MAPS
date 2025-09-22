@@ -246,10 +246,9 @@ const CustomControl = (() => {
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
         movePosition = MapService.moveBoardingGate();
-        Logger.log(boardingGateNum);
         InfoWindowService.boardingInfoOpen();
       } else {
-        ModalService.boardingModalOpen();
+        ModalService.boardingModalOpen("boardingInfo");
       }
     });
   };

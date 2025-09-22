@@ -17,7 +17,7 @@ const Utility = (() => {
 
       const savedLocation = sessionStorage.getItem("myLocation");
       if (savedLocation == null) {
-        return "📍 위치 확인 중...";
+        return 0;
       }
 
       targetLocation = JSON.parse(savedLocation);

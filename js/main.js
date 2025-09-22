@@ -258,6 +258,8 @@ $(document).ready(async () => {
       if (boardingGate) {
         await PolylineService.updatePolyline(userLocation, boardingGate);
       }
+      BottomSheet.showGateCongestion();
+      console.log("showGateCongestion");
     } catch (error) {
       Logger.log("⚠️ 위치 로딩 실패, 기본 기능으로 계속 진행");
     }
