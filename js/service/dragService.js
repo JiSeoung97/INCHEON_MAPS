@@ -60,13 +60,6 @@ const DragService = (() => {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    let lang = sessionStorage.getItem("language");
-    if (lang == "ko") {
-      POSITIONS.OPEN = -3;
-    } else {
-      POSITIONS.OPEN = -1;
-    }
-
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
     }

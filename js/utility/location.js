@@ -2,6 +2,7 @@ import Logger from "./logger.js";
 import ErrorHandler from "./httpError.js";
 import { LocationError } from "./customError.js";
 import MarkerService from "../service/markerService.js";
+import RecoService from "../service/recoService.js";
 
 const utLocation = (() => {
   let watchId = null;
@@ -378,6 +379,7 @@ const utLocation = (() => {
             ? `${location.improvement.toFixed(1)}m`
             : "N/A",
         });
+        RecoService.recoGate();
         MarkerService.createMarker();
         return location;
       } catch (error) {

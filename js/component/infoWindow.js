@@ -188,6 +188,9 @@ const InfoWindowService = (() => {
     resetBoardingInfo: () => {
       boardingInfo = null;
     },
+    getBInfoOn: () => {
+      return bInfoOn;
+    },
   };
 })();
 export default InfoWindowService;

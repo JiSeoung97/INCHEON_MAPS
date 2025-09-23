@@ -20,6 +20,7 @@ const MarkerService = (() => {
   let boardingGateNum = null;
   let elementsMarkers = [];
   let elementInfos = [];
+  let markerOn = false;
   const createMarker = async (areaData, index, boardingGateNum) => {
     try {
       const data = DataService.getAllAreas();
@@ -260,8 +261,8 @@ const MarkerService = (() => {
         idx = index;
       }
     });
+    console.log(selectMarker);
     replaceAllMarkerIcon();
-
     if (selectedMarker == selectMarker) {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -273,6 +274,7 @@ const MarkerService = (() => {
           .replace(";transform:scale(1.2);transform-origin:center;", ";"),
       };
       selectedMarker = null;
+      markerOn = false;
     } else {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -285,6 +287,7 @@ const MarkerService = (() => {
       };
 
       selectedMarker = selectMarker;
+      markerOn = true;
     }
 
     selectMarker.setIcon(newIcon);
@@ -561,6 +564,12 @@ const MarkerService = (() => {
     },
     allElementhide: () => {
       allElementhide();
+    },
+    getMarkerOn: () => {
+      return markerOn;
+    },
+    setMarkerOn: (bool) => {
+      markerOn = bool;
     },
   };
 })();

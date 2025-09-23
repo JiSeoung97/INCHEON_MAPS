@@ -131,10 +131,21 @@ const MapService = (() => {
   return {
     init: async () => {
       Logger.log("MapService 초기화 시작");
-      const urlParams = new URLSearchParams(window.location.search);
-      let lang = urlParams.get("lang");
-      sessionStorage.setItem("language", lang);
-
+      let kiosk = null;
+      let lang = null;
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        lang = urlParams.get("lang");
+        kiosk = urlParams.get("kiosk");
+      } catch (error) {
+        Logger.log("쿼리스트링x", error);
+      }
+      if (kiosk != null) {
+        sessionStorage.setItem("kiosk", kiosk);
+      }
+      if (lang != null) {
+        sessionStorage.setItem("language", lang);
+      }
       const mapElement = document.getElementById("map");
       if (!mapElement) {
         Logger.error("지도를 표시할 엘리먼트를 찾을 수 없음.");
@@ -236,7 +247,7 @@ const MapService = (() => {
         easing: "easeOutCubic",
       };
       boardingMarkers = MarkerService.getBoardingMarker();
-      MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
+      MarkerService.replaceMarkerIcon(boardingMarkers);
       let movePosition;
 
       movePosition = naver.maps.LatLng(
