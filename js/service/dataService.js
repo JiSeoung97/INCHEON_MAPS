@@ -1,84 +1,87 @@
 import Logger from "../utility/logger.js";
 import TimeCalculator from "../utility/timeCalculator.js";
 import mockData from "../../data/mock-data.js";
-import mockData2 from "../../data/mock-data2.js";
-import ErrorHandler from "../utility/httpError.js";
+import createAxiosInstance from "../../api/axios-instance.js";
 
 const DataService = (() => {
   let data = null;
   let apiDatas = null;
   let congestions = [];
   let elements = [];
+  let apiInstance;
   const updateCongestion = () => {
     if (!data) return;
+    if (!apiDatas || !Array.isArray(apiDatas)) {
+      return;
+    }
     Array.from(apiDatas).forEach((apiData) => {
       congestions.push(calculateCongestionLevel(apiData));
     });
 
     data.buildings.forEach((building) => {
       building.areas.forEach((area, idx) => {
-        if (idx !== 0 && idx !== 9) {
-          area.congestion = congestions[idx];
+        if (idx < 10) {
+          if (idx % 2 == 0) {
+            area.congestion = congestions[idx + 1];
+          } else {
+            area.congestion = congestions[idx - 1];
+          }
         }
       });
     });
 
     data.lastUpdated = new Date().toISOString();
-
     return data;
   };
   const getAirportData = async () => {
     try {
+      Logger.log("time formating", TimeCalculator.formatCurrentDateTime());
       const requestParams = {
-        accessKey: window.appConfig.API_KEY || "",
-        _type: "json",
+        type: "json",
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
-
-      const result = await apiDatas.get(
-        "/service/DptgtSnsrDatT1/dptgtsnsrdatt1",
-        { params: requestParams }
+      Logger.log("request : ", requestParams.accessKey);
+      const result = await apiInstance.get(
+        "/api/airport/getDepartureCongestion",
+        {
+          params: requestParams,
+        }
       );
-
-      apiDatas = result.data.response.body.items.item || null;
+      apiDatas = result.data.response.body.items || null;
+      console.log("apiData : ", result.data);
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
-      Logger.error("혼잡도 api데이터 로드 실패");
-      // ErrorHandler.handleSpecificError(error);
+      Logger.error("혼잡도 api데이터 로드 실패 :", error);
     }
-  };
-  const calculateTotalWaitTime = (item) => {
-    const queueLength = parseInt(item.quelength) || 0;
-    const immigrationTime =
-      item.immigrationtime === "NA" ? 0 : parseInt(item.immigrationtime) || 0;
-    const expectedWaitTime =
-      item.espwaittime === "D" || item.espwaittime === "NA"
-        ? 0
-        : parseInt(item.espwaittime) || 0;
-
-    return queueLength * immigrationTime + expectedWaitTime;
   };
 
   // 총 대기시간 기준 혼잡도 계산
   const calculateCongestionLevel = (item) => {
-    const totalWaitTime = calculateTotalWaitTime(item);
+    const totalWaitTime = item.waitTime;
     // 시간 기준 혼잡도 (초 단위)
-    if (totalWaitTime <= 600) return "low"; // 10분 이하
-    if (totalWaitTime <= 1800) return "medium"; // 30분 이하
-    if (totalWaitTime <= 3600) return "high"; // 1시간 이하
+    if (totalWaitTime <= 6) return "low"; // 6분 이하
+    if (totalWaitTime <= 8) return "medium"; // 8분 이하
+    if (totalWaitTime <= 10) return "high"; // 10분 이하
     return "veryhigh"; // 1시간 초과
   };
 
   return {
     initData: async () => {
       data = mockData || null;
-      apiDatas = mockData2.data[0].response.body.items.item || null;
-      // await getAirportData();
-      elements = data.elements.areas;
       if (!data) {
         Logger.error("모킹 데이터 로드 실패함");
         return null;
       }
+      elements = data.elements.areas;
+
+      apiInstance = createAxiosInstance();
+
+      await getAirportData();
+
+      if (!apiDatas) {
+        Logger.error("실시간 혼잡도 API 데이터 로드에 실패했습니다.");
+      }
+
       updateCongestion();
       return data;
     },
@@ -92,7 +95,7 @@ const DataService = (() => {
       return apiDatas;
     },
     getTotalWaitTime: (item) => {
-      return calculateTotalWaitTime(item);
+      return item.waitTime;
     },
     getCompanyLocation: () => {
       if (!data) {

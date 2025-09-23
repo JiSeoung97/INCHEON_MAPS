@@ -8,16 +8,19 @@ const Utility = (() => {
   let map;
   let markers = [];
   let selectedMarker = null;
+  let infoOn = false;
 
-  function delay(ms) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
   const getDistance = async (area, boardingGateNum, bottomSheet) => {
     try {
       let startLocation = null;
       let targetLocation = null;
 
-      targetLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+      const savedLocation = sessionStorage.getItem("myLocation");
+      if (savedLocation == null) {
+        return 0;
+      }
+
+      targetLocation = JSON.parse(savedLocation);
       startLocation = area;
 
       if (bottomSheet) {
@@ -71,11 +74,16 @@ const Utility = (() => {
 
   const moveGate = async (index) => {
     map = MapService.getMap();
+    if (map.getZoom() <= 17) {
+      setTimeout(() => {
+        map.setZoom(18, true);
+      }, 100);
+    }
     let idx = index;
     selectedMarker = MarkerService.getSelectedMarker();
     markers = MarkerService.getMarkers();
     var transition = {
-      duration: 1000,
+      duration: 100,
       easing: "easeOutCubic",
     };
     MarkerService.replaceAllMarkerIcon();
@@ -85,26 +93,26 @@ const Utility = (() => {
       markers[idx].position._lng
     );
     map.panTo(newPosition, transition);
-    await delay(1000);
-    setTimeout(() => {
-      if (map.getZoom() <= 17) {
-        map.setZoom(18, true);
-      }
-    }, 100);
     MarkerService.replaceMarkerIcon(markers[idx]);
   };
 
-  const openWindowInfo = (index = null) => {
-    markers = MarkerService.getMarkers();
-    let infoWindows = InfoWindowService.getInfoWindows();
-    let selectedInfowindow = MarkerService.getSelectedInfowindow();
-    let idx = index;
+  const openWindowInfo = (index) => {
     if (index == null) {
-      idx = infoWindows.length - 1;
-      infoWindows[idx].setMap(null);
+      let boardingInfo = InfoWindowService.getBoardingInfo();
+      let boardingMarker = MarkerService.getBoardingMarker();
+      if (boardingInfo.getMap() == null) {
+        boardingInfo.open(map, boardingMarker[0]);
+      } else {
+        boardingInfo.close();
+      }
     } else {
-      selectedInfowindow = infoWindows[idx];
-      infoWindows[idx].open(map, markers[idx]);
+      markers = MarkerService.getMarkers();
+      let infoWindows = InfoWindowService.getInfoWindows();
+      if (infoWindows[index].getMap() == null) {
+        infoWindows[index].open(map, markers[index]);
+      } else {
+        infoWindows[index].close();
+      }
     }
   };
   const translateAreaName = (areaName, language) => {
@@ -165,8 +173,8 @@ const Utility = (() => {
     openWindowInfo: (index) => {
       openWindowInfo(index);
     },
-    openBoardingWindowInfo: () => {
-      openWindowInfo();
+    openBoardingWindowInfo: (index = null) => {
+      openWindowInfo(index);
     },
     translateAreaName: (areaName, language) => {
       return translateAreaName(areaName, language);

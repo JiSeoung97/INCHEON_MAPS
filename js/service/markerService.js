@@ -4,6 +4,7 @@ import DataService from "./dataService.js";
 import Utility from "../utility/utility.js";
 import InfoWindowService from "../component/infoWindow.js";
 import ModalService from "./modalService.js";
+import PolylineService from "./polylineService.js";
 const MarkerService = (() => {
   let markers = [];
   let infoWindows = [];
@@ -27,7 +28,7 @@ const MarkerService = (() => {
       let marker;
       if (boardingGateNum == null) {
         area = areaData.area || areaData;
-        if (index == 0 || index == 9) return;
+        if (index == 10) return;
         content = getMarkerIcon(areaData, index);
         if (index % 2 == 1) {
           marker = new naver.maps.Marker({
@@ -40,7 +41,7 @@ const MarkerService = (() => {
             icon: {
               content: content,
               size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(55, 30),
+              anchor: new naver.maps.Point(20, 30),
             },
           });
         } else {
@@ -54,7 +55,7 @@ const MarkerService = (() => {
             icon: {
               content: content,
               size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(20, 30),
+              anchor: new naver.maps.Point(55, 30),
             },
           });
         }
@@ -87,6 +88,7 @@ const MarkerService = (() => {
       );
       naver.maps.Event.addListener(marker, "click", () => {
         markerEvent(marker, infoWindow);
+        PolylineService.selectPolyline(index);
       });
       if (boardingGateNum == null) {
         markers.push(marker);
@@ -152,9 +154,6 @@ const MarkerService = (() => {
         marker.setMap(map);
       }
       elementsMarkers.push(marker);
-      naver.maps.Event.addListener(marker, "click", () => {
-        markerEvent(marker, infoWindow);
-      });
     });
   };
   const elementEvent = (e) => {
@@ -211,7 +210,7 @@ const MarkerService = (() => {
 
   const createZoomOutMarker = async (index) => {
     try {
-      if (index % 2 == 1 || index == 0) return;
+      if (index % 2 == 0) return;
 
       const data = DataService.getAllAreas();
       let position = Utility.calculateMidPoint(
@@ -406,7 +405,7 @@ const MarkerService = (() => {
       Logger.log("eastwest error");
     }
 
-    if (index % 2 == 1) {
+    if (index % 2 == 0) {
       return (
         '<div class = "markerIcon"style="display:flex ;z-index :11;flex-direction:row;align-items: center; justify-content:center;height: 2.5rem;width:auto;margin-top:10px"><span style="display:flex;flex-direction:row;height:2rem;width:2rem;font-size:0.875rem;align-items: center; justify-content:center">' +
         eastWest +
@@ -457,6 +456,7 @@ const MarkerService = (() => {
       }
       zoomOutMarkers = [];
       markers = [];
+      infoWindows = [];
       const allAreas = DataService.getAllAreas();
       for (let index = 0; index < allAreas.length; index++) {
         const area = allAreas[index];
@@ -469,6 +469,27 @@ const MarkerService = (() => {
     },
     getMarkers: () => {
       return markers;
+    },
+    createMarker: async () => {
+      markers.forEach((marker) => {
+        marker.setMap(null);
+      });
+      markers = [];
+      InfoWindowService.resetInfo();
+      infoWindows = [];
+      areas = [];
+      const allAreas = DataService.getAllAreas();
+      for (let index = 0; index < 10; index++) {
+        const area = allAreas[index];
+        areas.push(area);
+        await createMarker(area, index);
+      }
+      const zoomLevel = map.getZoom();
+      if (zoomLevel >= 18) {
+        markers.forEach((marker) => {
+          marker.setMap(map);
+        });
+      }
     },
     createBoardingMarker: async (boardingGateNum) => {
       if (boardingMarkers[0] != null) {

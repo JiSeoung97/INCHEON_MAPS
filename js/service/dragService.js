@@ -9,9 +9,10 @@ const DragService = (() => {
   let currentBottom = 0;
   let currentPosition;
   let bottomSheet;
+  let dragOn = false;
   const POSITIONS = {
     CLOSED: 0,
-    OPEN: 0,
+    OPEN: 2,
   };
   function getEventY(e) {
     return e.type.includes("touch") ? e.touches[0].clientY : e.clientY;
@@ -38,6 +39,7 @@ const DragService = (() => {
         marginBottom +
         paddingTop +
         paddingBottom +
+        pxToRem(25) +
         50;
       totalHeight += height;
     });
@@ -58,7 +60,12 @@ const DragService = (() => {
       const maxHiddenRem = -pxToRem(viewportHight);
       POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
     }
-    POSITIONS.OPEN = -5;
+    let lang = sessionStorage.getItem("language");
+    if (lang == "ko") {
+      POSITIONS.OPEN = -3;
+    } else {
+      POSITIONS.OPEN = -1;
+    }
 
     if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
       POSITIONS.CLOSED = -10;
@@ -97,7 +104,7 @@ const DragService = (() => {
     let newBottom = startBottom - deltaRem;
     // 경계 제한
     const minPosition = Math.max(POSITIONS.CLOSED - 7, -25); // 안전한 최소값
-    const maxPosition = Math.min(POSITIONS.OPEN + 2, 7); // 안전한 최대값
+    const maxPosition = Math.min(POSITIONS.OPEN + 2, 5); // 안전한 최대값
 
     newBottom = Math.max(minPosition, Math.min(maxPosition, newBottom));
     updatePosition(newBottom);
@@ -146,14 +153,17 @@ const DragService = (() => {
     peekElement = document.getElementsByClassName("peek");
   }
   function bottomSheetEvent() {
-    handle.addEventListener("mousedown", startDrag);
-    document.addEventListener("mousemove", drag);
-    document.addEventListener("mouseup", endDrag);
+    if (!dragOn) {
+      handle.addEventListener("mousedown", startDrag);
+      document.addEventListener("mousemove", drag);
+      document.addEventListener("mouseup", endDrag);
 
-    // 터치 이벤트 (passive: false로 설정)
-    handle.addEventListener("touchstart", startDrag, { passive: false });
-    document.addEventListener("touchmove", drag, { passive: false });
-    document.addEventListener("touchend", endDrag, { passive: false });
+      // 터치 이벤트 (passive: false로 설정)
+      handle.addEventListener("touchstart", startDrag, { passive: false });
+      document.addEventListener("touchmove", drag, { passive: false });
+      document.addEventListener("touchend", endDrag, { passive: false });
+      dragOn = true;
+    }
   }
   return {
     init: async () => {

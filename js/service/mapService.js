@@ -8,6 +8,7 @@ import DragService from "./dragService.js";
 import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
 import languageData from "../../data/language.js";
+import CustomControl from "../component/customControl.js";
 
 const MapService = (() => {
   let map = null;
@@ -26,6 +27,11 @@ const MapService = (() => {
   let polylines = [];
   let elementInfos = [];
   let isClickEvent = false;
+  let setting = false;
+  let boardingInfo = null;
+  let dataCnt = 0;
+  let elementSettingOn = false;
+
   const loadTranslateData = async (lang) => {
     try {
       BottomSheet.languageChan(languageData[lang]);
@@ -37,26 +43,29 @@ const MapService = (() => {
 
   const zoomEvent = () => {
     naver.maps.Event.addListener(map, "zoom_changed", () => {
+      if (!elementSettingOn) {
+        MarkerService.elementSetting();
+        elementSettingOn = true;
+      }
       selectedInfowindow = InfoWindowService.getInfoWindows();
       MarkerService.replaceAllMarkerIcon();
       MarkerService.getZoomEvent();
+      CustomControl.mapLangClose();
       let infowindows = InfoWindowService.getElementInfos();
       if (map.getZoom() < 18) {
         selectedInfowindow.forEach((infoWindow) => {
           infoWindow.setMap(null);
-          MarkerService.allElementhide();
         });
+        MarkerService.allElementhide();
         infowindows.forEach((info) => {
           info.setMap(null);
         });
         PolylineService.deletePolyLine();
-      } else if (map.getZoom() < 20) {
+      } else {
         zoomOutMarkers.forEach((marker) => {
           marker.setMap(null);
         });
         PolylineService.viewPolyLine();
-        MarkerService.allElementhide();
-      } else {
         MarkerService.allElementShow();
       }
     });
@@ -65,22 +74,17 @@ const MapService = (() => {
     if (isClickEvent == false) {
       naver.maps.Event.addListener(map, "click", function (e) {
         isClickEvent = true;
-        let latLng = { x: e.coord.x, y: e.coord.y };
-        Logger.log(latLng);
-        infoWindows = InfoWindowService.getInfoWindows();
-        elementInfos = InfoWindowService.getElementInfos();
-
-        elementInfos.forEach((elementInfo) => {
-          elementInfo.close();
-        });
+        CustomControl.mapLangClose();
         MarkerService.replaceAllMarkerIcon();
         if (MarkerService.getSelectedMarker() != null) {
           MarkerService.setSelectedMarker(null);
         }
-        BottomSheet.resetAllBorderColor();
-        infoWindows.forEach((infoWindow) => {
-          infoWindow.close();
-        });
+        let eW = document.getElementsByClassName("eastWest");
+        if (eW) {
+          BottomSheet.resetAllBorderColor();
+        }
+        InfoWindowService.allInfoClose();
+        PolylineService.hideUserPoly();
       });
     }
   };
@@ -99,8 +103,8 @@ const MapService = (() => {
 
   const initMap = () => {
     const mapOptions = {
-      center: new naver.maps.LatLng(37.44703, 126.449211),
-      zoom: 17,
+      center: new naver.maps.LatLng(37.44703, 126.4515),
+      zoom: 16,
       mapTypes: new naver.maps.MapTypeRegistry({
         normal: naver.maps.NaverStyleMapTypeOptions.getVectorMap(),
       }),
@@ -127,6 +131,9 @@ const MapService = (() => {
   return {
     init: async () => {
       Logger.log("MapService 초기화 시작");
+      const urlParams = new URLSearchParams(window.location.search);
+      let lang = urlParams.get("lang");
+      sessionStorage.setItem("language", lang);
 
       const mapElement = document.getElementById("map");
       if (!mapElement) {
@@ -138,17 +145,6 @@ const MapService = (() => {
         Logger.error("네이버 지도 API가 로드되지 않았습니다.");
         return null;
       }
-      // let lang = sessionStorage.getItem("language");
-      // firstlang = lang;
-      // if (lang == null) {
-      //   languageText = "Language";
-      //   lang = "ko";
-      //   language = await loadTranslateData(lang);
-      // } else {
-      //   language = await loadTranslateData(lang);
-      //   languageText = language[lang];
-      // }
-      // Logger.log("language load완료");
       try {
         map = initMap();
         return map;
@@ -171,17 +167,18 @@ const MapService = (() => {
           language = await loadTranslateData(lang);
           languageText = language[lang];
         }
-        console.log("language Loaded");
-        const data = await DataService.initData();
-        PolylineService.init();
+        if (dataCnt !== 0) {
+          const data = await DataService.initData();
+          if (!data) {
+            Logger.log("데이터 초기화 실패", "error");
+            return map;
+          }
+        }
+        dataCnt++;
         await RecoService.recoGate();
         await MarkerService.init();
         boardingGateNum = sessionStorage.getItem("boardingGate");
         Logger.log("boardingGateNum :", boardingGateNum);
-        if (!data) {
-          Logger.log("데이터 초기화 실패", "error");
-          return map;
-        }
         const allAreas = DataService.getAllAreas();
         await MarkerService.allMarkerDelete();
         markers = [];
@@ -193,8 +190,6 @@ const MapService = (() => {
           boardingMarkers = await MarkerService.createBoardingMarker(
             boardingGateNum
           );
-
-          console.log(boardingMarkers);
           await PolylineService.createBoardingPolyline(boardingMarkers);
           PolylineService.setPolyline();
         } else {
@@ -207,17 +202,17 @@ const MapService = (() => {
 
         ampm = language["am"];
         await BottomSheet.changeMenu();
-        await DragService.init();
         await Translate.translateMenu();
-        MarkerService.elementSetting();
         if (polylines[0] == null) {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
         }
+        PolylineService.createUserPolyline();
         zoomEvent();
         mapClickEvent();
 
         await BottomSheet.showGateCongestion();
+        await DragService.init();
         Logger.log("setting 완료");
       } catch (error) {
         Logger.error("data를 가져오는 도중 error발생 : ", error);
@@ -235,9 +230,7 @@ const MapService = (() => {
     alertGateNumCheck: () => {
       alert(language["checkNum"]);
     },
-    moveBoardingGate: (boardingGateNum) => {
-      const areaData = DataService.getAllAreas();
-
+    moveBoardingGate: () => {
       var transition = {
         duration: 800,
         easing: "easeOutCubic",
@@ -245,19 +238,20 @@ const MapService = (() => {
       boardingMarkers = MarkerService.getBoardingMarker();
       MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
       let movePosition;
-      Array.from(areaData).forEach((area) => {
-        if (area.name == "탑승게이트" + boardingGateNum) {
-          movePosition = naver.maps.LatLng(
-            area.position.lat - 0.0003,
-            area.position.lng
-          );
-          map.panTo(movePosition, transition);
-        }
-      });
+
+      movePosition = naver.maps.LatLng(
+        boardingMarkers[0].position._lat - 0.0003,
+        boardingMarkers[0].position._lng
+      );
+      map.panTo(movePosition, transition);
+
       return movePosition;
     },
     getCurrentPosition: async () => {
       return await getCurrentPosition();
+    },
+    setElementSet: (bool) => {
+      elementSettingOn = bool;
     },
   };
 })();

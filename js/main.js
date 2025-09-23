@@ -8,10 +8,11 @@ import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
 import ErrorHandler from "./utility/httpError.js";
 import Utility from "./utility/utility.js";
+import DataService from "./service/dataService.js";
+
 $(document).ready(async () => {
   // ErrorHandler.init();
-
-  let appConfig = {};
+  utLocation.init();
 
   // 서버의 /api/config 경로로 요청을 보내 환경 변수를 가져오는 함수
   const loadConfig = async () => {
@@ -20,9 +21,8 @@ $(document).ready(async () => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      appConfig = await response.json();
-      window.appConfig = appConfig;
-      Logger.log("서버 환경 설정 로드 완료:", appConfig);
+      window.appConfig = await response.json();
+      Logger.log("서버 환경 설정 로드 완료:", window.appConfig);
     } catch (error) {
       Logger.error(
         "서버 환경 설정을 불러오는 데 실패했습니다. 기본 설정으로 실행합니다.",
@@ -30,22 +30,22 @@ $(document).ready(async () => {
       );
     }
   };
+  await loadConfig();
+  await DataService.initData();
   let map;
   let boardingGate = sessionStorage.getItem("boardingGate");
   let btnIdx = 0;
   const initializeServices = async () => {
     try {
       sessionStorage.setItem("render", true);
-      let userLocation = await utLocation.getCurrentPosition();
-      await utLocation.savedLocation(userLocation);
-      Logger.log("사용자 위치 저장 완료");
       map = await MapService.init();
       if (!map) {
         throw new Error("지도 초기화 실패");
       }
+
+      PolylineService.init();
       await MapService.setting();
       Logger.log("MapService 설정 완료");
-
       initBottomSheet();
       await initCustomControl();
       await initModalService();
@@ -53,8 +53,7 @@ $(document).ready(async () => {
 
       return { success: true, hasLocation: true };
     } catch (error) {
-      Logger.warn("위치 권한 없음 : ", error);
-      console.log(error);
+      Logger.error("위치 권한 없음 : ", error);
       try {
         map = await MapService.init();
         if (!map) {
@@ -75,10 +74,10 @@ $(document).ready(async () => {
       }
     }
   };
-  const initBottomSheet = () => {
+  const initBottomSheet = async () => {
     try {
       Logger.log("bottomSheet init");
-      BottomSheet.init();
+      await BottomSheet.init();
     } catch (error) {
       Logger.error("bottomSheet init fail : ", error);
     }
@@ -89,7 +88,7 @@ $(document).ready(async () => {
         setTimeout(async () => {
           await CustomControl.init();
           resolve();
-        }, 100);
+        }, 50);
       } catch (error) {
         Logger.error("CustomControl init error", error);
       }
@@ -141,7 +140,6 @@ $(document).ready(async () => {
         const gateNum = document.getElementsByClassName("gate-input")[0];
         boardingGate = gateNum.value;
         Logger.log("입력된 탑승구:", boardingGate);
-
         if (MapService.boardingGateIdx(boardingGate)) {
           Logger.log("유효하지 않은 탑승구");
           MapService.alertGateNumCheck();
@@ -157,22 +155,28 @@ $(document).ready(async () => {
           CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
-
           // UI 업데이트
           updateBoardingGateUI();
-          if (PolylineService.getBoardingPolyline() != null) {
-            await PolylineService.updatePolyline(boardingGate);
-            Logger.log("polyline update");
+          // 위치는 백그라운드에서 처리하므로 세션에서 가져옴
+          const savedLocation = sessionStorage.getItem("myLocation");
+          if (savedLocation) {
+            const loca = JSON.parse(savedLocation);
+            if (PolylineService.getBoardingPolyline() != null) {
+              await PolylineService.updatePolyline(loca, boardingGate);
+              Logger.log("polyline update");
+            } else {
+              await PolylineService.createBoardingPolyline(boardingMarker);
+              PolylineService.setPolyline();
+              Logger.log("polyline create");
+            }
           } else {
-            await PolylineService.createBoardingPolyline(boardingMarker);
-            PolylineService.setPolyline();
-            Logger.log("polyline create");
+            Logger.log("위치 정보 대기 중, 폴리라인은 나중에 생성됩니다");
           }
           ModalService.boardingModalClose();
         }
       } catch (error) {
         Logger.error("탑승구 확인 처리 오류:", error);
-        alert("탑승구 설정 중 오류가 발생했습니다.");
+        MapService.alertGateNumCheck();
       }
     };
 
@@ -233,16 +237,37 @@ $(document).ready(async () => {
           Utility.moveGate(index);
           Utility.openWindowInfo(index);
           BottomSheet.changeBorderColor(index);
+          PolylineService.selectPolyline(index);
         } catch (error) {
           Logger.error(`게이트 ${index} 클릭 처리 오류:`, error);
         }
       });
     });
   };
+
+  // 백그라운드 위치 로딩 함수
+  const startBackgroundLocationLoading = async () => {
+    Logger.log("📍 백그라운드에서 위치 로딩 시작...");
+
+    try {
+      const userLocation = await utLocation.getCurrentPosition();
+      Logger.log("✅ 위치 로딩 완료:", userLocation);
+
+      // 탑승구가 설정된 경우 폴리라인 업데이트
+      const boardingGate = sessionStorage.getItem("boardingGate");
+      if (boardingGate) {
+        await PolylineService.updatePolyline(userLocation, boardingGate);
+      }
+      BottomSheet.showGateCongestion();
+      console.log("showGateCongestion");
+    } catch (error) {
+      Logger.log("⚠️ 위치 로딩 실패, 기본 기능으로 계속 진행");
+    }
+  };
   try {
     Logger.log("애플리케이션 초기화 시작...");
 
-    await loadConfig();
+    // await loadConfig();
     // 1. 서비스 초기화
     const initResult = await initializeServices();
 
@@ -262,6 +287,8 @@ $(document).ready(async () => {
     // 5. 초기 게이트 클릭 이벤트 설정
     setupGateClickEvents();
     // BottomSheet.recoLikeIconView();
+    // 6.
+    startBackgroundLocationLoading();
     Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     Logger.log(
       "지도가 초기화되었습니다. '마커 추가하기' 버튼을 클릭하여 시작하세요."

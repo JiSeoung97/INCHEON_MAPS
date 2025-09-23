@@ -3,13 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light only" />
     <title>Map-WEB</title>
     <link rel="stylesheet" href="css/style.css" />
-    <link
-      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"
-      rel="stylesheet"
-    />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.10.0/dist/axios.min.js"></script>
     <script
       id="naverMap"
       type="text/javascript"
@@ -20,66 +18,138 @@
     <div class="container">
       <div id="map"></div>
       <div id="bottomSheet">
-        <div id="handle" class="peek">
-          <img id="handleImg" src="./images/handle.png" />
+        <div id="locationContainer">
+          <div id="requestLocation">
+            <img id="gps-black" src="images/gps_black.svg" />
+            <img id="gps-blue" src="images/gps_blue.svg" />
+          </div>
         </div>
-        <table id="menu" class="peek">
-          <tr>
-            <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
-            <th class="menuBtn" data-idx="1">약도 보기</th>
-          </tr>
-        </table>
-        <div id="controls">
-          <div class="tabs">
-            <table>
-              <tr>
-                <th id="congestionEx">
-                  • 제1여객터미널 혼잡도
-                  <span id="questionMark">?</span>
-                </th>
-                <th><p id="nTime"></p></th>
+        <div id="bottomContainer">
+          <div id="handle" class="peek">
+            <img id="handleImg" src="./images/handle.png" />
+          </div>
+          <table id="menu" class="peek">
+            <tr>
+              <th class="menuBtn" data-idx="0">출국장 혼잡도</th>
+              <th class="menuBtn" data-idx="1">약도 보기</th>
+            </tr>
+          </table>
+          <div id="controls">
+            <div class="tabs">
+              <table>
+                <tr>
+                  <th id="congestionEx">
+                    • 제1여객터미널 혼잡도
+                    <span id="questionMark">?</span>
+                  </th>
+                  <th><p id="nTime"></p></th>
+                </tr>
+              </table>
+            </div>
+            <!-- 스켈레톤 ui -->
+            <div id="congestion-skeleton" class="loading-skeleton">
+              <div class="skeleton-congestion-row">
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-name"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-status"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-time"
+                ></div>
+              </div>
+              <div class="skeleton-congestion-row">
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-name"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-status"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-time"
+                ></div>
+              </div>
+              <div class="skeleton-congestion-row">
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-name"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-status"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-time"
+                ></div>
+              </div>
+              <div class="skeleton-congestion-row">
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-name"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-status"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-time"
+                ></div>
+              </div>
+              <div class="skeleton-congestion-row">
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-name"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-status"
+                ></div>
+                <div
+                  class="skeleton skeleton-congestion-cell skeleton-gate-time"
+                ></div>
+              </div>
+            </div>
+
+            <!-- 실제 혼잡도 컨텐츠 -->
+            <table id="contents" class="congestion-content hidden">
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
+              </tr>
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
+              </tr>
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
+              </tr>
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
+              </tr>
+              <tr class="gate">
+                <th></th>
+                <th class="eastWest"></th>
+                <th class="eastWest"></th>
               </tr>
             </table>
           </div>
-          <table id="contents">
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-            <tr class="gate">
-              <th></th>
-              <th class="eastWest"></th>
-              <th class="eastWest"></th>
-            </tr>
-          </table>
         </div>
       </div>
     </div>
     <div id="adModal" class="modal-overlay">
       <div class="modal-content">
-        <p id="modalClose"><img id="adClose" src="./images/x.png" /></p>
+        <p id="modalClose"><img id="adClose" /></p>
         <div id="modal-contents">
           <div id="imgBox">
-            <img id="modelImg" src="./images/adModalImg.svg" />
+            <img id="modelImg" />
           </div>
           <div id="modalText">
-            <p id="modalTryMeal">출국 전 든든한 한끼 어떠신가요?</p>
-            <p id="modalTitle">인천공항 맛집 BEST 10!</p>
+            <p id="modalTryMeal"></p>
+            <p id="modalTitle"></p>
           </div>
           <button id="reco">
-            인천공항 맛집 보러가기
-            <img id="arrow-right" src="./images/more.svg" />
+            <img id="arrow-right" loading="lazy" src="./images/more.svg" />
           </button>
         </div>
       </div>
@@ -87,7 +157,7 @@
     <div id="modal-background" class="modal-overlay">
       <div class="modal">
         <div class="modal-header">
-          <span id="input-gateNum">탑승구 번호를 입력해주세요</span>
+          <span id="input-gateNum"></span>
           <div class="modal-close">&times;</div>
         </div>
         <div class="input-container">
@@ -99,8 +169,8 @@
             max="132"
           />
         </div>
-        <div class="subtext">서브 타이틀 문구</div>
-        <button class="confirm-btn">확인</button>
+        <div class="subtext"></div>
+        <button class="confirm-btn"></button>
       </div>
     </div>
     <div id="reco-select">
@@ -110,29 +180,7 @@
         <div class="reco-rank"></div>
       </table>
     </div>
-    <!--SCRIPTS-->
-    <script type="module" src="data/language.js"></script>
-    <script type="module" src="data/mock-data2.js"></script>
-    <script type="module" src="data/mock-data.js"></script>
-    <script type="module" src="js/utility/httpError.js"></script>
-    <script type="module" src="js/utility/logger.js"></script>
-    <script type="module" src="js/utility/utility.js"></script>
-    <script type="module" src="js/utility/location.js"></script>
-    <script type="module" src="js/service/dragService.js"></script>
-    <script type="module" src="js/service/recoService.js"></script>
-    <script type="module" src="js/utility/timeCalculator.js"></script>
-    <script type="module" src="js/utility/translate.js"></script>
-    <script type="module" src="js/service/markerService.js"></script>
-    <script type="module" src="js/component/infoWindow.js"></script>
-    <script type="module" src="js/service/polylineService.js"></script>
-
-    <script type="module" src="js/service/dataService.js"></script>
-    <script type="module" src="js/component/bottomSheet.js"></script>
-    <script type="module" src="js/service/modalService.js"></script>
-    <script type="module" src="js/service/mapService.js"></script>
-    <script type="module" src="js/component/customControl.js"></script>
-    <script type="module" src="js/main.js"></script>
-    <!--/SCRIPTS-->
+    <script src="js/bundle.min.js"></script>
     <script>
       // 페이지 로드 완료 후 실행
       window.addEventListener("load", function () {

@@ -66,28 +66,9 @@ const TimeCalculator = (() => {
           : `${boardingTime}${language["minute"]}`;
 
       // 대기 시간
-      const waitTime = foundApi.espwaittime === "D" ? 0 : foundApi.espwaittime;
-      const waitingMinutes = Math.floor(waitTime / 60);
-      totalTime += waitingMinutes;
-      const waitingTime = `${waitingMinutes}${language["minute"]}`;
-
-      // 출입국 시간
-      const immigrationTotal =
-        foundApi.immigrationtime === "NA"
-          ? 60
-          : foundApi.immigrationtime * foundApi.quelength;
-      const immigrationMinutes = Math.floor(immigrationTotal / 60);
-      totalTime += immigrationMinutes;
-      let estimatedTime =
-        immigrationMinutes + waitingMinutes + language["minute"];
-      const immigration =
-        immigrationTotal > 3600
-          ? `${Math.floor(immigrationTotal / 3600)}${
-              language["hour"]
-            } ${Math.floor((immigrationTotal % 3600) / 60)}${
-              language["minute"]
-            }`
-          : `${immigrationMinutes}${language["minute"]}`;
+      const waitTime = Number(foundApi.waitTime);
+      totalTime += waitTime;
+      const waitingTime = `${waitTime}${language["minute"]}`;
 
       // 총 시간
       const strTotal =
@@ -99,7 +80,7 @@ const TimeCalculator = (() => {
 
       return {
         total: strTotal,
-        times: [hallWaiting, estimatedTime, boardingTimeStr],
+        times: [hallWaiting, waitingTime, boardingTimeStr],
       };
     } catch (error) {
       Logger.error("시간 계산 실패:", error);
@@ -114,8 +95,8 @@ const TimeCalculator = (() => {
       };
     }
   };
-  const padZero = () => {
-    String(num).padStart(2, "0");
+  const padZero = (num) => {
+    return String(num).padStart(2, "0");
   };
   const formatCurrentDateTime = () => {
     const now = new Date();
@@ -125,13 +106,15 @@ const TimeCalculator = (() => {
     const hours = padZero(now.getHours());
     const minutes = padZero(now.getMinutes());
     const seconds = padZero(now.getSeconds());
+    Logger.log(
+      `formating time : ${year}${month}${day}${hours}${minutes}${seconds}`
+    );
     return `${year}${month}${day}${hours}${minutes}${seconds}`;
   };
   const updateTimeDisplay = async (timeData) => {
     try {
       const total = document.getElementsByClassName("total-time");
       const latingTime = document.getElementsByClassName("latingTime");
-
       if (total[0]) {
         total[0].innerText = timeData.total;
       }

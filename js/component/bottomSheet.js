@@ -4,19 +4,29 @@ import DataService from "../service/dataService.js";
 import TimeCalculator from "../utility/timeCalculator.js";
 import Translate from "../utility/translate.js";
 import Utility from "../utility/utility.js";
+import ModalService from "../service/modalService.js";
+import PolylineService from "../service/polylineService.js";
+import MapService from "../service/mapService.js";
+import utLocation from "../utility/location.js";
 const BottomSheet = (() => {
   let language;
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
-
+  let locaOn = true;
+  let userOn = false;
+  let map = null;
+  let userMarker = [];
   const showGateCongestion = async () => {
     try {
+      // 스켈레톤 UI 표시
+      showSkeletonUI();
+
       const allAreadata = DataService.getAllAreas();
       const areadata = [];
 
       allAreadata.forEach((area, idx) => {
-        if (idx != 0 && idx < 9) {
+        if (idx < 10) {
           areadata.push(area);
         }
       });
@@ -27,8 +37,8 @@ const BottomSheet = (() => {
         return;
       }
 
-      // 200ms 후에 실행 (기존 setTimeout을 Promise로 변경)
-      await new Promise((resolve) => setTimeout(resolve, 200));
+      // 최소 1초간 스켈레톤 UI 표시 (사용자 경험 향상)
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
       for (const [index, conData] of areadata.entries()) {
         if (index >= contentsEl.length) continue;
@@ -41,6 +51,9 @@ const BottomSheet = (() => {
 
         contentsEl[index].innerHTML = htmlContents;
       }
+
+      // 실제 컨텐츠 표시
+      hideSkeletonUI();
       RecoService.recoLikeIconView();
     } catch (error) {
       Logger.error("게이트 혼잡도 표시 실패:", error);
@@ -50,7 +63,7 @@ const BottomSheet = (() => {
     const congestionMap = {
       none: {
         color: "#999",
-        border: "1px solid #999",
+        border: "1px solid #E8E8E8",
         textColor: "#99999",
         text: language["none"],
       },
@@ -95,15 +108,15 @@ const BottomSheet = (() => {
     const direction = isEast ? language["east"] : language["west"];
 
     return `<div style="text-align: center;border:${congestionInfo.border}">
+    <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-10px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
       <p class="gatePoint">${direction}</p>
       <h4 style="color:${congestionInfo.textColor}">${congestionInfo.text}</h4>
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-38px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
     </div>`;
   };
   const changeBorderColor = async (index) => {
     try {
       const allareas = DataService.getAllAreas();
-      let idx = index + 1;
+      let idx = index;
       const div = document.querySelectorAll(".eastWest div");
 
       let eastWest = [];
@@ -129,6 +142,7 @@ const BottomSheet = (() => {
   };
   const resetAllBorderColor = () => {
     const div = document.querySelectorAll(".eastWest div");
+
     div.forEach((divBox) => {
       divBox.style.setProperty("border-color", "#E8E8E8");
     });
@@ -151,8 +165,13 @@ const BottomSheet = (() => {
       Array.from(updatedGates).forEach((gate, index) => {
         gate.addEventListener("click", async () => {
           try {
+            if (userOn) {
+              utLocation.getCurrentPosition();
+              userOn = true;
+            }
             Utility.moveGate(index);
             Utility.openWindowInfo(index);
+            PolylineService.selectPolyline(index);
             await changeBorderColor(index);
           } catch (error) {
             Logger.error(`게이트 ${index} 클릭 처리 오류:`, error);
@@ -228,6 +247,11 @@ const BottomSheet = (() => {
       </table>
     </div>
     <table id="contents">
+    <tr class="gate">
+        <th>${language["gate1"]}</th>
+        <th class="eastWest"></th>
+        <th class="eastWest"></th>
+      </tr>
       <tr class="gate">
         <th>${language["gate2"]}</th>
         <th class="eastWest"></th>
@@ -251,29 +275,31 @@ const BottomSheet = (() => {
     </table>`;
   };
   const createSecondMenuHTML = () => {
+    let getLang = sessionStorage.getItem("language");
+    let isLongText = getLang == "zh" || getLang == "en" ? `longText` : "";
     return `<div class="recoContainer">
       <div class="title">
         <div id="title-text">${language["estimatedTime"]}</div>
         <div class="total-time">${language["total"]} - ${language["minute"]}</div>
       </div>
-      <div class="segment">
-        <img class="icon" src="./images/walk.png" />
+      <div class="segment ${isLongText}">
+        <img class="icon" src="./images/walk.svg" />
         <span class="flag">${language["transfer"]}</span>
-        <div id="reco-priority" class="segment-inner">
+        <div id="reco-priority" class="segment-inner ${isLongText}">
           <span id="selectHall">${language["selectHall"]}<small></small><img id="down" src="./images/dropDown.svg"></span>
         </div>
-        <div class="time-info">
-          <span class="latingTime">-${language["minute"]}</span>
+        <div class="time-info ${isLongText}">
+          <span class="latingTime">- ${language["minute"]}</span>
         </div>
       </div>
       <div class="segment">
-        <img class="icon" src="./images/ticket.png" />
+        <img class="icon" src="./images/ticket.svg" />
         <span class="flag">${language["Immigration"]}</span>
         <div class="segment-inner">
           <span>${language["waitingTime"]}<small></small></span>
         </div>
         <div class="time-info">
-          <span class="latingTime">-${language["minute"]}</span>
+          <span class="latingTime">- ${language["minute"]}</span>
         </div>
       </div>
       <div class="segment" id="trainAlert">
@@ -282,7 +308,7 @@ const BottomSheet = (() => {
         <span>10${language["minute"]}</span>
       </div>
       <div class="segment">
-        <img class="icon" src="./images/walk.png" />
+        <img class="icon" src="./images/walk.svg" />
         <span class="flag">${language["walk"]}</span>
         <div id="segment-check" class="segment-inner">
           <span id="boardingGateCheck" style="display:flex;align-items:center;justify-content:center">
@@ -291,7 +317,7 @@ const BottomSheet = (() => {
           </span>
         </div>
         <div class="time-info">
-          <span class="latingTime">-${language["minute"]}</span>
+          <span class="latingTime">- ${language["minute"]}</span>
         </div>
       </div>
     </div>`;
@@ -303,10 +329,7 @@ const BottomSheet = (() => {
 
       if (boardingGateCheck) {
         boardingGateCheck.addEventListener("click", () => {
-          const modal = document.getElementById("modal-background");
-          if (modal) {
-            modal.style.display = "flex";
-          }
+          ModalService.boardingModalOpen();
         });
       }
 
@@ -370,8 +393,11 @@ const BottomSheet = (() => {
     return new Promise((resolve) => {
       try {
         const train = document.getElementById("trainAlert");
+        const seg = document.getElementsByClassName("segment");
+        const lastChild = seg.length - 1;
         if (boardingGateNum > 100 && boardingGateNum < 133) {
           train.style.display = "flex";
+          seg[lastChild].classList.add("train");
         }
         resolve();
       } catch (error) {
@@ -404,7 +430,11 @@ const BottomSheet = (() => {
     try {
       const reco = document.getElementById("reco-select");
       const selectHall = document.getElementById("selectHall");
-
+      const latingTime = document.getElementsByClassName("latingTime");
+      const lang = sessionStorage.getItem("language");
+      if (lang == "en" || lang == "zh") {
+        latingTime[0].classList.add("longText");
+      }
       if (reco) reco.style.display = "none";
 
       if (selectHall && recoArray[idx]) {
@@ -444,7 +474,7 @@ const BottomSheet = (() => {
       const datas = DataService.getAllAreas();
       const apiData = DataService.getApiData();
       const foundData = datas.find((data) => data.name === recoArray[idx].name);
-      const foundApi = apiData.find((data) => data.deskname === foundData.id);
+      const foundApi = apiData.find((data) => data.gateId === foundData.id);
 
       if (!foundData || !foundApi) {
         Logger.error("data를 찾을 수 없습니다");
@@ -457,9 +487,94 @@ const BottomSheet = (() => {
     }
   };
 
+  // requestControl
+  const requestControlEvent = async () => {
+    try {
+      const userPos = await utLocation.getCurrentPosition();
+      boardingGateNum = sessionStorage.getItem("boardingGate");
+      if (locaOn) {
+        setTimeout(() => {}, 1000);
+        locaOn = false;
+      }
+      const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
+      if (userPos) {
+        map.getCenter();
+        map.setCenter(latLng);
+        const marker = new naver.maps.Marker({
+          position: new naver.maps.LatLng(latLng),
+          map: null,
+          title: "내 위치",
+          icon: {
+            content:
+              '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+            size: new naver.maps.Size(27, 35),
+            anchor: new naver.maps.Point(7, 14),
+          },
+        });
+        if (userMarker[0] != null) {
+          userMarker.forEach((uMarker) => {
+            uMarker.setMap(null);
+          });
+        }
+        marker.setMap(map);
+        userMarker.push(marker);
+        const boardingPolyline = PolylineService.getBoardingPolyline();
+        if (boardingPolyline == null) {
+          PolylineService.updatePolyline(userPos, null);
+        } else {
+          PolylineService.updatePolyline(userPos, boardingGateNum);
+        }
+      } else {
+        alert("위치 정보가 없습니다.");
+      }
+    } catch (error) {
+      alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
+      Logger.log("위치 권한 오류: " + error.message, "error");
+    }
+  };
+  const locationEvent = () => {
+    const requestLocation = document.getElementById("requestLocation");
+    requestLocation.addEventListener("click", async () => {
+      await requestControlEvent();
+    });
+  };
+
+  // 스켈레톤 UI 제어 함수들
+  const showSkeletonUI = () => {
+    const skeleton = document.getElementById("congestion-skeleton");
+    const contents = document.getElementById("contents");
+
+    if (skeleton) {
+      skeleton.classList.remove("hidden");
+      skeleton.classList.add("loading-skeleton");
+    }
+
+    if (contents) {
+      contents.classList.add("hidden");
+      contents.classList.remove("congestion-content");
+    }
+  };
+
+  const hideSkeletonUI = () => {
+    const skeleton = document.getElementById("congestion-skeleton");
+    const contents = document.getElementById("contents");
+
+    if (skeleton) {
+      skeleton.classList.add("hidden");
+      skeleton.classList.remove("loading-skeleton");
+    }
+
+    if (contents) {
+      contents.classList.remove("hidden");
+      contents.classList.add("congestion-content");
+    }
+  };
+
   return {
     init: async () => {
       recoArray = await RecoService.recoGate();
+      map = MapService.getMap();
+      locationEvent();
     },
     languageChan: (lang) => {
       language = lang;

@@ -27,6 +27,9 @@ const CustomControl = (() => {
   let map;
   let movePosition = null;
   let userMarker = [];
+  let conSwitch = null;
+  // let locaOn = true;
+  let customEventOn = false;
   const positions = [
     naver.maps.Position.TOP_LEFT,
     naver.maps.Position.LEFT_TOP,
@@ -53,26 +56,25 @@ const CustomControl = (() => {
       boardingInfoWindows = [];
       infoWindows = [];
       zoomMarkers = [];
+      InfoWindowService.resetInfo();
       // 재설정
       await MapService.setting();
       await MarkerService.showMarkers();
       MarkerService.getZoomEvent();
       MarkerService.elementSetting();
+      await ModalService.langChange();
       customControlAllDelete();
       createCustomControl();
       customControlEvent();
       customControlSetMap();
+      if (map.getZoom() >= 18) {
+        MarkerService.allElementShow();
+      }
     } catch (error) {
       Logger.error("언어변경실패", error);
     }
   };
-  const deletecustomControl = () => {
-    const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
-    positions.forEach((position) => {
-      map.controls[position].clear();
-    });
-    map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
-  };
+
   const createCustomControl = () => {
     const selectedLang = sessionStorage.getItem("language");
     language = MapService.languageReturn();
@@ -82,93 +84,78 @@ const CustomControl = (() => {
     } else {
       languageText = language[selectedLang];
     }
-
-    const locationBtnHtml =
-      '<div id="requestLocation" style="height:2rem;display:flex ;align-items: center;justify-content: center;background-color:#fff;border-radius:1rem 1rem 1rem 1rem ;width:2rem;margin-right:10px;margin-bottom:8rem"><img id = "gps-black"src="./images/gps_black.svg" style="height:25px; width:25px;" ><img id ="gps-blue" src="./images/gps_blue.svg" style="height:1.5rem; width:1.5rem;display:none;" ></div>';
+    let marginBottom;
+    if (selectedLang == "ko") {
+      marginBottom = 12.5;
+    } else {
+      marginBottom = 17;
+    }
 
     let boarding;
     let moveGateBtn;
 
     if (boardingGateNum != null) {
-      moveGateBtn =
-        '<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >' +
-        '<img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px">' +
-        '<img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px">' +
-        language["boardingGate"] +
-        " : " +
-        boardingGateNum +
-        "</div>";
+      moveGateBtn = `<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >
+        <img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px"> 
+        <img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px"> 
+        ${language["boardingGate"]}
+         : ${boardingGateNum}
+        </div>`;
       boarding =
         '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     } else {
-      moveGateBtn =
-        '<div id ="boardingInfo-none" style="display:flex;height : 2rem ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">' +
-        language["boardingGate"] +
-        " : </div>";
+      moveGateBtn = `<div id ="boardingInfo-none" style="display:flex;height : 2rem ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">
+        ${language["boardingGate"]} 
+         : </div>`;
       boarding =
         '<div id="moveBoardingGate" style="display: none ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     }
-    const selectLang =
-      '<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;' +
-      'background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">' +
-      '<div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left; ' +
-      'overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">' +
-      '<img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">' +
-      languageText +
-      "</div>" +
-      '<img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;">' +
-      "</div>";
+    const selectLang = `<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;
+      background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">
+      <div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left;
+      overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">
+      <img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">
+      ${languageText} 
+      </div>
+      <img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;margin-right:5px">
+      </div>`;
     let languageList = {
-      ko:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">한국어(' +
-        language["korean"] +
-        ")</div>",
-      en:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">English(' +
-        language["english"] +
-        ")</div>",
-      ja:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">日本語(' +
-        language["japanese"] +
-        ")</div>",
-      zh:
-        '<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">简体中文(' +
-        language["chinese"] +
-        ")</div>",
+      ko: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">한국어(
+        ${language["korean"]}
+        )</div>`,
+      en: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">영어(
+        ${language["english"]}
+        )</div>`,
+      ja: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">일본어(
+        ${language["japanese"]}
+        )</div>`,
+      zh: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">중국어(
+        ${language["chinese"]}
+        )</div>`,
     };
 
-    selectedLangArray = [];
-    langArray.forEach((lang) => {
-      if (lang == selectedLang) {
-        selectedLangArray.push(selectedLang);
-        firstlang = lang;
-      }
-    });
-    langArray.forEach((lang) => {
-      if (lang != selectedLang) {
-        selectedLangArray.push(lang);
-      }
-    });
+    // 성능 최적화: 배열 처리 단순화
+    firstlang = selectedLang;
+    selectedLangArray = [
+      selectedLang,
+      ...langArray.filter((lang) => lang !== selectedLang),
+    ];
     const langImgArray = createLanguageArrayWithSelectiveImg(
       languageList,
       firstlang
     );
 
-    let langChan = "";
-    selectedLangArray.forEach((lang) => {
-      langImgArray.forEach((langImg) => {
-        if (langImg[0] == lang) {
-          langChan += langImg[1];
-        }
-      });
-    });
-    const languageChange =
-      '<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem">' +
-      langChan +
-      "</div>";
-    locaCon = new naver.maps.CustomControl(locationBtnHtml, {
-      position: naver.maps.Position.RIGHT_CENTER,
-    });
+    // 성능 최적화: 이중 반복문 단순화
+    const langChan = selectedLangArray
+      .map(
+        (lang) => langImgArray.find((langImg) => langImg[0] === lang)?.[1] || ""
+      )
+      .join("");
+
+    const languageChange = `<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem"> 
+      ${langChan}
+      </div>`;
+
     moveGateCon = new naver.maps.CustomControl(moveGateBtn, {
       position: naver.maps.Position.TOP_RIGHT,
     });
@@ -183,6 +170,11 @@ const CustomControl = (() => {
     });
   };
   const customControlEvent = async () => {
+    if (customEventOn) {
+      return;
+    }
+
+    customEventOn = true;
     let mapLangs;
 
     naver.maps.Event.addDOMListener(boardingInfo.getElement(), "click", () => {
@@ -232,14 +224,14 @@ const CustomControl = (() => {
         icon.src = "./images/up.svg";
       }
     });
-    let conSwitch = null;
+
     mapLangs = Array.from(
       langchangeCon.getElement().getElementsByClassName("mapLang")
     );
     mapLangs.forEach((mapLang, index) => {
       mapLang.addEventListener("click", async () => {
+        InfoWindowService.allInfoClose();
         await changeLanguage(selectedLangArray[index]);
-        await ModalService.langChange();
       });
     });
     mapLangs.forEach((mapLang) => {
@@ -253,57 +245,16 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
-        movePosition = MapService.moveBoardingGate(boardingGateNum);
-        Logger.log(boardingGateNum);
-        Utility.openBoardingWindowInfo();
+        movePosition = MapService.moveBoardingGate();
+        InfoWindowService.boardingInfoOpen();
       } else {
-        ModalService.boardingModalOpen();
-      }
-    });
-
-    naver.maps.Event.addDOMListener(locaCon.getElement(), "click", async () => {
-      try {
-        const userPos = await utLocation.getCurrentPosition();
-
-        const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
-        if (userPos) {
-          map.getCenter();
-          map.setCenter(latLng);
-          const marker = new naver.maps.Marker({
-            position: new naver.maps.LatLng(latLng),
-            map: null,
-            title: "내 위치",
-            icon: {
-              content:
-                '<img src="./images/user_Location.png" style="width:30px;height:30px">',
-              size: new naver.maps.Size(27, 35),
-              anchor: new naver.maps.Point(7, 14),
-            },
-          });
-          if (userMarker[0] != null) {
-            userMarker.forEach((uMarker) => {
-              uMarker.setMap(null);
-            });
-          }
-          marker.setMap(map);
-          userMarker.push(marker);
-          const boardingPolyline = PolylineService.getBoardingPolyline();
-          Logger.log("boardingPolyline : ", boardingPolyline);
-          if (boardingPolyline != null) {
-            PolylineService.updatePolyline();
-          }
-        } else {
-          alert("위치 정보가 없습니다.");
-        }
-      } catch (error) {
-        alert("위치 정보를 가져오는데 실패했습니다. 위치 권한을 허용해주세요.");
-        Logger.log("위치 권한 오류: " + error.message, "error");
+        ModalService.boardingModalOpen("boardingInfo");
       }
     });
   };
   const customControlSetMap = () => {
     setTimeout(() => {
-      locaCon.setMap(map);
+      // locaCon.setMap(map);
       boardingInfo.setMap(map);
       selectLangCon.setMap(map);
       moveGateCon.setMap(map);
@@ -312,10 +263,23 @@ const CustomControl = (() => {
   const customControlAllDelete = () => {
     try {
       const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
+
+      if (moveGateCon) {
+        naver.maps.Event.clearInstanceListeners(moveGateCon);
+      }
+      if (boardingInfo) {
+        naver.maps.Event.clearInstanceListeners(boardingInfo);
+      }
+      if (selectLangCon) {
+        naver.maps.Event.clearInstanceListeners(selectLangCon);
+      }
+      if (langchangeCon) {
+        naver.maps.Event.clearInstanceListeners(langchangeCon);
+      }
       positions.forEach((position) => {
         map.controls[position].clear();
       });
-
+      customEventOn = false;
       map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
     } catch (error) {
       Logger.error(`커스텀 컨트롤 삭제 실패:`, error);
@@ -363,11 +327,15 @@ const CustomControl = (() => {
       InfoWindowService.getInfoWindows();
       MarkerService.getMarkers();
       createCustomControl();
-      await customControlEvent();
       customControlSetMap();
+      customControlEvent();
     },
     customControlAllDelete: () => {
       customControlAllDelete();
+    },
+    mapLangClose: () => {
+      conSwitch = null;
+      langchangeCon.setMap(conSwitch);
     },
   };
 })();
