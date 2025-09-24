@@ -10,7 +10,7 @@ const RecoService = (() => {
       areas = DataService.getAllAreas();
       const apiData = DataService.getApiData();
       recoArray = [];
-      for (let i = 0; i < 10; i++) {
+      for (let i = 2; i < 10; i++) {
         const distance = Number(await getAreaDistance(areas[i]));
         const apiDataForArea = apiData.find(
           (api) => api.gateId === areas[i].id
@@ -35,13 +35,13 @@ const RecoService = (() => {
           position: areas[i].position,
         });
       }
+      console.log("추천게이트 계산 실패");
       Logger.error("추천 게이트 계산 실패:", error);
     }
   };
   const getAreaDistance = async (area) => {
     try {
       const distanceStr = await Utility.getDistance(area);
-      console.log(distanceStr);
       return Math.round(
         Number(distanceStr.replace("M", "").replace(",", "")) / 70
       );

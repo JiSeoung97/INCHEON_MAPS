@@ -4,6 +4,12 @@ import MarkerService from "./markerService.js";
 const ModalService = (() => {
   let language;
   let modalOn = false;
+  let imgArray = [
+    "images/trainCenter1.gif",
+    "images/trainCenter2.gif",
+    "images/trainCenter3.gif",
+    "images/trainCenter4.gif",
+  ];
   const init = () => {
     language = MapService.languageReturn();
   };
@@ -31,9 +37,28 @@ const ModalService = (() => {
     MarkerService.setSelectedMarker(false);
   };
 
-  const modalOpen = (index) => {
+  const modalOpen = (index, kiosk = null) => {
     if (modalOn) {
       document.getElementById("adClose").src = "images/x.png";
+    }
+    if (index == 2) {
+      init();
+      const modalImg = document.getElementById("trainCenterImg");
+      const trainMap = document.getElementById("trainMap");
+      console.log(language);
+      trainMap.innerText = language["departurehall_map"];
+      let imgSrc = null;
+      switch (kiosk) {
+        case 5:
+          imgSrc = imgArray[0];
+        case 6:
+          imgSrc = imgArray[1];
+        case 7:
+          imgSrc = imgArray[2];
+        case 8:
+          imgSrc = imgArray[3];
+      }
+      modalImg.src = imgSrc;
     }
     const modal = document.getElementsByClassName("modal-overlay");
     modal[index].classList.add("show");
@@ -56,7 +81,6 @@ const ModalService = (() => {
     adModalOpen: () => {
       modalOpen(0);
     },
-
     adModalClose: () => {
       modalClose(0);
     },
@@ -65,6 +89,15 @@ const ModalService = (() => {
     },
     boardingModalOpen: () => {
       modalOpen(1);
+    },
+    trainCenterModalOpen: (kiosk) => {
+      if (kiosk < 5) {
+        return;
+      }
+      modalOpen(2, kiosk);
+    },
+    trainCenterModalClose: () => {
+      modalClose(2);
     },
   };
 })();

@@ -9,6 +9,7 @@ import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
 import languageData from "../../data/language.js";
 import CustomControl from "../component/customControl.js";
+import ModalService from "./modalService.js";
 
 const MapService = (() => {
   let map = null;
@@ -29,6 +30,8 @@ const MapService = (() => {
   let isClickEvent = false;
   let setting = false;
   let boardingInfo = null;
+  let kiosk = null;
+  let lang = null;
   let dataCnt = 0;
   let elementSettingOn = false;
 
@@ -103,7 +106,7 @@ const MapService = (() => {
 
   const initMap = () => {
     const mapOptions = {
-      center: new naver.maps.LatLng(37.44703, 126.4515),
+      center: new naver.maps.LatLng(37.44553, 126.4515),
       zoom: 16,
       mapTypes: new naver.maps.MapTypeRegistry({
         normal: naver.maps.NaverStyleMapTypeOptions.getVectorMap(),
@@ -131,10 +134,23 @@ const MapService = (() => {
   return {
     init: async () => {
       Logger.log("MapService 초기화 시작");
-      const urlParams = new URLSearchParams(window.location.search);
-      let lang = urlParams.get("lang");
-      sessionStorage.setItem("language", lang);
 
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        lang = urlParams.get("lang");
+        kiosk = urlParams.get("kiosk");
+      } catch (error) {
+        Logger.log("쿼리스트링x", error);
+      }
+      if (lang != null) {
+        language = await loadTranslateData(lang);
+        sessionStorage.setItem("language", lang);
+        console.log("language 저장 완료");
+      }
+      if (kiosk != null) {
+        kiosk = Number(kiosk);
+        ModalService.trainCenterModalOpen(kiosk);
+      }
       const mapElement = document.getElementById("map");
       if (!mapElement) {
         Logger.error("지도를 표시할 엘리먼트를 찾을 수 없음.");
@@ -236,7 +252,7 @@ const MapService = (() => {
         easing: "easeOutCubic",
       };
       boardingMarkers = MarkerService.getBoardingMarker();
-      MarkerService.replaceBoardingMarkerIcon(boardingMarkers);
+      MarkerService.replaceMarkerIcon(boardingMarkers);
       let movePosition;
 
       movePosition = naver.maps.LatLng(

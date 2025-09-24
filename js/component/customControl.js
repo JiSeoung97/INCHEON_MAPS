@@ -301,7 +301,7 @@ const CustomControl = (() => {
           key,
           baseHtml.replace(
             "</div>",
-            `<img src="${imgSrc}" style="width:15px; height:15px;margin-left:auto"></div>`
+            `<img src="${imgSrc}" style="width:15px; height:15px;margin-left:auto;margin-right:10px"></div>`
           ),
         ];
       } else {

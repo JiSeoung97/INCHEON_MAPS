@@ -103,8 +103,10 @@ const PolylineService = (() => {
 
   const viewPolyLine = async () => {
     try {
-      polylines.forEach((polyline) => {
-        polyline.setMap(map);
+      polylines.forEach((polyline, index) => {
+        if (index != 0) {
+          polyline.setMap(map);
+        }
       });
     } catch (error) {
       Logger.error("polyline setMap(map)실패 : ", error);

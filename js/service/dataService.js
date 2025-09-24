@@ -9,6 +9,7 @@ const DataService = (() => {
   let congestions = [];
   let elements = [];
   let apiInstance;
+  let waitingTimes = [];
   const updateCongestion = () => {
     if (!data) return;
     if (!apiDatas || !Array.isArray(apiDatas)) {
@@ -16,6 +17,7 @@ const DataService = (() => {
     }
     Array.from(apiDatas).forEach((apiData) => {
       congestions.push(calculateCongestionLevel(apiData));
+      waitingTimes.push(apiData.waitTime);
     });
 
     data.buildings.forEach((building) => {
@@ -23,13 +25,16 @@ const DataService = (() => {
         if (idx < 10) {
           if (idx % 2 == 0) {
             area.congestion = congestions[idx + 1];
+            area.capacity = waitingTimes[idx + 1];
           } else {
             area.congestion = congestions[idx - 1];
+            area.capacity = waitingTimes[idx - 1];
           }
         }
       });
     });
-
+    console.log("areadata : ", data.buildings[0].areas);
+    console.log("apidata : ", apiDatas);
     data.lastUpdated = new Date().toISOString();
     return data;
   };
@@ -40,7 +45,6 @@ const DataService = (() => {
         type: "json",
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
-      Logger.log("request : ", requestParams.accessKey);
       const result = await apiInstance.get(
         "/api/airport/getDepartureCongestion",
         {
@@ -48,7 +52,6 @@ const DataService = (() => {
         }
       );
       apiDatas = result.data.response.body.items || null;
-      console.log("apiData : ", result.data);
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
       Logger.error("혼잡도 api데이터 로드 실패 :", error);

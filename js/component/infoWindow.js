@@ -78,7 +78,8 @@ const InfoWindowService = (() => {
         '<p><span class="status ' +
         areaData.congestion +
         '"></span>' +
-        conLevel +
+        areaData.capacity +
+        language["minute"] +
         "</p>" +
         '<p style = "color:#21212280">' +
         language["distance"] +
@@ -187,6 +188,9 @@ const InfoWindowService = (() => {
     },
     resetBoardingInfo: () => {
       boardingInfo = null;
+    },
+    getBInfoOn: () => {
+      return bInfoOn;
     },
   };
 })();

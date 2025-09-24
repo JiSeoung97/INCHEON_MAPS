@@ -20,6 +20,7 @@ const MarkerService = (() => {
   let boardingGateNum = null;
   let elementsMarkers = [];
   let elementInfos = [];
+  let markerOn = false;
   const createMarker = async (areaData, index, boardingGateNum) => {
     try {
       const data = DataService.getAllAreas();
@@ -260,8 +261,8 @@ const MarkerService = (() => {
         idx = index;
       }
     });
+    console.log(selectMarker);
     replaceAllMarkerIcon();
-
     if (selectedMarker == selectMarker) {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -273,6 +274,7 @@ const MarkerService = (() => {
           .replace(";transform:scale(1.2);transform-origin:center;", ";"),
       };
       selectedMarker = null;
+      markerOn = false;
     } else {
       newIcon = {
         ...selectMarker.getIcon(),
@@ -285,6 +287,7 @@ const MarkerService = (() => {
       };
 
       selectedMarker = selectMarker;
+      markerOn = true;
     }
 
     selectMarker.setIcon(newIcon);
@@ -359,18 +362,26 @@ const MarkerService = (() => {
   function zoomMarkerEvent() {
     let currentZoom = Number(map.getZoom());
     if (currentZoom <= 17) {
-      markers.forEach((marker) => {
-        marker.setMap(null);
+      markers.forEach((marker, index) => {
+        if (index > 1) {
+          marker.setMap(null);
+        }
       });
-      zoomOutMarkers.forEach((marker) => {
-        marker.setMap(map);
+      zoomOutMarkers.forEach((marker, index) => {
+        if (index != 0) {
+          marker.setMap(map);
+        }
       });
     } else {
-      markers.forEach((marker) => {
-        marker.setMap(map);
+      markers.forEach((marker, index) => {
+        if (index > 1) {
+          marker.setMap(map);
+        }
       });
-      zoomOutMarkers.forEach((marker) => {
-        marker.setMap(null);
+      zoomOutMarkers.forEach((marker, index) => {
+        if (index != 0) {
+          marker.setMap(null);
+        }
       });
     }
   }
@@ -505,8 +516,10 @@ const MarkerService = (() => {
     showMarkers: () => {
       try {
         if (map.getZoom() < 18) {
-          zoomOutMarkers.forEach((marker) => {
-            marker.setMap(map);
+          zoomOutMarkers.forEach((marker, index) => {
+            if (index != 0) {
+              marker.setMap(map);
+            }
           });
         } else {
           markers.forEach((marker, index) => {
@@ -561,6 +574,12 @@ const MarkerService = (() => {
     },
     allElementhide: () => {
       allElementhide();
+    },
+    getMarkerOn: () => {
+      return markerOn;
+    },
+    setMarkerOn: (bool) => {
+      markerOn = bool;
     },
   };
 })();

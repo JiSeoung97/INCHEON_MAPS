@@ -6,7 +6,7 @@ const Logger = {
    */
   log: function (...args) {
     // window.appConfig 객체가 존재하고, BRANCH가 'dev'일 때만 실행
-    if (window.appConfig?.ENV_MODE === "dev") {
+    if (window.appConfig?.ENV_MODE != "prod") {
       console.log(...args);
     }
   },
@@ -17,8 +17,7 @@ const Logger = {
    * @param {...any} args - console.warn과 동일한 인자를 받습니다.
    */
   warn: function (...args) {
-    if (window.appConfig?.ENV_MODE === "dev") {
-
+    if (window.appConfig?.ENV_MODE != "prod") {
       console.warn(...args);
     }
   },
@@ -30,7 +29,9 @@ const Logger = {
    * @param {...any} args - console.error와 동일한 인자를 받습니다.
    */
   error: function (...args) {
-    console.error(...args);
+    if (window.appConfig?.ENV_MODE != "prod") {
+      console.error(...args);
+    }
   },
 };
 
