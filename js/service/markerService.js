@@ -362,18 +362,26 @@ const MarkerService = (() => {
   function zoomMarkerEvent() {
     let currentZoom = Number(map.getZoom());
     if (currentZoom <= 17) {
-      markers.forEach((marker) => {
-        marker.setMap(null);
+      markers.forEach((marker, index) => {
+        if (index > 1) {
+          marker.setMap(null);
+        }
       });
-      zoomOutMarkers.forEach((marker) => {
-        marker.setMap(map);
+      zoomOutMarkers.forEach((marker, index) => {
+        if (index != 0) {
+          marker.setMap(map);
+        }
       });
     } else {
-      markers.forEach((marker) => {
-        marker.setMap(map);
+      markers.forEach((marker, index) => {
+        if (index > 1) {
+          marker.setMap(map);
+        }
       });
-      zoomOutMarkers.forEach((marker) => {
-        marker.setMap(null);
+      zoomOutMarkers.forEach((marker, index) => {
+        if (index != 0) {
+          marker.setMap(null);
+        }
       });
     }
   }
@@ -508,8 +516,10 @@ const MarkerService = (() => {
     showMarkers: () => {
       try {
         if (map.getZoom() < 18) {
-          zoomOutMarkers.forEach((marker) => {
-            marker.setMap(map);
+          zoomOutMarkers.forEach((marker, index) => {
+            if (index != 0) {
+              marker.setMap(map);
+            }
           });
         } else {
           markers.forEach((marker, index) => {

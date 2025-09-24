@@ -9,6 +9,7 @@ import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
 import languageData from "../../data/language.js";
 import CustomControl from "../component/customControl.js";
+import ModalService from "./modalService.js";
 
 const MapService = (() => {
   let map = null;
@@ -29,6 +30,8 @@ const MapService = (() => {
   let isClickEvent = false;
   let setting = false;
   let boardingInfo = null;
+  let kiosk = null;
+  let lang = null;
   let dataCnt = 0;
   let elementSettingOn = false;
 
@@ -131,8 +134,7 @@ const MapService = (() => {
   return {
     init: async () => {
       Logger.log("MapService 초기화 시작");
-      let kiosk = null;
-      let lang = null;
+
       try {
         const urlParams = new URLSearchParams(window.location.search);
         lang = urlParams.get("lang");
@@ -140,11 +142,14 @@ const MapService = (() => {
       } catch (error) {
         Logger.log("쿼리스트링x", error);
       }
-      if (kiosk != null) {
-        sessionStorage.setItem("kiosk", kiosk);
-      }
       if (lang != null) {
+        language = await loadTranslateData(lang);
         sessionStorage.setItem("language", lang);
+        console.log("language 저장 완료");
+      }
+      if (kiosk != null) {
+        kiosk = Number(kiosk);
+        ModalService.trainCenterModalOpen(kiosk);
       }
       const mapElement = document.getElementById("map");
       if (!mapElement) {

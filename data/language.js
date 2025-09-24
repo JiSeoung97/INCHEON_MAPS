@@ -85,6 +85,7 @@ const languageData = {
     KBlocation_2: "3층 일반지역 F 체크인카운터 부근",
     KBlocation_3: "3층 면세지역 25번 게이트 부근",
     more: "더보기",
+    departurehall_map: "출국장지도",
   },
   ja: {
     terminal: "第1旅客ターミナル",
@@ -173,6 +174,7 @@ const languageData = {
     KBlocation_2: "3階一般エリア チェックインカウンターF付近",
     KBlocation_3: "3階免税エリア ゲート25番付近",
     more: "もっと見る",
+    departurehall_map: "出発エリア案内図",
   },
   zh: {
     terminal: "第1旅客航站楼",
@@ -260,6 +262,7 @@ const languageData = {
     KBlocation_2: "3楼一般区域 F值机柜台附近",
     KBlocation_3: "3楼免税区域 25号登机口附近",
     more: "更多",
+    departurehall_map: "出发区域地图",
   },
   en: {
     terminal: "Passenger Terminal 1",
@@ -351,6 +354,7 @@ const languageData = {
     KBlocation_2: "Near Check-in Counter F on the 3rd floor, general area",
     KBlocation_3: "Near Gate 25 on the 3rd floor, duty-free area",
     more: "more",
+    departurehall_map: "Departurehall Map",
   },
 };
 export default languageData;

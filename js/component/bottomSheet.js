@@ -17,6 +17,7 @@ const BottomSheet = (() => {
   let userOn = false;
   let map = null;
   let userMarker = [];
+  let getCurrentOn = false;
   const showGateCongestion = async () => {
     try {
       // 스켈레톤 UI 표시
@@ -46,7 +47,8 @@ const BottomSheet = (() => {
         const congestionInfo = getCongestionInfo(conData.congestion);
         const htmlContents = createCongestionHTML(
           congestionInfo,
-          index % 2 === 1
+          index % 2 === 1,
+          conData.capacity
         );
 
         contentsEl[index].innerHTML = htmlContents;
@@ -104,13 +106,15 @@ const BottomSheet = (() => {
   };
 
   // 5. 혼잡도 HTML 생성
-  const createCongestionHTML = (congestionInfo, isEast) => {
+  const createCongestionHTML = (congestionInfo, isEast, capacity) => {
     const direction = isEast ? language["east"] : language["west"];
 
     return `<div style="text-align: center;border:${congestionInfo.border}">
     <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-10px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
       <p class="gatePoint">${direction}</p>
-      <h4 style="color:${congestionInfo.textColor}">${congestionInfo.text}</h4>
+      <h4 style="color:${congestionInfo.textColor}">${
+      capacity + language["minute"]
+    }</h4>
     </div>`;
   };
   const changeBorderColor = async (index) => {
@@ -209,7 +213,6 @@ const BottomSheet = (() => {
     try {
       menuBtn[0].style.setProperty("border-bottom", "3px solid #212122");
       menuBtn[1].style.setProperty("border-bottom", "1px solid #2121221A");
-
       controls.innerHTML = createFirstMenuHTML();
       await showGateCongestion();
       await TimeCalculator.timereset();
@@ -224,10 +227,6 @@ const BottomSheet = (() => {
       menuBtn[0].style.setProperty("border-bottom", "1px solid #2121221A");
 
       departurehall = [];
-      const translationPromises = RecoService.getRecoArray()
-        .slice(0, 3)
-        .map((reco) => Translate.transName(reco.name));
-      departurehall = await Promise.all(translationPromises);
       const innerHTML = createSecondMenuHTML();
       controls.innerHTML = innerHTML;
 
@@ -327,19 +326,21 @@ const BottomSheet = (() => {
       const priority = document.getElementById("reco-priority");
       const boardingGateCheck = document.getElementById("boardingGateCheck");
 
+      await updateRecommendationRanks();
       if (boardingGateCheck) {
         boardingGateCheck.addEventListener("click", () => {
           ModalService.boardingModalOpen();
         });
       }
-
+      if (!getCurrentOn) {
+        await utLocation.getCurrentPosition();
+        getCurrentOn = true;
+      }
       if (priority) {
         priority.addEventListener("click", async () => {
           await handlePriorityClick(priority);
         });
       }
-
-      await updateRecommendationRanks();
     } catch (error) {
       Logger.error("추천 이벤트 설정 실패:", error);
     }
@@ -348,7 +349,6 @@ const BottomSheet = (() => {
     try {
       const reco = document.getElementById("reco-select");
       if (!reco) return;
-
       reco.style.left = priority.getBoundingClientRect().left + "px";
       reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
 
@@ -378,6 +378,11 @@ const BottomSheet = (() => {
   };
   const updateRecommendationRanks = async () => {
     try {
+      recoArray = RecoService.getRecoArray();
+      const translationPromises = recoArray
+        .slice(0, 3)
+        .map((reco) => Translate.transName(reco.name));
+      departurehall = await Promise.all(translationPromises);
       const ranks = [language["first"], language["second"], language["third"]];
       const recoRank = document.getElementsByClassName("reco-rank");
       Array.from(recoRank).forEach((rank, idx) => {
@@ -616,6 +621,7 @@ const BottomSheet = (() => {
     resetAllBorderColor: () => {
       resetAllBorderColor();
     },
+    openRecoGate: () => {},
   };
 })();
 

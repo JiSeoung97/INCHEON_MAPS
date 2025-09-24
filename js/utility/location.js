@@ -61,7 +61,6 @@ const utLocation = (() => {
   const warmUpGPS = async () => {
     for (let i = 0; i < 3; i++) {
       try {
-        console.log("예열중");
         await new Promise((resolve, reject) => {
           navigator.geolocation.getCurrentPosition(resolve, reject, {
             timeout: 1000,
@@ -370,15 +369,6 @@ const utLocation = (() => {
 
         // 위치 저장
         await savedLocation(location);
-
-        console.log("✅ 위치 획득 완료:", {
-          coordinates: `${location.lat.toFixed(6)}, ${location.lng.toFixed(6)}`,
-          accuracy: `${location.accuracy.toFixed(1)}m`,
-          method: location.method,
-          improvement: location.improvement
-            ? `${location.improvement.toFixed(1)}m`
-            : "N/A",
-        });
         RecoService.recoGate();
         MarkerService.createMarker();
         return location;

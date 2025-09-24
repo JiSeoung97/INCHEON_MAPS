@@ -152,6 +152,7 @@ $(document).ready(async () => {
           const boardingMarker = await MarkerService.createBoardingMarker(
             boardingGate
           );
+          await BottomSheet.openRecoGate();
           CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
@@ -215,6 +216,9 @@ $(document).ready(async () => {
     $("#adClose").click(() => {
       ModalService.adModalClose();
     });
+    $("#trainClose").click(() => {
+      ModalService.trainCenterModalClose();
+    });
 
     $("#reco").click(() => {
       window.open("https://test.drarr0cp4471y.amplifyapp.com/incheon_airport");
@@ -259,7 +263,6 @@ $(document).ready(async () => {
         await PolylineService.updatePolyline(userLocation, boardingGate);
       }
       BottomSheet.showGateCongestion();
-      console.log("showGateCongestion");
     } catch (error) {
       Logger.log("⚠️ 위치 로딩 실패, 기본 기능으로 계속 진행");
     }
