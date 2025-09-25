@@ -50,12 +50,16 @@ const ModalService = (() => {
       switch (kiosk) {
         case 5:
           imgSrc = imgArray[0];
+          break;
         case 6:
           imgSrc = imgArray[1];
+          break;
         case 7:
           imgSrc = imgArray[2];
+          break;
         case 8:
           imgSrc = imgArray[3];
+          break;
       }
       modalImg.src = imgSrc;
     }
