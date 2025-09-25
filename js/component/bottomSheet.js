@@ -200,6 +200,7 @@ const BottomSheet = (() => {
         await handleSecondMenu(menuBtn, controls);
       } else {
         ModalService.boardingModalOpen();
+        await utLocation.getCurrentPosition();
       }
     } catch (error) {
       Logger.error("메뉴 변경 실패:", error);
