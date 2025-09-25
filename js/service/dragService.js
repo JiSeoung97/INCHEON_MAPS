@@ -18,52 +18,105 @@ const DragService = (() => {
     return e.type.includes("touch") ? e.touches[0].clientY : e.clientY;
   }
   function calculatePeekHeight() {
+    let peekHeight = 0;
+
+    // peek 영역만 계산
     if (!peekElement) {
       Logger.error("peek 클래스 요소를 찾을 수 없습니다!");
-      return 100; // 기본값
+    } else {
+      Array.from(peekElement).forEach((peek) => {
+        const style = window.getComputedStyle(peek);
+        const marginTop = parseInt(style.marginTop) || 0;
+        const marginBottom = parseInt(style.marginBottom) || 0;
+        const paddingTop = parseInt(style.paddingTop) || 0;
+        const paddingBottom = parseInt(style.paddingBottom) || 0;
+
+        peekHeight +=
+          peek.offsetHeight +
+          marginTop +
+          marginBottom +
+          paddingTop +
+          paddingBottom;
+      });
     }
-    let totalHeight = 0;
-    let marginTop;
-    let marginBottom;
-    let paddingTop;
-    let paddingBottom;
-    Array.from(peekElement).forEach((peek) => {
-      const style = window.getComputedStyle(peek);
-      marginTop = parseInt(style.marginTop) || 0;
-      marginBottom = parseInt(style.marginBottom) || 0;
-      paddingTop = parseInt(style.paddingTop) || 0;
-      paddingBottom = parseInt(style.paddingBottom) || 0;
-      let height =
-        peek.offsetHeight +
+    const menu = document.getElementById("menu");
+    peekHeight += menu.offsetHeight;
+    Logger.log("Peek height only:", peekHeight);
+    return peekHeight;
+  }
+
+  function calculateVisibleHeight() {
+    let totalHeight = calculatePeekHeight();
+
+    // controls 영역 계산
+    const controlsElement = document.getElementById("controls");
+    if (controlsElement) {
+      const style = window.getComputedStyle(controlsElement);
+      const marginTop = parseInt(style.marginTop) || 0;
+      const marginBottom = parseInt(style.marginBottom) || 0;
+      const paddingTop = parseInt(style.paddingTop) || 0;
+      const paddingBottom = parseInt(style.paddingBottom) || 0;
+
+      totalHeight +=
+        controlsElement.offsetHeight +
         marginTop +
         marginBottom +
         paddingTop +
-        paddingBottom +
-        pxToRem(25) +
-        50;
-      totalHeight += height;
-    });
+        paddingBottom;
+    }
 
-    Logger.log("Total peek height:", totalHeight);
+    // 추가 여유 공간 10px
+    totalHeight += 10;
 
+    Logger.log("Total visible height (peek + controls + 10px):", totalHeight);
     return totalHeight;
   }
   function calculatePositions() {
     const sheetHeight = bottomSheet.offsetHeight;
-    const peekHeight = calculatePeekHeight();
-    const viewportHight = window.innerHeight;
-    const hiddenHeight = sheetHeight - peekHeight;
-    const closedRem = -pxToRem(hiddenHeight);
-    if (closedRem > 0) {
-      POSITIONS.CLOSED = -4;
-    } else {
-      const maxHiddenRem = -pxToRem(viewportHight);
-      POSITIONS.CLOSED = Math.max(closedRem, maxHiddenRem);
-    }
-    if (POSITIONS.CLOSED > 0 || POSITIONS.CLOSED < -30) {
-      POSITIONS.CLOSED = -10;
+    const peekHeight = calculatePeekHeight(); // peek만 (handle + menu)
+    const visibleHeight = calculateVisibleHeight(); // peek + controls + 10px
+
+    // OPEN: peek + controls + 10px 영역만 보이도록 계산
+    const openHiddenHeight = sheetHeight - visibleHeight;
+    POSITIONS.OPEN = -pxToRem(openHiddenHeight);
+
+    // controls 영역 높이 계산
+    const controlsElement = document.getElementById("controls");
+    let controlsHeight = 0;
+    if (controlsElement) {
+      const style = window.getComputedStyle(controlsElement);
+      const marginTop = parseInt(style.marginTop) || 0;
+      const marginBottom = parseInt(style.marginBottom) || 0;
+      const paddingTop = parseInt(style.paddingTop) || 0;
+      const paddingBottom = parseInt(style.paddingBottom) || 0;
+      controlsHeight =
+        controlsElement.offsetHeight +
+        marginTop +
+        marginBottom +
+        paddingTop +
+        paddingBottom;
     }
 
+    // CLOSED: OPEN 위치에서 controls + 10px만큼 더 아래로
+    const additionalHide = controlsHeight + 10;
+    POSITIONS.CLOSED = POSITIONS.OPEN - pxToRem(additionalHide);
+
+    // 안전장치: 적절한 범위로 제한
+    POSITIONS.CLOSED = Math.max(POSITIONS.CLOSED, -pxToRem(sheetHeight * 0.9));
+    POSITIONS.OPEN = Math.max(POSITIONS.OPEN, -pxToRem(sheetHeight * 0.7));
+    POSITIONS.OPEN = Math.min(POSITIONS.OPEN, -1);
+
+    Logger.log("Sheet height:", sheetHeight);
+    Logger.log("Peek height (handle + menu):", peekHeight);
+    Logger.log("Controls height:", controlsHeight);
+    Logger.log("Visible height (peek + controls + 10px):", visibleHeight);
+    Logger.log("OPEN position (기준):", POSITIONS.OPEN, "rem");
+    Logger.log(
+      "CLOSED position (OPEN - controls - 10px):",
+      POSITIONS.CLOSED,
+      "rem"
+    );
+    Logger.log("Additional hide amount:", additionalHide, "px");
     return POSITIONS;
   }
   function pxToRem(px) {
@@ -117,7 +170,7 @@ const DragService = (() => {
 
     let targetPosition = POSITIONS.CLOSED;
     let minDistance = Math.abs(currentBottom - POSITIONS.CLOSED);
-    for (const [key, position] of Object.entries(POSITIONS)) {
+    for (const [, position] of Object.entries(POSITIONS)) {
       const distance = Math.abs(currentBottom - position);
       if (distance < minDistance) {
         Logger.log("min,distance : ", distance);

@@ -169,10 +169,6 @@ const BottomSheet = (() => {
       Array.from(updatedGates).forEach((gate, index) => {
         gate.addEventListener("click", async () => {
           try {
-            if (userOn) {
-              utLocation.getCurrentPosition();
-              userOn = true;
-            }
             Utility.moveGate(index);
             Utility.openWindowInfo(index);
             PolylineService.selectPolyline(index);
@@ -331,10 +327,6 @@ const BottomSheet = (() => {
         boardingGateCheck.addEventListener("click", () => {
           ModalService.boardingModalOpen();
         });
-      }
-      if (!getCurrentOn) {
-        await utLocation.getCurrentPosition();
-        getCurrentOn = true;
       }
       if (priority) {
         priority.addEventListener("click", async () => {

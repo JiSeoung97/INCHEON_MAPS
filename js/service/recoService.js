@@ -15,9 +15,8 @@ const RecoService = (() => {
         const apiDataForArea = apiData.find(
           (api) => api.gateId === areas[i].id
         );
-        if (apiDataForArea) {
+        if (apiDataForArea && i !== 3) {
           const waitingTime = Number(apiDataForArea.waitTime);
-
           recoArray.push({
             name: areas[i].name,
             time: distance + waitingTime,
@@ -26,7 +25,6 @@ const RecoService = (() => {
         }
       }
       recoArray.sort((a, b) => a.time - b.time);
-      console.log(recoArray);
     } catch (error) {
       for (let i = 0; i < 3; i++) {
         recoArray.push({
@@ -35,7 +33,6 @@ const RecoService = (() => {
           position: areas[i].position,
         });
       }
-      console.log("추천게이트 계산 실패");
       Logger.error("추천 게이트 계산 실패:", error);
     }
   };
@@ -60,7 +57,6 @@ const RecoService = (() => {
         idx = index;
       }
     });
-    console.log(eastWest[idx]);
     eastWest[idx].getElementsByClassName("like-icon")[0].style.display = "flex";
   };
 
