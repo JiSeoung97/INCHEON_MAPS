@@ -17,14 +17,16 @@ const RecoService = (() => {
         );
         if (apiDataForArea && i !== 3) {
           const waitingTime = Number(apiDataForArea.waitTime);
+          const waitLength = Number(apiDataForArea.waitLength);
           recoArray.push({
             name: areas[i].name,
             time: distance + waitingTime,
             position: areas[i].position,
+            waitLength: waitLength,
           });
         }
       }
-      recoArray.sort((a, b) => a.time - b.time);
+      recoArray.sort((a, b) => a.time - b.time || a.waitLength - b.waitLength);
     } catch (error) {
       for (let i = 0; i < 3; i++) {
         recoArray.push({

@@ -102,21 +102,8 @@ const DragService = (() => {
     POSITIONS.CLOSED = POSITIONS.OPEN - pxToRem(additionalHide);
 
     // 안전장치: 적절한 범위로 제한
-    POSITIONS.CLOSED = Math.max(POSITIONS.CLOSED, -pxToRem(sheetHeight * 0.9));
-    POSITIONS.OPEN = Math.max(POSITIONS.OPEN, -pxToRem(sheetHeight * 0.7));
-    POSITIONS.OPEN = Math.min(POSITIONS.OPEN, -1);
-
-    Logger.log("Sheet height:", sheetHeight);
-    Logger.log("Peek height (handle + menu):", peekHeight);
-    Logger.log("Controls height:", controlsHeight);
-    Logger.log("Visible height (peek + controls + 10px):", visibleHeight);
-    Logger.log("OPEN position (기준):", POSITIONS.OPEN, "rem");
-    Logger.log(
-      "CLOSED position (OPEN - controls - 10px):",
-      POSITIONS.CLOSED,
-      "rem"
-    );
-    Logger.log("Additional hide amount:", additionalHide, "px");
+    POSITIONS.CLOSED = Math.max(POSITIONS.CLOSED, -pxToRem(sheetHeight - 60));
+    POSITIONS.OPEN = Math.max(POSITIONS.OPEN, -pxToRem(sheetHeight));
     return POSITIONS;
   }
   function pxToRem(px) {
