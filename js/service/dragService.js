@@ -78,7 +78,7 @@ const DragService = (() => {
 
     // OPEN: peek + controls + 10px 영역만 보이도록 계산
     const openHiddenHeight = sheetHeight - visibleHeight;
-    POSITIONS.OPEN = -pxToRem(openHiddenHeight);
+    POSITIONS.OPEN = -pxToVh(openHiddenHeight);
 
     // controls 영역 높이 계산
     const controlsElement = document.getElementById("controls");
@@ -99,22 +99,22 @@ const DragService = (() => {
 
     // CLOSED: OPEN 위치에서 controls + 10px만큼 더 아래로
     const additionalHide = controlsHeight + 10;
-    POSITIONS.CLOSED = POSITIONS.OPEN - pxToRem(additionalHide);
+    POSITIONS.CLOSED = POSITIONS.OPEN - pxToVh(additionalHide);
 
     // 안전장치: 적절한 범위로 제한
-    POSITIONS.CLOSED = Math.max(POSITIONS.CLOSED, -pxToRem(sheetHeight - 60));
-    POSITIONS.OPEN = Math.max(POSITIONS.OPEN, -pxToRem(sheetHeight));
+    POSITIONS.CLOSED = Math.max(POSITIONS.CLOSED, -pxToVh(sheetHeight - 60));
+    POSITIONS.OPEN = Math.max(POSITIONS.OPEN, -pxToVh(sheetHeight));
     return POSITIONS;
   }
-  function pxToRem(px) {
-    const rootFontSize =
-      parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-    return px / rootFontSize;
+  function pxToVh(px) {
+    // dvh 기반으로 계산 (동적 뷰포트 높이 사용)
+    const viewportHeight = window.innerHeight;
+    return (px / viewportHeight) * 100;
   }
 
-  function updatePosition(bottomRem) {
-    bottomSheet.style.bottom = bottomRem + "rem";
-    currentBottom = bottomRem;
+  function updatePosition(bottomVh) {
+    bottomSheet.style.bottom = bottomVh + "dvh";
+    currentBottom = bottomVh;
   }
 
   function startDrag(e) {
@@ -133,11 +133,12 @@ const DragService = (() => {
     if (!isDragging) return;
     const currentY = getEventY(e);
     const deltaY = currentY - startY;
-    const deltaRem = pxToRem(deltaY);
-    let newBottom = startBottom - deltaRem;
-    // 경계 제한
-    const minPosition = Math.max(POSITIONS.CLOSED - 7, -25); // 안전한 최소값
-    const maxPosition = Math.min(POSITIONS.OPEN + 2, 5); // 안전한 최대값
+    const deltaVh = pxToVh(deltaY);
+    let newBottom = startBottom - deltaVh;
+    // 경계 제한 (dvh 기준으로 조정)
+    const safetyMargin = pxToVh(50); // 50px를 dvh로 변환
+    const minPosition = Math.max(POSITIONS.CLOSED - safetyMargin, -80); // dvh 기준 최소값
+    const maxPosition = Math.min(POSITIONS.OPEN + pxToVh(20), 10); // dvh 기준 최대값
 
     newBottom = Math.max(minPosition, Math.min(maxPosition, newBottom));
     updatePosition(newBottom);
