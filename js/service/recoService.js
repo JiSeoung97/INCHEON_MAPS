@@ -33,6 +33,7 @@ const RecoService = (() => {
           position: areas[i].position,
         });
       }
+      console.log("추천게이트 계산 실패");
       Logger.error("추천 게이트 계산 실패:", error);
     }
   };

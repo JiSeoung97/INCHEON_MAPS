@@ -261,6 +261,7 @@ const MarkerService = (() => {
         idx = index;
       }
     });
+    console.log(selectMarker);
     replaceAllMarkerIcon();
     if (selectedMarker == selectMarker) {
       newIcon = {

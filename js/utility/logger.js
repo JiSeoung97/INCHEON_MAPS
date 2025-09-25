@@ -6,6 +6,7 @@ const Logger = {
    */
   log: function (...args) {
     // window.appConfig 객체가 존재하고, BRANCH가 'dev'일 때만 실행
+
     if (
       window.appConfig?.ENV_MODE === "test" ||
       window.appConfig?.ENV_MODE === "dev"

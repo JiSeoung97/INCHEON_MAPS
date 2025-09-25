@@ -328,6 +328,7 @@ const BottomSheet = (() => {
           ModalService.boardingModalOpen();
         });
       }
+
       if (priority) {
         priority.addEventListener("click", async () => {
           await handlePriorityClick(priority);
