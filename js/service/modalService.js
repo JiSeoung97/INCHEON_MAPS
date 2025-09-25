@@ -45,7 +45,6 @@ const ModalService = (() => {
       init();
       const modalImg = document.getElementById("trainCenterImg");
       const trainMap = document.getElementById("trainMap");
-      console.log(language);
       trainMap.innerText = language["departurehall_map"];
       let imgSrc = null;
       switch (kiosk) {

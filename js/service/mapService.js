@@ -145,7 +145,6 @@ const MapService = (() => {
       if (lang != null) {
         language = await loadTranslateData(lang);
         sessionStorage.setItem("language", lang);
-        console.log("language 저장 완료");
       }
       if (kiosk != null) {
         kiosk = Number(kiosk);

@@ -2,6 +2,7 @@ import Logger from "../utility/logger.js";
 import TimeCalculator from "../utility/timeCalculator.js";
 import mockData from "../../data/mock-data.js";
 import createAxiosInstance from "../../api/axios-instance.js";
+import mockData2 from "../../data/mock-data2.js";
 
 const DataService = (() => {
   let data = null;
@@ -33,8 +34,6 @@ const DataService = (() => {
         }
       });
     });
-    console.log("areadata : ", data.buildings[0].areas);
-    console.log("apidata : ", apiDatas);
     data.lastUpdated = new Date().toISOString();
     return data;
   };
@@ -54,6 +53,7 @@ const DataService = (() => {
       apiDatas = result.data.response.body.items || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
+      apiDatas = mockData2.data.response.body.items;
       Logger.error("혼잡도 api데이터 로드 실패 :", error);
     }
   };
