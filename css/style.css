@@ -957,7 +957,6 @@ small {
   height: 27rem;
   padding: 0px;
   top: 5rem;
-
 }
 #trainCenterImg {
   width: 100%;
@@ -993,4 +992,7 @@ small {
 
 .gate:first-child {
   display: none;
+}
+#kiosk {
+  height: 1rem;
 }
