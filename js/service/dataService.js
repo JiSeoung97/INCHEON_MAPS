@@ -46,16 +46,13 @@ const DataService = (() => {
       };
       let apiurl =
         "https://wiki.urcode.link/api/v1/airport/congestion/departure";
-      if (window.appConfig.ENV_MODE == "prod") {
-      }
       const result = await window.axios.get(apiurl, {
         params: requestParams,
       });
-      // apiDatas = result?.data?.response?.body.items || null;
-      apiDatas = result?.data?.parsed_data?.body.items || null;
+      apiDatas = result?.data?.parsed_data?.body?.items || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
-      apiDatas = mockData2.data.response.body.items;
+      apiDatas = mockData2?.data?.parsed_data?.body?.items;
       Logger.error("혼잡도 api데이터 로드 실패 :", error);
     }
   };
