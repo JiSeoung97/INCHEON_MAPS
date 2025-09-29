@@ -44,13 +44,13 @@ const DataService = (() => {
         type: "json",
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
-      const result = await apiInstance.get(
-        "/api/airport/getDepartureCongestion",
+      const result = await window.axios.get(
+        "https://wiki.urcode.link/api/v1/airport/congestion/departure",
         {
           params: requestParams,
         }
       );
-      apiDatas = result.data.response.body.items || null;
+      apiDatas = result?.data?.response?.body.items || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
       apiDatas = mockData2.data.response.body.items;
