@@ -301,9 +301,6 @@ const utLocation = (() => {
       const locationData = {
         lat: location.lat,
         lng: location.lng,
-        accuracy: location.accuracy,
-        method: location.method,
-        timestamp: location.timestamp || Date.now(),
       };
 
       sessionStorage.setItem("myLocation", JSON.stringify(locationData));
