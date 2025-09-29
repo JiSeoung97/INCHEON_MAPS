@@ -358,11 +358,11 @@ const utLocation = (() => {
         let location = await getCurrentPosition();
 
         // 위치 제한 검사
-        // if (!limitLocation(location)) {
-        //   const errorMsg = "인천공항 내부에서만 이용할 수 있습니다.";
-        //   Logger.error(errorMsg);
-        //   throw new LocationError(errorMsg);
-        // }
+        if (!limitLocation(location)) {
+          const errorMsg = "인천공항 내부에서만 이용할 수 있습니다.";
+          Logger.error(errorMsg);
+          throw new LocationError(errorMsg);
+        }
 
         // 위치 저장
         await savedLocation(location);
