@@ -39,6 +39,8 @@ const DataService = (() => {
     data.lastUpdated = new Date().toISOString();
     return data;
   };
+
+  // 혼잡도 호출 API
   const getAirportData = async () => {
     try {
       Logger.log("time formating", TimeCalculator.formatCurrentDateTime());
@@ -51,7 +53,7 @@ const DataService = (() => {
       const result = await window.axios.get(apiurl, {
         params: requestParams,
       });
-      apiDatas = result?.data?.parsed_data?.body?.items?.item || null;
+      apiDatas = result?.data?.data?.parsed_data?.body?.items?.item || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
       apiDatas = mockData2?.data?.parsed_data?.body?.items?.item;
