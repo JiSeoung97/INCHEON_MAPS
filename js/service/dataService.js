@@ -37,6 +37,8 @@ const DataService = (() => {
     data.lastUpdated = new Date().toISOString();
     return data;
   };
+
+  // 혼잡도 호출 API
   const getAirportData = async () => {
     try {
       Logger.log("time formating", TimeCalculator.formatCurrentDateTime());
