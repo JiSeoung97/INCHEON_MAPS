@@ -49,10 +49,10 @@ const DataService = (() => {
       const result = await window.axios.get(apiurl, {
         params: requestParams,
       });
-      apiDatas = result?.data?.parsed_data?.body?.items || null;
+      apiDatas = result?.data?.parsed_data?.body?.items?.item || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
-      apiDatas = mockData2?.data?.parsed_data?.body?.items;
+      apiDatas = mockData2?.data?.parsed_data?.body?.items?.item;
       Logger.error("혼잡도 api데이터 로드 실패 :", error);
     }
   };
