@@ -14,11 +14,13 @@ const DataService = (() => {
   const updateCongestion = () => {
     if (!data) return;
     if (!apiDatas || !Array.isArray(apiDatas)) {
+      console.log(apiDatas);
       return;
     }
     Array.from(apiDatas).forEach((apiData) => {
       congestions.push(calculateCongestionLevel(apiData));
       waitingTimes.push(apiData.waitTime);
+      console.log("api waitTime : ", apiData.waitTime);
     });
 
     data.buildings.forEach((building) => {
@@ -49,10 +51,10 @@ const DataService = (() => {
       const result = await window.axios.get(apiurl, {
         params: requestParams,
       });
-      apiDatas = result?.data?.parsed_data?.body?.items || null;
+      apiDatas = result?.data?.parsed_data?.body?.items?.item || null;
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
-      apiDatas = mockData2?.data?.parsed_data?.body?.items;
+      apiDatas = mockData2?.data?.parsed_data?.body?.items?.item;
       Logger.error("혼잡도 api데이터 로드 실패 :", error);
     }
   };
@@ -83,7 +85,6 @@ const DataService = (() => {
       if (!apiDatas) {
         Logger.error("실시간 혼잡도 API 데이터 로드에 실패했습니다.");
       }
-
       updateCongestion();
       return data;
     },

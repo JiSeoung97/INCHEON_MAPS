@@ -50,10 +50,9 @@ const Utility = (() => {
           Math.cos(degToRad(lat1)) *
             Math.cos(degToRad(lat2)) *
             Math.sin(dlng / 2) ** 2;
-        const distance =
-          Math.round(
-            earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
-          ).toLocaleString() + "M";
+        const distance = Math.round(
+          earthR * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+        );
         return distance;
       }
     } catch (error) {
@@ -162,7 +161,10 @@ const Utility = (() => {
   };
   return {
     getDistance: async (area, boardingGateNum = null, bottomSheet = false) => {
-      return await getDistance(area, boardingGateNum, bottomSheet);
+      let distance = Number(
+        await getDistance(area, boardingGateNum, bottomSheet)
+      );
+      return distance;
     },
     calculateMidPoint: (position1, position2) => {
       return calculateMidPoint(position1, position2);

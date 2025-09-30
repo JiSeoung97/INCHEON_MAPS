@@ -46,19 +46,27 @@ const ModalService = (() => {
       const modalImg = document.getElementById("trainCenterImg");
       const trainMap = document.getElementById("trainMap");
       trainMap.innerText = language["departurehall_map"];
+      const kioskImg = document.getElementById("kioskImg");
+      const kioskFlag = document.getElementById("kioskFlag");
+      kioskImg.innerHTML = `<img src='/images/kiosk.svg' style="width:10px; height:17px"> ${language["kioskimg"]}`;
+
       let imgSrc = null;
       switch (kiosk) {
         case 5:
           imgSrc = imgArray[0];
+          kioskFlag.innerText = `${language["kiosk1"]}`;
           break;
         case 6:
           imgSrc = imgArray[1];
+          kioskFlag.innerText = `${language["kiosk2"]}`;
           break;
         case 7:
           imgSrc = imgArray[2];
+          kioskFlag.innerText = `${language["kiosk3"]}`;
           break;
         case 8:
           imgSrc = imgArray[3];
+          kioskFlag.innerText = `${language["kiosk4"]}`;
           break;
       }
       modalImg.src = imgSrc;
