@@ -4,6 +4,7 @@ const rollup = require("rollup"); // Rollup 번들러를 사용합니다.
 const terser = require("@rollup/plugin-terser"); // Rollup용 압축 플러그인
 const CleanCSS = require("clean-css");
 const path = require("path");
+const replace = require("@rollup/plugin-replace");
 
 // 프로젝트의 루트 경로와 결과물이 저장될 dist 폴더 경로를 설정합니다.
 const rootDir = __dirname;
@@ -58,10 +59,14 @@ async function build() {
  */
 async function bundleAndMinifyJS() {
   console.log("- JS 파일 정리중...");
-
+  const ENV_MODE = process.env.ENV_MODE || "dev";
   const bundle = await rollup.rollup({
     input: "js/main.js", // 시작점(Entry Point) 파일
     plugins: [
+      replace({
+        preventAssignment: true,
+        "process.env.ENV_MODE": JSON.stringify(ENV_MODE),
+      }),
       terser(), // 압축(minify) 플러그인 적용
     ],
   });

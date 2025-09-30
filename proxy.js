@@ -1,5 +1,5 @@
 const dotenv = require("dotenv");
-const nodeEnv = process.env.NODE_ENV || "development";
+const nodeEnv = process.env.ENV_MODE || "development";
 dotenv.config({ path: `.env.${nodeEnv}` });
 
 // --- 디버깅용 코드 ---
