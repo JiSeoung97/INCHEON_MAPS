@@ -46,8 +46,13 @@ const DataService = (() => {
         type: "json",
         datetime: TimeCalculator.formatCurrentDateTime(),
       };
-      let apiurl =
-        "https://wiki.urcode.link/api/v1/airport/congestion/departure";
+      let apiurl = null;
+      if (process.env.ENV_MODE === "prod") {
+        apiurl = "https://api.urwiki.com/api/v1/airport/congestion/departure";
+      } else {
+        apiurl = "https://wiki.urcode.link/api/v1/airport/congestion/departure";
+      }
+
       const result = await window.axios.get(apiurl, {
         params: requestParams,
       });
