@@ -14,7 +14,6 @@ const DataService = (() => {
   const updateCongestion = () => {
     if (!data) return;
     if (!apiDatas || !Array.isArray(apiDatas)) {
-      console.log(apiDatas);
       return;
     }
     Array.from(apiDatas).forEach((apiData) => {
@@ -53,9 +52,12 @@ const DataService = (() => {
         params: requestParams,
       });
       apiDatas = result?.data?.data?.parsed_data?.body?.items?.item || null;
+      if (apiDatas === undefined || apiDatas == null) {
+        throw new Error("apiData is undefined or null");
+      }
       Logger.log("실시간 혼잡도 API 수신 완료", apiDatas);
     } catch (error) {
-      apiDatas = mockData2?.data?.parsed_data?.body?.items?.item;
+      apiDatas = mockData2?.data[0]?.parsed_data?.body?.items?.item;
       Logger.error("혼잡도 api데이터 로드 실패 :", error);
     }
   };
