@@ -86,6 +86,11 @@ const languageData = {
     KBlocation_3: "3층 면세지역 25번 게이트 부근",
     more: "더보기",
     departurehall_map: "출국장지도",
+    kioskimg: "키오스크 화면",
+    kiosk1: "현재 보시는 키오스크 화면 기준, 정면으로 직진하세요",
+    kiosk2: "현재 보시는 키오스크 화면 기준, 왼쪽으로 이동하세요",
+    kiosk3: "현재 보시는 키오스크 화면 기준, 뒤로 돌아 우측으로 이동하세요",
+    kiosk4: "현재 보시는 키오스크 화면 기준, 뒤로 돌아 정면으로 이동하세요",
   },
   ja: {
     terminal: "第1旅客ターミナル",
@@ -175,6 +180,11 @@ const languageData = {
     KBlocation_3: "3階免税エリア ゲート25番付近",
     more: "もっと見る",
     departurehall_map: "出発エリア案内図",
+    kioskimg: "キオスク画面",
+    kiosk1: "これを見って、まっすぐ行く",
+    kiosk2: "これを見て、左に曲がる",
+    kiosk3: "これを背にして、右に曲がる",
+    kiosk4: "これを背にして、まっすぐ行く",
   },
   zh: {
     terminal: "第1旅客航站楼",
@@ -263,6 +273,11 @@ const languageData = {
     KBlocation_3: "3楼免税区域 25号登机口附近",
     more: "更多",
     departurehall_map: "出发区域地图",
+    kioskimg: "自助终端屏幕",
+    kiosk1: "以当前自助屏为基准，直行",
+    kiosk2: "以当前自助屏为基准，向左走",
+    kiosk3: "以当前自助屏为基准，掉头向右走",
+    kiosk4: "以当前自助屏为基准，掉头直行",
   },
   en: {
     terminal: "Passenger Terminal 1",
@@ -355,6 +370,11 @@ const languageData = {
     KBlocation_3: "Near Gate 25 on the 3rd floor, duty-free area",
     more: "more",
     departurehall_map: "Departurehall Map",
+    kioskimg: "Kiosk Screen",
+    kiosk1: "From this kiosk, go straight",
+    kiosk2: "From this kiosk, move left",
+    kiosk3: "Turn around and move right from the kiosk screen",
+    kiosk4: "Turn around and go straight from the kiosk screen",
   },
 };
 export default languageData;

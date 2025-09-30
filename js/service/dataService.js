@@ -14,11 +14,13 @@ const DataService = (() => {
   const updateCongestion = () => {
     if (!data) return;
     if (!apiDatas || !Array.isArray(apiDatas)) {
+      console.log(apiDatas);
       return;
     }
     Array.from(apiDatas).forEach((apiData) => {
       congestions.push(calculateCongestionLevel(apiData));
       waitingTimes.push(apiData.waitTime);
+      console.log("api waitTime : ", apiData.waitTime);
     });
 
     data.buildings.forEach((building) => {
@@ -83,7 +85,6 @@ const DataService = (() => {
       if (!apiDatas) {
         Logger.error("실시간 혼잡도 API 데이터 로드에 실패했습니다.");
       }
-
       updateCongestion();
       return data;
     },

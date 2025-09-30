@@ -103,10 +103,10 @@ const DragService = (() => {
 
     // 안전장치: 적절한 범위로 제한
     POSITIONS.CLOSED = Math.max(
-      POSITIONS.CLOSED + 2,
+      POSITIONS.CLOSED + 4,
       -pxToVh(sheetHeight - 60)
     );
-    POSITIONS.OPEN = Math.max(POSITIONS.OPEN, -pxToVh(sheetHeight));
+    POSITIONS.OPEN = Math.max(POSITIONS.OPEN + 4, -pxToVh(sheetHeight));
     return POSITIONS;
   }
   function pxToVh(px) {

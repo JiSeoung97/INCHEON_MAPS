@@ -954,12 +954,13 @@ small {
   z-index: 1;
 }
 #trainCenterModal {
-  height: 27rem;
+  height: 34.1333rem;
+  width: 24rem;
   padding: 0px;
-  top: 5rem;
+  top: 4rem;
 }
 #trainCenterImg {
-  width: 100%;
+  width: 70%;
   height: auto;
   object-fit: contain;
 }
@@ -972,6 +973,7 @@ small {
   padding-left: 20px;
   padding-right: 20px;
   padding-top: 20px;
+  margin-bottom: auto;
 }
 #trainClose {
   height: 30px;
@@ -993,6 +995,30 @@ small {
 .gate:first-child {
   display: none;
 }
-#kiosk {
-  height: 1rem;
+#kioskFlag {
+  width: 22.2rem;
+  height: 2.8rem;
+  display: flex;
+  padding: 0.88413rem 2.26667rem 0.8492rem 2rem;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  border-radius: 0.44213rem;
+  background: #eef3ff;
+  color: #056cfe;
+  font-family: Pretendard;
+  font-size: 0.86667rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-top: 8px;
+  margin-bottom: 20px;
+}
+
+#kioskImg {
+  display: flex;
+  align-items: center;
+}
+#kioskImg > img {
+  margin-right: 3px;
 }
