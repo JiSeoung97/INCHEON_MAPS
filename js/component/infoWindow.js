@@ -84,8 +84,8 @@ const InfoWindowService = (() => {
         '<p style = "color:#21212280">' +
         language["distance"] +
         ": " +
-        distance +
-        "</p>" +
+        distance.toLocaleString() +
+        "m</p>" +
         "</div>"
       );
     } else {
