@@ -960,7 +960,7 @@ small {
   top: 3rem;
 }
 #trainCenterImg {
-  width: 70%;
+  width: 100%;
   height: auto;
   object-fit: contain;
 }

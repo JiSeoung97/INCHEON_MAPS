@@ -20,7 +20,6 @@ const DataService = (() => {
     Array.from(apiDatas).forEach((apiData) => {
       congestions.push(calculateCongestionLevel(apiData));
       waitingTimes.push(apiData.waitTime);
-      console.log("api waitTime : ", apiData.waitTime);
     });
 
     data.buildings.forEach((building) => {
