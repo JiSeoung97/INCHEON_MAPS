@@ -1,5 +1,6 @@
 index.local.html
 .env.development
+.env.product
 dist/
 node_modules
 

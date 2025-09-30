@@ -49,7 +49,10 @@ const DataService = (() => {
       let apiurl = null;
       if (process.env.ENV_MODE === "prod") {
         apiurl = "https://api.urwiki.com/api/v1/airport/congestion/departure";
-      } else {
+      } else if (
+        process.env.ENV_MODE === "test" ||
+        process.env.ENV_MODE === "dev"
+      ) {
         apiurl = "https://wiki.urcode.link/api/v1/airport/congestion/departure";
       }
 

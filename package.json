@@ -12,6 +12,7 @@
     "express": "^5.1.0"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
     "clean-css": "^5.3.3",
     "fs-extra": "^11.3.1",
