@@ -222,7 +222,6 @@ const MapService = (() => {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
         }
-        PolylineService.createUserPolyline();
         zoomEvent();
         mapClickEvent();
 
@@ -244,23 +243,6 @@ const MapService = (() => {
     },
     alertGateNumCheck: () => {
       alert(language["checkNum"]);
-    },
-    moveBoardingGate: () => {
-      var transition = {
-        duration: 800,
-        easing: "easeOutCubic",
-      };
-      boardingMarkers = MarkerService.getBoardingMarker();
-      MarkerService.replaceMarkerIcon(boardingMarkers);
-      let movePosition;
-
-      movePosition = naver.maps.LatLng(
-        boardingMarkers[0].position._lat - 0.0003,
-        boardingMarkers[0].position._lng
-      );
-      map.panTo(movePosition, transition);
-
-      return movePosition;
     },
     getCurrentPosition: async () => {
       return await getCurrentPosition();

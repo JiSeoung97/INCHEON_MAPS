@@ -27,16 +27,8 @@ const RecoService = (() => {
         }
       }
       recoArray.sort((a, b) => a.time - b.time || a.waitLength - b.waitLength);
-      console.log("recoArray : ", recoArray);
+      recoLikeIconView();
     } catch (error) {
-      for (let i = 0; i < 3; i++) {
-        recoArray.push({
-          name: areas[i].name,
-          time: distance + waitingTime,
-          position: areas[i].position,
-        });
-      }
-      console.log("recoArray : ", recoArray);
       Logger.error("추천 게이트 계산 실패:", error);
     }
   };

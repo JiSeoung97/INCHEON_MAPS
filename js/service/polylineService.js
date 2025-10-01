@@ -3,6 +3,7 @@ import MapService from "./mapService.js";
 import utLocation from "../utility/location.js";
 import DataService from "./dataService.js";
 import MarkerService from "./markerService.js";
+import BottomSheet from "../component/bottomSheet.js";
 const PolylineService = (() => {
   let polylines = [];
   let map;
@@ -10,7 +11,9 @@ const PolylineService = (() => {
   let boardingPolyline = null;
   let markerPolylines = [];
   let userLocation = null;
+  let polyOn = false;
   const createPolyline = (markers) => {
+    Logger.log("createPolylines in Markers: ", markers);
     for (let i = 0; i < markers.length; i += 2) {
       let polyline = new naver.maps.Polyline({
         map: null,
@@ -26,7 +29,7 @@ const PolylineService = (() => {
   };
   const createBoardingPolyline = async (marker, position, index) => {
     if (index == null) {
-      const userLocation = utLocation.getCurrentPosition();
+      const userLocation = sessionStorage.getItem("myLocation");
       const latLng = new naver.maps.LatLng(
         userLocation["lat"],
         userLocation["lng"]
@@ -42,9 +45,11 @@ const PolylineService = (() => {
         strokeStyle: "longdash",
       });
     } else {
+      Logger.log("markerPolyline in positon : ", position);
+      const latLng = new naver.maps.LatLng(position.lat, position.lng);
       let markerPolyline = new naver.maps.Polyline({
         map: null,
-        path: [position, marker.position],
+        path: [latLng, marker.position],
         clickable: false,
         strokeColor: "#2E90FA",
         strokeOpacity: 1,
@@ -74,7 +79,8 @@ const PolylineService = (() => {
     });
   };
   const selectPolyline = (index) => {
-    if (markerPolylines[index].getMap() == null) {
+    Logger.log("polylines : ", markerPolylines);
+    if (!polyOn) {
       markerPolylines.forEach((polyline) => {
         polyline.setMap(null);
       });
@@ -103,8 +109,10 @@ const PolylineService = (() => {
 
   const viewPolyLine = async () => {
     try {
+      let openDeparture1 = BottomSheet.openDeparture1();
+      Logger.log("polylines : ", openDeparture1, polylines);
       polylines.forEach((polyline, index) => {
-        if (index != 0) {
+        if (index != 0 || openDeparture1) {
           polyline.setMap(map);
         }
       });
@@ -121,13 +129,14 @@ const PolylineService = (() => {
         createPolyline(markers);
       }
     },
-    createUserPolyline: () => {
+    createUserPolyline: async () => {
       if (markerPolylines.length == 0) {
-        userLocation = JSON.parse(sessionStorage.getItem("myLocation"));
+        userLocation = sessionStorage.getItem("myLocation");
         let markers = MarkerService.getMarkers();
-        markers.forEach(async (marker, index) => {
+        for (const [index, marker] of markers.entries()) {
           await createBoardingPolyline(marker, userLocation, index);
-        });
+        }
+        Logger.log("markerPolylines : ", markerPolylines);
       }
     },
     selectPolyline: (index) => {

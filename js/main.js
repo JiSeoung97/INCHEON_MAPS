@@ -134,7 +134,6 @@ $(document).ready(async () => {
           const boardingMarker = await MarkerService.createBoardingMarker(
             boardingGate
           );
-          await BottomSheet.openRecoGate();
           CustomControl.init();
           BottomSheet.changeMenu(1);
           await MarkerService.showMarkers();
@@ -238,12 +237,6 @@ $(document).ready(async () => {
     try {
       const userLocation = await utLocation.getCurrentPosition();
       Logger.log("✅ 위치 로딩 완료:", userLocation);
-
-      // 탑승구가 설정된 경우 폴리라인 업데이트
-      const boardingGate = sessionStorage.getItem("boardingGate");
-      if (boardingGate) {
-        await PolylineService.updatePolyline(userLocation, boardingGate);
-      }
       BottomSheet.showGateCongestion();
     } catch (error) {
       Logger.log("⚠️ 위치 로딩 실패, 기본 기능으로 계속 진행");

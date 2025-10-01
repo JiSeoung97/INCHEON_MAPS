@@ -5,6 +5,7 @@ import Utility from "../utility/utility.js";
 import InfoWindowService from "../component/infoWindow.js";
 import ModalService from "./modalService.js";
 import PolylineService from "./polylineService.js";
+import BottomSheet from "../component/bottomSheet.js";
 const MarkerService = (() => {
   let markers = [];
   let infoWindows = [];
@@ -27,6 +28,7 @@ const MarkerService = (() => {
       let area = null;
       let content;
       let marker;
+      let boardingOn = false;
       if (boardingGateNum == null) {
         area = areaData.area || areaData;
         if (index == 10) return;
@@ -61,12 +63,13 @@ const MarkerService = (() => {
           });
         }
       } else {
+        boardingOn = true;
         area = data.find(
           (data) => data.name === "탑승게이트" + boardingGateNum
         );
         marker = new naver.maps.Marker({
           position: new naver.maps.LatLng(area.position.lat, area.position.lng),
-          map: null,
+          map: map,
           title: area.name,
           icon: {
             content:
@@ -88,8 +91,8 @@ const MarkerService = (() => {
         boardingGateNum
       );
       naver.maps.Event.addListener(marker, "click", () => {
-        markerEvent(marker, infoWindow);
-        PolylineService.selectPolyline(index);
+        markerEvent(marker, index, boardingOn);
+        // PolylineService.selectPolyline(index);
       });
       if (boardingGateNum == null) {
         markers.push(marker);
@@ -361,43 +364,34 @@ const MarkerService = (() => {
   };
   function zoomMarkerEvent() {
     let currentZoom = Number(map.getZoom());
+    let departure1Open = BottomSheet.openDeparture1();
     if (currentZoom <= 17) {
-      markers.forEach((marker, index) => {
-        if (index > 1) {
-          marker.setMap(null);
-        }
+      markers.forEach((marker) => {
+        marker.setMap(null);
       });
       zoomOutMarkers.forEach((marker, index) => {
-        if (index != 0) {
+        if (index != 0 || departure1Open) {
           marker.setMap(map);
         }
       });
     } else {
       markers.forEach((marker, index) => {
-        if (index > 1) {
+        if (index > 1 || departure1Open) {
           marker.setMap(map);
         }
       });
-      zoomOutMarkers.forEach((marker, index) => {
-        if (index != 0) {
-          marker.setMap(null);
-        }
+      zoomOutMarkers.forEach((marker) => {
+        marker.setMap(null);
       });
     }
   }
-  const markerEvent = (marker, infoWindow) => {
+  const markerEvent = (marker, index = null, boardingOn = false) => {
     replaceMarkerIcon(marker);
 
-    if (selectedInfowindow == null) {
-      selectedInfowindow = infoWindow;
+    if (boardingOn) {
+      Utility.openWindowInfo();
     } else {
-      selectedInfowindow = null;
-    }
-
-    if (infoWindow.getMap() != null) {
-      infoWindow.close();
-    } else {
-      infoWindow.open(map, marker);
+      Utility.openWindowInfo(index);
     }
     $(".moreInfo")
       .off("click")
@@ -515,9 +509,10 @@ const MarkerService = (() => {
     },
     showMarkers: () => {
       try {
+        let departure1Open = BottomSheet.openDeparture1();
         if (map.getZoom() < 18) {
           zoomOutMarkers.forEach((marker, index) => {
-            if (index != 0) {
+            if (index != 0 || departure1Open) {
               marker.setMap(map);
             }
           });
@@ -527,6 +522,7 @@ const MarkerService = (() => {
             marker.setMap(map);
           });
         }
+        Logger.log("markers : ", markers);
         boardingGateNum = sessionStorage.getItem("boardingGate");
         if (boardingGateNum != null) {
           boardingMarkers[0].setMap(map);

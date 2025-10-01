@@ -13,16 +13,12 @@ const BottomSheet = (() => {
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
-  let locaOn = true;
-  let userOn = false;
   let map = null;
   let userMarker = [];
-  let getCurrentOn = false;
+  let open = false;
+  let polyOn = false;
   const showGateCongestion = async () => {
     try {
-      // 스켈레톤 UI 표시
-      showSkeletonUI();
-
       const allAreadata = DataService.getAllAreas();
       const areadata = [];
 
@@ -37,10 +33,6 @@ const BottomSheet = (() => {
         Logger.error("eastWest 요소들을 찾을 수 없습니다.");
         return;
       }
-
-      // 최소 1초간 스켈레톤 UI 표시 (사용자 경험 향상)
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
       for (const [index, conData] of areadata.entries()) {
         if (index >= contentsEl.length) continue;
 
@@ -55,8 +47,7 @@ const BottomSheet = (() => {
       }
 
       // 실제 컨텐츠 표시
-      hideSkeletonUI();
-      RecoService.recoLikeIconView();
+      departure1Open();
     } catch (error) {
       Logger.error("게이트 혼잡도 표시 실패:", error);
     }
@@ -490,10 +481,6 @@ const BottomSheet = (() => {
     try {
       const userPos = await utLocation.getCurrentPosition();
       boardingGateNum = sessionStorage.getItem("boardingGate");
-      if (locaOn) {
-        setTimeout(() => {}, 1000);
-        locaOn = false;
-      }
       const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
       if (userPos) {
         map.getCenter();
@@ -509,6 +496,11 @@ const BottomSheet = (() => {
             anchor: new naver.maps.Point(7, 14),
           },
         });
+        if (!polyOn) {
+          await PolylineService.createUserPolyline();
+          Logger.log("polyLine Create");
+          polyOn = true;
+        }
         if (userMarker[0] != null) {
           userMarker.forEach((uMarker) => {
             uMarker.setMap(null);
@@ -536,36 +528,19 @@ const BottomSheet = (() => {
       await requestControlEvent();
     });
   };
-
-  // 스켈레톤 UI 제어 함수들
-  const showSkeletonUI = () => {
-    const skeleton = document.getElementById("congestion-skeleton");
-    const contents = document.getElementById("contents");
-
-    if (skeleton) {
-      skeleton.classList.remove("hidden");
-      skeleton.classList.add("loading-skeleton");
+  const departure1Open = () => {
+    let date = new Date();
+    const hour = Number(date.getHours());
+    const minute = Number(date.getMinutes());
+    const nowTime = hour * 60 + minute;
+    if (nowTime >= 390 && nowTime <= 1260) {
+      open = true;
     }
-
-    if (contents) {
-      contents.classList.add("hidden");
-      contents.classList.remove("congestion-content");
+    if (open) {
+      const gate = document.getElementsByClassName("gate");
+      gate[0].classList.remove("hidden");
     }
-  };
-
-  const hideSkeletonUI = () => {
-    const skeleton = document.getElementById("congestion-skeleton");
-    const contents = document.getElementById("contents");
-
-    if (skeleton) {
-      skeleton.classList.add("hidden");
-      skeleton.classList.remove("loading-skeleton");
-    }
-
-    if (contents) {
-      contents.classList.remove("hidden");
-      contents.classList.add("congestion-content");
-    }
+    return open;
   };
 
   return {
@@ -614,7 +589,9 @@ const BottomSheet = (() => {
     resetAllBorderColor: () => {
       resetAllBorderColor();
     },
-    openRecoGate: () => {},
+    openDeparture1: () => {
+      return departure1Open();
+    },
   };
 })();
 
