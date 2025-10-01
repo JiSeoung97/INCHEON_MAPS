@@ -1,4 +1,6 @@
+import BottomSheet from "../component/bottomSheet.js";
 import Logger from "../utility/logger.js";
+import Utility from "../utility/utility.js";
 
 const DragService = (() => {
   let handle;
@@ -73,7 +75,6 @@ const DragService = (() => {
   }
   function calculatePositions() {
     const sheetHeight = bottomSheet.offsetHeight;
-    const peekHeight = calculatePeekHeight(); // peek만 (handle + menu)
     const visibleHeight = calculateVisibleHeight(); // peek + controls + 10px
 
     // OPEN: peek + controls + 10px 영역만 보이도록 계산
@@ -102,11 +103,20 @@ const DragService = (() => {
     POSITIONS.CLOSED = POSITIONS.OPEN - pxToVh(additionalHide);
 
     // 안전장치: 적절한 범위로 제한
-    POSITIONS.CLOSED = Math.max(
-      POSITIONS.CLOSED + 4,
-      -pxToVh(sheetHeight - 60)
-    );
-    POSITIONS.OPEN = Math.max(POSITIONS.OPEN + 4, -pxToVh(sheetHeight));
+    let safeClose = POSITIONS.CLOSED;
+    let safeOpen = POSITIONS.OPEN;
+    let isSamsung = Utility.detectSamsungBrowser();
+    let departure1Open = BottomSheet.openDeparture1();
+    if (departure1Open) {
+      safeClose = POSITIONS.CLOSED + 4;
+      safeOpen = POSITIONS.OPEN + 4;
+    }
+    if (isSamsung) {
+      safeClose = POSITIONS.CLOSED + 4;
+      safeOpen = POSITIONS.OPEN + 4;
+    }
+    POSITIONS.CLOSED = Math.max(safeClose, -pxToVh(sheetHeight - 60));
+    POSITIONS.OPEN = Math.max(safeOpen, -pxToVh(sheetHeight));
     return POSITIONS;
   }
   function pxToVh(px) {

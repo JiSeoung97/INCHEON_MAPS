@@ -130,16 +130,6 @@ body {
   background-color: #999;
 }
 
-/* 스켈레톤 UI 애니메이션 */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
 .skeleton {
   position: relative;
   overflow: hidden;
@@ -164,56 +154,34 @@ body {
   animation: shimmer 1.5s infinite;
 }
 
-/* 혼잡도 테이블 스켈레톤 - div 구조 */
-#congestion-skeleton {
-  width: 100%;
+/* skeleton UI */
+.eastWest.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  min-height: 60px;
 }
 
-.skeleton-congestion-row {
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  border-bottom: 1px solid #2121221a;
-  padding: 6px;
+.eastWest.skeleton > * {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.skeleton-congestion-cell {
-  height: 2.4rem;
-  border-radius: 10px;
-  margin-right: 2%;
-}
-
-/* 원본 테이블과 동일한 너비 비율 */
-.skeleton-gate-name {
-  width: 30%;
-}
-
-.skeleton-gate-status {
-  width: 35%;
-}
-
-.skeleton-gate-time {
-  width: 33%;
-}
-
-/* 스켈레톤 숨김/표시 */
-.loading-skeleton {
-  display: block;
-}
-
-.loading-skeleton.hidden {
-  display: none;
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .congestion-content {
   display: table;
   width: 100%;
-  height: 100%;
   text-align: left;
-}
-
-.congestion-content.hidden {
-  display: none;
 }
 
 /* 모바일 반응형 스타일 */
@@ -992,9 +960,6 @@ small {
   padding-top: 6px;
 }
 
-.gate:first-child {
-  display: none;
-}
 #kioskFlag {
   width: 15rem;
   height: 2.8rem;
@@ -1021,4 +986,7 @@ small {
 }
 #kioskImg > img {
   margin-right: 3px;
+}
+.gate.hidden {
+  display: none;
 }
