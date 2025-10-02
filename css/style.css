@@ -284,7 +284,7 @@ div p {
   font-size: 0.8rem;
 }
 #contents tr {
-  height: 3rem;
+  height: 3.5rem;
 }
 #contents tr th:nth-child(2),
 table th:nth-child(3) {
@@ -292,10 +292,10 @@ table th:nth-child(3) {
 }
 .eastWest {
   min-height: 100px;
-  height: 2.5rem;
+  height: 3rem;
 }
 .eastWest div {
-  height: 2.4rem;
+  height: 3rem;
 }
 .eastWest div h4 {
   font-size: 0.9rem;

@@ -92,6 +92,9 @@ const MapService = (() => {
     }
   };
   const getBoardingGateIdx = (index) => {
+    if (index == null || index == "") {
+      return true;
+    }
     index = Number(index);
     return (
       (index > 50 && index < 101) ||

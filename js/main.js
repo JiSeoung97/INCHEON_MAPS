@@ -98,7 +98,7 @@ $(document).ready(async () => {
         await BottomSheet.showGateCongestion();
 
         // 게이트 클릭 이벤트 재설정
-        setupGateClickEvents();
+        // setupGateClickEvents();
       } catch (error) {
         Logger.error("첫 번째 메뉴 처리 오류:", error);
       }
@@ -263,7 +263,7 @@ $(document).ready(async () => {
     setupEventListeners();
 
     // 5. 초기 게이트 클릭 이벤트 설정
-    setupGateClickEvents();
+    // setupGateClickEvents();
     // BottomSheet.recoLikeIconView();
     // 6.
     startBackgroundLocationLoading();
