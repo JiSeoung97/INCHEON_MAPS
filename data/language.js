@@ -91,6 +91,7 @@ const languageData = {
     kiosk2: "현재 보시는 키오스크 화면 기준, 왼쪽으로 이동하세요",
     kiosk3: "현재 보시는 키오스크 화면 기준, 뒤로 돌아 우측으로 이동하세요",
     kiosk4: "현재 보시는 키오스크 화면 기준, 뒤로 돌아 정면으로 이동하세요",
+    smartPass: "스마트패스 전용",
   },
   ja: {
     terminal: "第1旅客ターミナル",
@@ -185,6 +186,7 @@ const languageData = {
     kiosk2: "これを見て、左に曲がる",
     kiosk3: "これを背にして、右に曲がる",
     kiosk4: "これを背にして、まっすぐ行く",
+    smartPass: "スマートパス限定",
   },
   zh: {
     terminal: "第1旅客航站楼",
@@ -278,6 +280,7 @@ const languageData = {
     kiosk2: "以当前自助屏为基准，向左走",
     kiosk3: "以当前自助屏为基准，掉头向右走",
     kiosk4: "以当前自助屏为基准，掉头直行",
+    smartPass: "智能通道专用",
   },
   en: {
     terminal: "Passenger Terminal 1",
@@ -375,6 +378,7 @@ const languageData = {
     kiosk2: "From this kiosk, move left",
     kiosk3: "Turn around and move right from the kiosk screen",
     kiosk4: "Turn around and go straight from the kiosk screen",
+    smartPass: "Only SmartPass",
   },
 };
 export default languageData;
