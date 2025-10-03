@@ -13,6 +13,7 @@ const PolylineService = (() => {
   let userLocation = null;
   let polyOn = false;
   const createPolyline = (markers) => {
+    Logger.log("createPolylines in Markers: ", markers);
     for (let i = 0; i < markers.length; i += 2) {
       let polyline = new naver.maps.Polyline({
         map: null,

@@ -548,12 +548,10 @@ const BottomSheet = (() => {
     const hour = Number(date.getHours());
     const minute = Number(date.getMinutes());
     const nowTime = hour * 60 + minute;
-    Logger.log("nowTime : ", nowTime);
     if (nowTime >= 390 && nowTime <= 1260) {
       open = true;
     }
     if (open) {
-      Logger.log("f--------------------------------------");
       const gate = document.getElementsByClassName("gate");
       gate[0].classList.remove("hidden");
     }
