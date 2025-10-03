@@ -128,9 +128,7 @@ const MarkerService = (() => {
 
   const createElementMarker = () => {
     const elements = DataService.getAllElements();
-    let mapOn = null;
     map = MapService.getMap();
-    let infoWindow;
     elements.forEach((element) => {
       const marker = new naver.maps.Marker({
         position: element.position,
@@ -146,7 +144,8 @@ const MarkerService = (() => {
       if (name != "식당가") {
         const infoWindow = InfoWindowService.getElementInfo(element);
         naver.maps.Event.addListener(marker, "click", () => {
-          markerEvent(marker, infoWindow);
+          markerEvent(marker);
+          InfoWindowService.infoOpen(marker, infoWindow);
         });
         elementInfos.push(infoWindow);
       } else {

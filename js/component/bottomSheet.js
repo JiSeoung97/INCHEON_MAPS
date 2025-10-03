@@ -101,8 +101,8 @@ const BottomSheet = (() => {
     const direction = isEast ? language["east"] : language["west"];
     if (index <= 1 || index == 3) {
       return `<div style="text-align: center;border:${congestionInfo.border}">
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-15px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
-      <div class="smartPass-box" style="display:flex;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(10px, -18px)">
+      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
+      <div class="smartPass-box" style="display:flex;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
       <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
       </div>
         <p class="gatePoint">${direction}</p>
@@ -112,7 +112,10 @@ const BottomSheet = (() => {
       </div>`;
     } else {
       return `<div style="text-align: center;border:${congestionInfo.border}">
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-15px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
+      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
+      <div class="smartPass-box" style="display:none;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
+      <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
+      </div>
         <p class="gatePoint">${direction}</p>
         <h4 style="color:${congestionInfo.textColor}">${
         capacity + language["minute"]
@@ -125,10 +128,9 @@ const BottomSheet = (() => {
       const allareas = DataService.getAllAreas();
       let idx = index;
       const div = document.querySelectorAll(".eastWest div");
-      Logger.log("--------------------eastWest div : ", div);
       let eastWest = [];
       div.forEach((a, divIndex) => {
-        if (divIndex % 2 == 0) {
+        if (divIndex % 4 == 0) {
           eastWest.push(a);
         }
       });
@@ -246,7 +248,7 @@ const BottomSheet = (() => {
       </table>
     </div>
     <table id="contents">
-    <tr class="gate">
+    <tr class="gate hidden">
         <th>${language["gate1"]}</th>
         <th class="eastWest"></th>
         <th class="eastWest"></th>
@@ -603,7 +605,7 @@ const BottomSheet = (() => {
       resetAllBorderColor();
     },
     openDeparture1: () => {
-      return departure1Open();
+      return open;
     },
   };
 })();

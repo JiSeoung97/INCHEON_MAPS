@@ -104,6 +104,7 @@ const Utility = (() => {
   };
 
   const openWindowInfo = (index) => {
+    map = MapService.getMap();
     if (index == null) {
       let boardingInfo = InfoWindowService.getBoardingInfo();
       let boardingMarker = MarkerService.getBoardingMarker();

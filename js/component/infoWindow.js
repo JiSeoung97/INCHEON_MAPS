@@ -98,7 +98,7 @@ const InfoWindowService = (() => {
         '<p style = "color:#21212280">' +
         language["distance"] +
         ": " +
-        distance +
+        distance.toLocaleString() +
         "</p>" +
         "</div>"
       );
@@ -176,6 +176,7 @@ const InfoWindowService = (() => {
       return boardingInfo;
     },
     infoOpen: (marker, info) => {
+      let map = MapService.getMap();
       if (!infoOn) {
         info.open(map, marker);
         infoOn = true;

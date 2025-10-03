@@ -45,7 +45,6 @@ const PolylineService = (() => {
         strokeStyle: "longdash",
       });
     } else {
-      Logger.log("markerPolyline in positon : ", position);
       const latLng = new naver.maps.LatLng(position.lat, position.lng);
       let markerPolyline = new naver.maps.Polyline({
         map: null,

@@ -262,10 +262,7 @@ $(document).ready(async () => {
     // 3. 이벤트 리스너 설정
     setupEventListeners();
 
-    // 5. 초기 게이트 클릭 이벤트 설정
-    // setupGateClickEvents();
-    // BottomSheet.recoLikeIconView();
-    // 6.
+    // 4. 백그라운드 위치 로딩
     startBackgroundLocationLoading();
     Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     Logger.log(
@@ -273,7 +270,6 @@ $(document).ready(async () => {
     );
   } catch (error) {
     Logger.error("애플리케이션 초기화 중 치명적 오류:", error);
-    // window.location.href = "errorPage.html";
     Logger.error(
       "애플리케이션을 초기화하는 중 오류가 발생했습니다. 페이지를 새로고침해주세요."
     );
