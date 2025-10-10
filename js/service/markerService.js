@@ -386,8 +386,8 @@ const MarkerService = (() => {
   }
   const markerEvent = (marker, index = null, boardingOn = false) => {
     replaceMarkerIcon(marker);
-
-    if (boardingOn) {
+    if (index == null) {
+    } else if (boardingOn) {
       Utility.openWindowInfo();
     } else {
       Utility.openWindowInfo(index);

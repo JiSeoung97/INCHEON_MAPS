@@ -17,6 +17,7 @@ const BottomSheet = (() => {
   let userMarker = [];
   let open = false;
   let polyOn = false;
+  let isFirst = true;
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();
@@ -105,10 +106,10 @@ const BottomSheet = (() => {
       <div class="smartPass-box" style="display:flex;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
       <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
       </div>
-        <p class="gatePoint">${direction}</p>
-        <h4 style="color:${congestionInfo.textColor}">${
-        capacity + language["minute"]
-      }</h4>
+        <span class="gatePoint">${direction}</span>
+        <span style="text-align: center;margin-left:4px;width:50px;font-size: 15px;font-weight: 600;color:${
+          congestionInfo.textColor
+        }">${capacity + language["minute"]}</span>
       </div>`;
     } else {
       return `<div style="text-align: center;border:${congestionInfo.border}">
@@ -116,10 +117,10 @@ const BottomSheet = (() => {
       <div class="smartPass-box" style="display:none;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
       <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
       </div>
-        <p class="gatePoint">${direction}</p>
-        <h4 style="color:${congestionInfo.textColor}">${
-        capacity + language["minute"]
-      }</h4>
+        <span class="gatePoint">${direction}</span>
+        <span style="text-align: center;margin-left:4px;width:50px;font-size: 15px;font-weight: 600;color:${
+          congestionInfo.textColor
+        }">${capacity + language["minute"]}</span>
       </div>`;
     }
   };
@@ -231,7 +232,6 @@ const BottomSheet = (() => {
       departurehall = [];
       const innerHTML = createSecondMenuHTML();
       controls.innerHTML = innerHTML;
-
       await trainShow();
       await setupRecommendationEvents();
     } catch (error) {
@@ -348,9 +348,15 @@ const BottomSheet = (() => {
     try {
       const reco = document.getElementById("reco-select");
       if (!reco) return;
-      reco.style.left = priority.getBoundingClientRect().left + "px";
-      reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
-
+      if (isFirst) {
+        reco.style.left = priority.getBoundingClientRect().left + 10 + "px";
+        reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
+        isFirst = false;
+      } else {
+        reco.style.left = priority.getBoundingClientRect().left + "px";
+        reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
+      }
+      Logger.log("priorityRect : ", priority.getBoundingClientRect().left);
       if (reco.style.display === "none" || !reco.style.display) {
         reco.style.display = "flex";
         await selectEvent();
@@ -606,6 +612,9 @@ const BottomSheet = (() => {
     },
     openDeparture1: () => {
       return open;
+    },
+    handlePriorityClick: async (priority) => {
+      await handlePriorityClick(priority);
     },
   };
 })();
