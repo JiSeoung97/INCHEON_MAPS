@@ -506,6 +506,9 @@ table th:nth-child(3) {
   background: white;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
+#bottomContainer.close {
+  min-height: 20rem;
+}
 #locationContainer {
   display: flex;
   height: 2.3rem;

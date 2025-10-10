@@ -560,6 +560,8 @@ const BottomSheet = (() => {
     if (open) {
       const gate = document.getElementsByClassName("gate");
       gate[0].classList.remove("hidden");
+      const bottomSheetCon = document.getElementById("bottomContainer");
+      bottomSheetCon.classList.add("close");
     }
     return open;
   };
