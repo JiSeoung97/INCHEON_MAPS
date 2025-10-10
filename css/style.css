@@ -130,16 +130,6 @@ body {
   background-color: #999;
 }
 
-/* 스켈레톤 UI 애니메이션 */
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
 .skeleton {
   position: relative;
   overflow: hidden;
@@ -164,56 +154,34 @@ body {
   animation: shimmer 1.5s infinite;
 }
 
-/* 혼잡도 테이블 스켈레톤 - div 구조 */
-#congestion-skeleton {
-  width: 100%;
+/* skeleton UI */
+.eastWest.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  min-height: 60px;
 }
 
-.skeleton-congestion-row {
-  display: flex;
-  height: 3rem;
-  align-items: center;
-  border-bottom: 1px solid #2121221a;
-  padding: 6px;
+.eastWest.skeleton > * {
+  opacity: 0;
+  visibility: hidden;
 }
 
-.skeleton-congestion-cell {
-  height: 2.4rem;
-  border-radius: 10px;
-  margin-right: 2%;
-}
-
-/* 원본 테이블과 동일한 너비 비율 */
-.skeleton-gate-name {
-  width: 30%;
-}
-
-.skeleton-gate-status {
-  width: 35%;
-}
-
-.skeleton-gate-time {
-  width: 33%;
-}
-
-/* 스켈레톤 숨김/표시 */
-.loading-skeleton {
-  display: block;
-}
-
-.loading-skeleton.hidden {
-  display: none;
+@keyframes skeleton-loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 .congestion-content {
   display: table;
   width: 100%;
-  height: 100%;
   text-align: left;
-}
-
-.congestion-content.hidden {
-  display: none;
 }
 
 /* 모바일 반응형 스타일 */
@@ -316,7 +284,7 @@ div p {
   font-size: 0.8rem;
 }
 #contents tr {
-  height: 3rem;
+  height: 2.75rem;
 }
 #contents tr th:nth-child(2),
 table th:nth-child(3) {
@@ -324,13 +292,10 @@ table th:nth-child(3) {
 }
 .eastWest {
   min-height: 100px;
-  height: 2.5rem;
+  height: 2.75rem;
 }
 .eastWest div {
-  height: 2.4rem;
-}
-.eastWest div h4 {
-  font-size: 0.9rem;
+  height: 2.75rem;
 }
 .tab {
   width: 45%;
@@ -354,14 +319,18 @@ table th:nth-child(3) {
 }
 
 .gatePoint {
-  font-size: 0.6rem;
-  margin-bottom: 3px;
+  color: #616161;
+  text-align: center;
+  font-family: "Pretendard Variable";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 110%; /* 14.3px */
 }
-
 #menu {
   width: 100%;
   text-align: center;
-  min-height: 4vh;
+  min-height: 6vh;
 }
 .menuBtn {
   font-size: 0.9rem;
@@ -378,8 +347,9 @@ table th:nth-child(3) {
 }
 
 #contents th {
-  padding: 6px;
-  border-bottom: 1px solid #2121221a;
+  /* border-bottom: 1px solid #2121221a; */
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 #contents {
   height: auto;
@@ -390,7 +360,11 @@ table th:nth-child(3) {
   text-align: right;
   font-size: 12px;
 }
-
+.tabs table tr {
+  display: flex;
+  justify-content: center;
+  height: 2vh;
+}
 .tabs table tr th {
   font-size: 12px;
   color: #00000080;
@@ -506,16 +480,15 @@ table th:nth-child(3) {
   height: 1.2rem;
   object-fit: cover;
 }
-#handle {
+/* #handle {
   width: 100%;
-  height: 20px;
-  border-radius: 1vh 1vh 0vh 0vh;
-
+  height: 30px;
+  border-radius: 30px 30px 0 0;
   text-align: center;
-}
+} */
 #bottomSheet {
   position: fixed;
-  bottom: 0rem;
+  bottom: -36px;
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
@@ -532,7 +505,6 @@ table th:nth-child(3) {
   max-width: 430px;
   align-self: center;
   background: white;
-  border-radius: 20px 20px 0 0;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
 #locationContainer {
@@ -960,7 +932,7 @@ small {
   top: 3rem;
 }
 #trainCenterImg {
-  width: 70%;
+  width: 100%;
   height: auto;
   object-fit: contain;
 }
@@ -992,9 +964,6 @@ small {
   padding-top: 6px;
 }
 
-.gate:first-child {
-  display: none;
-}
 #kioskFlag {
   width: 15rem;
   height: 2.8rem;
@@ -1021,4 +990,13 @@ small {
 }
 #kioskImg > img {
   margin-right: 3px;
+}
+.gate.hidden {
+  display: none;
+}
+.gate {
+  padding: 0;
+}
+.gate th {
+  padding: 0;
 }

@@ -7,7 +7,7 @@ const InfoWindowService = (() => {
   let elementInfos = [];
   let boardingInfo = null;
   let language;
-  let bInfoOn = false;
+  let infoOn = false;
   const createInfoWindow = async (area, boardingGateNum) => {
     let infoWindow;
     if (boardingGateNum == null) {
@@ -98,7 +98,7 @@ const InfoWindowService = (() => {
         '<p style = "color:#21212280">' +
         language["distance"] +
         ": " +
-        distance +
+        distance.toLocaleString() +
         "</p>" +
         "</div>"
       );
@@ -175,22 +175,17 @@ const InfoWindowService = (() => {
     getBoardingInfo: () => {
       return boardingInfo;
     },
-    boardingInfoOpen: () => {
-      let markers = MarkerService.getBoardingMarker();
+    infoOpen: (marker, info) => {
       let map = MapService.getMap();
-      if (!bInfoOn) {
-        boardingInfo.open(map, markers[0]);
-        bInfoOn = true;
+      if (!infoOn) {
+        info.open(map, marker);
+        infoOn = true;
       } else {
-        boardingInfo.close();
-        bInfoOn = false;
+        info.close();
       }
     },
     resetBoardingInfo: () => {
       boardingInfo = null;
-    },
-    getBInfoOn: () => {
-      return bInfoOn;
     },
   };
 })();

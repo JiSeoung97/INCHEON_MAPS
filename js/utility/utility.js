@@ -71,31 +71,40 @@ const Utility = (() => {
     return naver.maps.LatLng(resultLat, resultLng);
   };
 
-  const moveGate = async (index) => {
+  const moveGate = async (index, boardingGateNum) => {
     map = MapService.getMap();
-    if (map.getZoom() <= 17) {
-      setTimeout(() => {
-        map.setZoom(18, true);
-      }, 100);
-    }
-    let idx = index;
-    selectedMarker = MarkerService.getSelectedMarker();
-    markers = MarkerService.getMarkers();
-    var transition = {
+    let newPosition = null;
+    let transition = {
       duration: 100,
       easing: "easeOutCubic",
     };
+    if (boardingGateNum == null) {
+      if (map.getZoom() <= 17) {
+        setTimeout(() => {
+          map.setZoom(18, true);
+        }, 100);
+      }
+      let idx = index;
+      selectedMarker = MarkerService.getSelectedMarker();
+      markers = MarkerService.getMarkers();
+      selectedMarker = markers[idx];
+    } else {
+      selectedMarker = MarkerService.getSelectedMarker();
+      const boardingMarkers = MarkerService.getBoardingMarker();
+      selectedMarker = boardingMarkers[0];
+    }
     MarkerService.replaceAllMarkerIcon();
-    selectedMarker = markers[idx];
-    let newPosition = naver.maps.LatLng(
-      markers[idx].position._lat - 0.0003,
-      markers[idx].position._lng
+    newPosition = naver.maps.LatLng(
+      selectedMarker.position._lat - 0.0003,
+      selectedMarker.position._lng
     );
     map.panTo(newPosition, transition);
-    MarkerService.replaceMarkerIcon(markers[idx]);
+    MarkerService.replaceMarkerIcon(selectedMarker);
+    return newPosition;
   };
 
   const openWindowInfo = (index) => {
+    map = MapService.getMap();
     if (index == null) {
       let boardingInfo = InfoWindowService.getBoardingInfo();
       let boardingMarker = MarkerService.getBoardingMarker();
@@ -159,6 +168,11 @@ const Utility = (() => {
     }
     return gaugeColor;
   };
+  const detectSamsungBrowser = () => {
+    const ua = navigator.userAgent;
+    let isSamsung = /SamsungBrowser/i.test(ua);
+    return isSamsung;
+  };
   return {
     getDistance: async (area, boardingGateNum = null, bottomSheet = false) => {
       let distance = Number(
@@ -169,8 +183,8 @@ const Utility = (() => {
     calculateMidPoint: (position1, position2) => {
       return calculateMidPoint(position1, position2);
     },
-    moveGate: (index) => {
-      moveGate(index);
+    moveGate: (index, boardingGateNum = null) => {
+      return moveGate(index, boardingGateNum);
     },
     openWindowInfo: (index) => {
       openWindowInfo(index);
@@ -183,6 +197,9 @@ const Utility = (() => {
     },
     congestionColor: (areaData) => {
       return congestionColor(areaData);
+    },
+    detectSamsungBrowser: () => {
+      return detectSamsungBrowser();
     },
   };
 })();

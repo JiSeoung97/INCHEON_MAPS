@@ -63,7 +63,7 @@ const ErrorHandler = (() => {
       error?.response?.status ||
       error?.status ||
       error?.statusCode ||
-      "NETWORK_ERROR";
+      "LocationError";
     // 2. 에러 페이지로 보낼 정보를 JSON 객체로 만듭니다.
     const errorDetails = {
       code: statusCode,

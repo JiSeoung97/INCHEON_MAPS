@@ -13,16 +13,13 @@ const BottomSheet = (() => {
   let departurehall = [];
   let boardingGateNum = null;
   let recoArray = [];
-  let locaOn = true;
-  let userOn = false;
   let map = null;
   let userMarker = [];
-  let getCurrentOn = false;
+  let open = false;
+  let polyOn = false;
+  let isFirst = true;
   const showGateCongestion = async () => {
     try {
-      // 스켈레톤 UI 표시
-      showSkeletonUI();
-
       const allAreadata = DataService.getAllAreas();
       const areadata = [];
 
@@ -37,10 +34,6 @@ const BottomSheet = (() => {
         Logger.error("eastWest 요소들을 찾을 수 없습니다.");
         return;
       }
-
-      // 최소 1초간 스켈레톤 UI 표시 (사용자 경험 향상)
-      await new Promise((resolve) => setTimeout(resolve, 300));
-
       for (const [index, conData] of areadata.entries()) {
         if (index >= contentsEl.length) continue;
 
@@ -48,15 +41,14 @@ const BottomSheet = (() => {
         const htmlContents = createCongestionHTML(
           congestionInfo,
           index % 2 === 1,
-          conData.capacity
+          conData.capacity,
+          index
         );
 
         contentsEl[index].innerHTML = htmlContents;
       }
-
       // 실제 컨텐츠 표시
-      hideSkeletonUI();
-      RecoService.recoLikeIconView();
+      departure1Open();
     } catch (error) {
       Logger.error("게이트 혼잡도 표시 실패:", error);
     }
@@ -106,25 +98,40 @@ const BottomSheet = (() => {
   };
 
   // 5. 혼잡도 HTML 생성
-  const createCongestionHTML = (congestionInfo, isEast, capacity) => {
+  const createCongestionHTML = (congestionInfo, isEast, capacity, index) => {
     const direction = isEast ? language["east"] : language["west"];
-    return `<div style="text-align: center;border:${congestionInfo.border}">
-    <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-10px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
-      <p class="gatePoint">${direction}</p>
-      <h4 style="color:${congestionInfo.textColor}">${
-      capacity + language["minute"]
-    }</h4>
-    </div>`;
+    if (index <= 1 || index == 3) {
+      return `<div style="text-align: center;border:${congestionInfo.border}">
+      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
+      <div class="smartPass-box" style="display:flex;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
+      <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
+      </div>
+        <span class="gatePoint">${direction}</span>
+        <span style="text-align: center;margin-left:4px;width:50px;font-size: 15px;font-weight: 600;color:${
+          congestionInfo.textColor
+        }">${capacity + language["minute"]}</span>
+      </div>`;
+    } else {
+      return `<div style="text-align: center;border:${congestionInfo.border}">
+      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
+      <div class="smartPass-box" style="display:none;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
+      <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
+      </div>
+        <span class="gatePoint">${direction}</span>
+        <span style="text-align: center;margin-left:4px;width:50px;font-size: 15px;font-weight: 600;color:${
+          congestionInfo.textColor
+        }">${capacity + language["minute"]}</span>
+      </div>`;
+    }
   };
   const changeBorderColor = async (index) => {
     try {
       const allareas = DataService.getAllAreas();
       let idx = index;
       const div = document.querySelectorAll(".eastWest div");
-
       let eastWest = [];
       div.forEach((a, divIndex) => {
-        if (divIndex % 2 == 0) {
+        if (divIndex % 4 == 0) {
           eastWest.push(a);
         }
       });
@@ -170,7 +177,7 @@ const BottomSheet = (() => {
           try {
             Utility.moveGate(index);
             Utility.openWindowInfo(index);
-            PolylineService.selectPolyline(index);
+            // PolylineService.selectPolyline(index);
             await changeBorderColor(index);
           } catch (error) {
             Logger.error(`게이트 ${index} 클릭 처리 오류:`, error);
@@ -225,7 +232,6 @@ const BottomSheet = (() => {
       departurehall = [];
       const innerHTML = createSecondMenuHTML();
       controls.innerHTML = innerHTML;
-
       await trainShow();
       await setupRecommendationEvents();
     } catch (error) {
@@ -242,7 +248,7 @@ const BottomSheet = (() => {
       </table>
     </div>
     <table id="contents">
-    <tr class="gate">
+    <tr class="gate hidden">
         <th>${language["gate1"]}</th>
         <th class="eastWest"></th>
         <th class="eastWest"></th>
@@ -342,9 +348,15 @@ const BottomSheet = (() => {
     try {
       const reco = document.getElementById("reco-select");
       if (!reco) return;
-      reco.style.left = priority.getBoundingClientRect().left + "px";
-      reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
-
+      if (isFirst) {
+        reco.style.left = priority.getBoundingClientRect().left + 10 + "px";
+        reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
+        isFirst = false;
+      } else {
+        reco.style.left = priority.getBoundingClientRect().left + "px";
+        reco.style.top = priority.getBoundingClientRect().top + 35 + "px";
+      }
+      Logger.log("priorityRect : ", priority.getBoundingClientRect().left);
       if (reco.style.display === "none" || !reco.style.display) {
         reco.style.display = "flex";
         await selectEvent();
@@ -490,10 +502,6 @@ const BottomSheet = (() => {
     try {
       const userPos = await utLocation.getCurrentPosition();
       boardingGateNum = sessionStorage.getItem("boardingGate");
-      if (locaOn) {
-        setTimeout(() => {}, 1000);
-        locaOn = false;
-      }
       const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
       if (userPos) {
         map.getCenter();
@@ -509,6 +517,11 @@ const BottomSheet = (() => {
             anchor: new naver.maps.Point(7, 14),
           },
         });
+        if (!polyOn) {
+          await PolylineService.createUserPolyline();
+          Logger.log("polyLine Create");
+          polyOn = true;
+        }
         if (userMarker[0] != null) {
           userMarker.forEach((uMarker) => {
             uMarker.setMap(null);
@@ -536,36 +549,19 @@ const BottomSheet = (() => {
       await requestControlEvent();
     });
   };
-
-  // 스켈레톤 UI 제어 함수들
-  const showSkeletonUI = () => {
-    const skeleton = document.getElementById("congestion-skeleton");
-    const contents = document.getElementById("contents");
-
-    if (skeleton) {
-      skeleton.classList.remove("hidden");
-      skeleton.classList.add("loading-skeleton");
+  const departure1Open = () => {
+    let date = new Date();
+    const hour = Number(date.getHours());
+    const minute = Number(date.getMinutes());
+    const nowTime = hour * 60 + minute;
+    if (nowTime >= 390 && nowTime <= 1260) {
+      open = true;
     }
-
-    if (contents) {
-      contents.classList.add("hidden");
-      contents.classList.remove("congestion-content");
+    if (open) {
+      const gate = document.getElementsByClassName("gate");
+      gate[0].classList.remove("hidden");
     }
-  };
-
-  const hideSkeletonUI = () => {
-    const skeleton = document.getElementById("congestion-skeleton");
-    const contents = document.getElementById("contents");
-
-    if (skeleton) {
-      skeleton.classList.add("hidden");
-      skeleton.classList.remove("loading-skeleton");
-    }
-
-    if (contents) {
-      contents.classList.remove("hidden");
-      contents.classList.add("congestion-content");
-    }
+    return open;
   };
 
   return {
@@ -614,7 +610,12 @@ const BottomSheet = (() => {
     resetAllBorderColor: () => {
       resetAllBorderColor();
     },
-    openRecoGate: () => {},
+    openDeparture1: () => {
+      return open;
+    },
+    handlePriorityClick: async (priority) => {
+      await handlePriorityClick(priority);
+    },
   };
 })();
 

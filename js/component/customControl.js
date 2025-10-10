@@ -4,8 +4,6 @@ import MarkerService from "../service/markerService.js";
 import InfoWindowService from "./infoWindow.js";
 import ModalService from "../service/modalService.js";
 import Utility from "../utility/utility.js";
-import utLocation from "../utility/location.js";
-import PolylineService from "../service/polylineService.js";
 
 const CustomControl = (() => {
   let language = [];
@@ -28,7 +26,6 @@ const CustomControl = (() => {
   let movePosition = null;
   let userMarker = [];
   let conSwitch = null;
-  // let locaOn = true;
   let customEventOn = false;
   const positions = [
     naver.maps.Position.TOP_LEFT,
@@ -95,20 +92,20 @@ const CustomControl = (() => {
     let moveGateBtn;
 
     if (boardingGateNum != null) {
-      moveGateBtn = `<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >
+      moveGateBtn = `<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >
         <img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px"> 
         <img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px"> 
         ${language["boardingGate"]}
          : ${boardingGateNum}
         </div>`;
       boarding =
-        '<div id="moveBoardingGate" style="display: flex ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+        '<div id="moveBoardingGate" style="display: flex ; box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     } else {
-      moveGateBtn = `<div id ="boardingInfo-none" style="display:flex;height : 2rem ;width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">
+      moveGateBtn = `<div id ="boardingInfo-none" style="display:flex;height : 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15);width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">
         ${language["boardingGate"]} 
-         : </div>`;
+        </div>`;
       boarding =
-        '<div id="moveBoardingGate" style="display: none ;z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+        '<div id="moveBoardingGate" style="display: none ;box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
     }
     const selectLang = `<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;
       background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">
@@ -123,13 +120,13 @@ const CustomControl = (() => {
       ko: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">한국어(
         ${language["korean"]}
         )</div>`,
-      en: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">영어(
+      en: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">English(
         ${language["english"]}
         )</div>`,
-      ja: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">일본어(
+      ja: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">日本語(
         ${language["japanese"]}
         )</div>`,
-      zh: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">중국어(
+      zh: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">中文(
         ${language["chinese"]}
         )</div>`,
     };
@@ -187,21 +184,21 @@ const CustomControl = (() => {
       const gpsBlack = document.getElementById("gps-black");
       const gpsBlue = document.getElementById("gps-blue");
       const user_location = JSON.parse(sessionStorage.getItem("myLocation"));
-      const userLat = Math.round(user_location.lat * 10000000) / 10000000;
-      const userLng = Math.round(user_location.lng * 10000000) / 10000000;
-      if (movePosition != null) {
-        if (
-          movePosition._lat == currentCenter._lat &&
-          movePosition._lng == currentCenter._lng
-        ) {
-          sendBlack.style.display = "none";
-          sendBlue.style.display = "block";
-        } else {
-          sendBlack.style.display = "block";
-          sendBlue.style.display = "none";
-        }
-      }
       if (user_location != null) {
+        const userLat = Math.round(user_location.lat * 10000000) / 10000000;
+        const userLng = Math.round(user_location.lng * 10000000) / 10000000;
+        if (movePosition != null) {
+          if (
+            movePosition._lat == currentCenter._lat &&
+            movePosition._lng == currentCenter._lng
+          ) {
+            sendBlack.style.display = "none";
+            sendBlue.style.display = "block";
+          } else {
+            sendBlack.style.display = "block";
+            sendBlue.style.display = "none";
+          }
+        }
         if (currentCenter._lat == userLat && currentCenter._lng == userLng) {
           gpsBlack.style.display = "none";
           gpsBlue.style.display = "block";
@@ -245,8 +242,8 @@ const CustomControl = (() => {
 
     naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
       if (boardingGateNum != null) {
-        movePosition = MapService.moveBoardingGate();
-        InfoWindowService.boardingInfoOpen();
+        movePosition = Utility.moveGate(0, 1);
+        Utility.openBoardingWindowInfo();
       } else {
         ModalService.boardingModalOpen("boardingInfo");
       }

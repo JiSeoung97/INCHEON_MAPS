@@ -4,7 +4,7 @@ import DataService from "./dataService.js";
 import PolylineService from "./polylineService.js";
 import RecoService from "./recoService.js";
 import MarkerService from "./markerService.js";
-import DragService from "./dragService.js";
+// import DragService from "./dragService.js";
 import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
 import languageData from "../../data/language.js";
@@ -26,10 +26,7 @@ const MapService = (() => {
   let selectedInfowindow = null;
   let zoomOutMarkers = [];
   let polylines = [];
-  let elementInfos = [];
   let isClickEvent = false;
-  let setting = false;
-  let boardingInfo = null;
   let kiosk = null;
   let lang = null;
   let dataCnt = 0;
@@ -73,11 +70,12 @@ const MapService = (() => {
       }
     });
   };
-  const mapClickEvent = () => {
+  const mapClickEvent = (e) => {
     if (isClickEvent == false) {
       naver.maps.Event.addListener(map, "click", function (e) {
         isClickEvent = true;
         CustomControl.mapLangClose();
+        Logger.log(e.coord);
         MarkerService.replaceAllMarkerIcon();
         if (MarkerService.getSelectedMarker() != null) {
           MarkerService.setSelectedMarker(null);
@@ -92,6 +90,9 @@ const MapService = (() => {
     }
   };
   const getBoardingGateIdx = (index) => {
+    if (index == null || index == "") {
+      return true;
+    }
     index = Number(index);
     return (
       (index > 50 && index < 101) ||
@@ -222,12 +223,11 @@ const MapService = (() => {
           markers = MarkerService.getMarkers();
           PolylineService.createPolyline(markers);
         }
-        PolylineService.createUserPolyline();
         zoomEvent();
         mapClickEvent();
 
         await BottomSheet.showGateCongestion();
-        await DragService.init();
+        // await DragService.init();
         Logger.log("setting 완료");
       } catch (error) {
         Logger.error("data를 가져오는 도중 error발생 : ", error);
@@ -244,23 +244,6 @@ const MapService = (() => {
     },
     alertGateNumCheck: () => {
       alert(language["checkNum"]);
-    },
-    moveBoardingGate: () => {
-      var transition = {
-        duration: 800,
-        easing: "easeOutCubic",
-      };
-      boardingMarkers = MarkerService.getBoardingMarker();
-      MarkerService.replaceMarkerIcon(boardingMarkers);
-      let movePosition;
-
-      movePosition = naver.maps.LatLng(
-        boardingMarkers[0].position._lat - 0.0003,
-        boardingMarkers[0].position._lng
-      );
-      map.panTo(movePosition, transition);
-
-      return movePosition;
     },
     getCurrentPosition: async () => {
       return await getCurrentPosition();

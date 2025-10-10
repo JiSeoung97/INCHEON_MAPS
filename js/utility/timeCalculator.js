@@ -39,8 +39,7 @@ const TimeCalculator = (() => {
       let language = MapService.languageReturn();
       boardingGateNum = sessionStorage.getItem("boardingGate");
       // 홀까지 이동 시간
-      const distanceStr = await Utility.getDistance(foundData);
-      const distance = Number(distanceStr.replace("M", "").replace(",", ""));
+      const distance = await Utility.getDistance(foundData);
       const hallTime = Math.floor(distance / 60);
       totalTime += hallTime;
 
@@ -56,9 +55,7 @@ const TimeCalculator = (() => {
         boardingGateNum,
         true
       );
-      const boardingTime = Math.floor(
-        Number(boardingDistance.replace("M", "").replace(",", "")) / 60
-      );
+      const boardingTime = Math.floor(boardingDistance / 60);
       totalTime += boardingTime;
       const boardingTimeStr =
         boardingGateNum > 100
@@ -85,12 +82,12 @@ const TimeCalculator = (() => {
     } catch (error) {
       Logger.error("시간 계산 실패:", error);
       return {
-        total: `0${language["minute"]}`,
+        total: `${language["minute"]}`,
         times: [
-          `0${language["minute"]}`,
-          `0${language["minute"]}`,
-          `0${language["minute"]}`,
-          `0${language["minute"]}`,
+          `${language["minute"]}`,
+          `${language["minute"]}`,
+          `${language["minute"]}`,
+          `${language["minute"]}`,
         ],
       };
     }

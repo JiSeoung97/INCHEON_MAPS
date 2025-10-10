@@ -98,7 +98,7 @@ $(document).ready(async () => {
         await BottomSheet.showGateCongestion();
 
         // 게이트 클릭 이벤트 재설정
-        setupGateClickEvents();
+        // setupGateClickEvents();
       } catch (error) {
         Logger.error("첫 번째 메뉴 처리 오류:", error);
       }
@@ -110,6 +110,7 @@ $(document).ready(async () => {
       } else {
         try {
           BottomSheet.changeMenu(btnIdx);
+
           Logger.log("메뉴 변경 완료");
         } catch (error) {
           Logger.error("메뉴 변경 오류:", error);
@@ -134,9 +135,10 @@ $(document).ready(async () => {
           const boardingMarker = await MarkerService.createBoardingMarker(
             boardingGate
           );
-          await BottomSheet.openRecoGate();
           CustomControl.init();
-          BottomSheet.changeMenu(1);
+          await BottomSheet.changeMenu(1);
+          const priority = document.getElementById("reco-priority");
+          await BottomSheet.handlePriorityClick(priority);
           await MarkerService.showMarkers();
           // UI 업데이트
           updateBoardingGateUI();
@@ -238,12 +240,6 @@ $(document).ready(async () => {
     try {
       const userLocation = await utLocation.getCurrentPosition();
       Logger.log("✅ 위치 로딩 완료:", userLocation);
-
-      // 탑승구가 설정된 경우 폴리라인 업데이트
-      const boardingGate = sessionStorage.getItem("boardingGate");
-      if (boardingGate) {
-        await PolylineService.updatePolyline(userLocation, boardingGate);
-      }
       BottomSheet.showGateCongestion();
     } catch (error) {
       Logger.log("⚠️ 위치 로딩 실패, 기본 기능으로 계속 진행");
@@ -269,10 +265,7 @@ $(document).ready(async () => {
     // 3. 이벤트 리스너 설정
     setupEventListeners();
 
-    // 5. 초기 게이트 클릭 이벤트 설정
-    setupGateClickEvents();
-    // BottomSheet.recoLikeIconView();
-    // 6.
+    // 4. 백그라운드 위치 로딩
     startBackgroundLocationLoading();
     Logger.log("네이버 지도 API 프로토타입이 시작되었습니다.");
     Logger.log(
@@ -280,7 +273,6 @@ $(document).ready(async () => {
     );
   } catch (error) {
     Logger.error("애플리케이션 초기화 중 치명적 오류:", error);
-    // window.location.href = "errorPage.html";
     Logger.error(
       "애플리케이션을 초기화하는 중 오류가 발생했습니다. 페이지를 새로고침해주세요."
     );

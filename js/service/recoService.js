@@ -27,24 +27,15 @@ const RecoService = (() => {
         }
       }
       recoArray.sort((a, b) => a.time - b.time || a.waitLength - b.waitLength);
+      recoLikeIconView();
     } catch (error) {
-      for (let i = 0; i < 3; i++) {
-        recoArray.push({
-          name: areas[i].name,
-          time: distance + waitingTime,
-          position: areas[i].position,
-        });
-      }
-      console.log("추천게이트 계산 실패");
       Logger.error("추천 게이트 계산 실패:", error);
     }
   };
   const getAreaDistance = async (area) => {
     try {
-      const distanceStr = await Utility.getDistance(area);
-      return Math.round(
-        Number(distanceStr.replace("M", "").replace(",", "")) / 70
-      );
+      const distance = await Utility.getDistance(area);
+      return Math.round(distance / 70);
     } catch (error) {
       Logger.error("거리 계산 실패:", error);
       return 0;
