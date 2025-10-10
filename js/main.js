@@ -110,6 +110,7 @@ $(document).ready(async () => {
       } else {
         try {
           BottomSheet.changeMenu(btnIdx);
+
           Logger.log("메뉴 변경 완료");
         } catch (error) {
           Logger.error("메뉴 변경 오류:", error);
@@ -135,7 +136,9 @@ $(document).ready(async () => {
             boardingGate
           );
           CustomControl.init();
-          BottomSheet.changeMenu(1);
+          await BottomSheet.changeMenu(1);
+          const priority = document.getElementById("reco-priority");
+          await BottomSheet.handlePriorityClick(priority);
           await MarkerService.showMarkers();
           // UI 업데이트
           updateBoardingGateUI();

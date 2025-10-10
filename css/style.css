@@ -292,13 +292,10 @@ table th:nth-child(3) {
 }
 .eastWest {
   min-height: 100px;
-  height: 3rem;
+  height: 2.75rem;
 }
 .eastWest div {
-  height: 3rem;
-}
-.eastWest div h4 {
-  font-size: 0.9rem;
+  height: 2.75rem;
 }
 .tab {
   width: 45%;
@@ -322,14 +319,18 @@ table th:nth-child(3) {
 }
 
 .gatePoint {
-  font-size: 0.6rem;
-  margin-bottom: 3px;
+  color: #616161;
+  text-align: center;
+  font-family: "Pretendard Variable";
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 110%; /* 14.3px */
 }
-
 #menu {
   width: 100%;
   text-align: center;
-  min-height: 4vh;
+  min-height: 6vh;
 }
 .menuBtn {
   font-size: 0.9rem;
@@ -346,7 +347,6 @@ table th:nth-child(3) {
 }
 
 #contents th {
-  padding: 6px;
   border-bottom: 1px solid #2121221a;
 }
 #contents {
@@ -358,7 +358,11 @@ table th:nth-child(3) {
   text-align: right;
   font-size: 12px;
 }
-
+.tabs table tr {
+  display: flex;
+  justify-content: center;
+  height: 2vh;
+}
 .tabs table tr th {
   font-size: 12px;
   color: #00000080;
@@ -474,13 +478,12 @@ table th:nth-child(3) {
   height: 1.2rem;
   object-fit: cover;
 }
-#handle {
+/* #handle {
   width: 100%;
-  height: 20px;
-  border-radius: 1vh 1vh 0vh 0vh;
-
+  height: 30px;
+  border-radius: 30px 30px 0 0;
   text-align: center;
-}
+} */
 #bottomSheet {
   position: fixed;
   bottom: 0rem;
@@ -500,7 +503,6 @@ table th:nth-child(3) {
   max-width: 430px;
   align-self: center;
   background: white;
-  border-radius: 20px 20px 0 0;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
 #locationContainer {

@@ -4,7 +4,7 @@ import DataService from "./dataService.js";
 import PolylineService from "./polylineService.js";
 import RecoService from "./recoService.js";
 import MarkerService from "./markerService.js";
-import DragService from "./dragService.js";
+// import DragService from "./dragService.js";
 import Translate from "../utility/translate.js";
 import InfoWindowService from "../component/infoWindow.js";
 import languageData from "../../data/language.js";
@@ -26,10 +26,7 @@ const MapService = (() => {
   let selectedInfowindow = null;
   let zoomOutMarkers = [];
   let polylines = [];
-  let elementInfos = [];
   let isClickEvent = false;
-  let setting = false;
-  let boardingInfo = null;
   let kiosk = null;
   let lang = null;
   let dataCnt = 0;
@@ -73,11 +70,12 @@ const MapService = (() => {
       }
     });
   };
-  const mapClickEvent = () => {
+  const mapClickEvent = (e) => {
     if (isClickEvent == false) {
       naver.maps.Event.addListener(map, "click", function (e) {
         isClickEvent = true;
         CustomControl.mapLangClose();
+        Logger.log(e.coord);
         MarkerService.replaceAllMarkerIcon();
         if (MarkerService.getSelectedMarker() != null) {
           MarkerService.setSelectedMarker(null);
@@ -229,7 +227,7 @@ const MapService = (() => {
         mapClickEvent();
 
         await BottomSheet.showGateCongestion();
-        await DragService.init();
+        // await DragService.init();
         Logger.log("setting 완료");
       } catch (error) {
         Logger.error("data를 가져오는 도중 error발생 : ", error);
