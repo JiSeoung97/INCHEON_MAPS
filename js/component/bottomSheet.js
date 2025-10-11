@@ -561,9 +561,9 @@ const BottomSheet = (() => {
       const gate = document.getElementsByClassName("gate");
       gate[0].classList.remove("hidden");
       const bottomSheetCon = document.getElementById("bottomContainer");
-      bottomSheetCon.classList.add("close");
+      bottomSheetCon.classList.add("open");
       const bottomSheet = document.getElementById("bottomSheet");
-      bottomSheet.classList.add("close");
+      bottomSheet.classList.add("open");
     }
     return open;
   };
