@@ -606,7 +606,7 @@ const BottomSheet = (() => {
     }
     const isSamsung = Utility.detectSamsungBrowser();
     if (isSamsung) {
-      total -= 20;
+      total -= 40;
     }
     total -= 20;
     const bottomSheet = document.getElementById("bottomSheet");
