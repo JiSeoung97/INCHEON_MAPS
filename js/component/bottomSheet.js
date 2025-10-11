@@ -103,7 +103,7 @@ const BottomSheet = (() => {
     if (index <= 1 || index == 3) {
       return `<div style="text-align: center;border:${congestionInfo.border}">
       <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
-      <div class="smartPass-box" style="display:flex;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
+      <div class="smartPass-box" style="display:flex;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.75rem, -1.3rem)">
       <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
       </div>
         <span class="gatePoint">${direction}</span>
@@ -113,7 +113,7 @@ const BottomSheet = (() => {
       </div>`;
     } else {
       return `<div style="text-align: center;border:${congestionInfo.border}">
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
+      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;font-size:11px;height:1rem;width:2.8rem;color:#fff;background-color:#32A1FF;position:fixed;transform:translate(2.7rem,-1.1rem);border-radius:0.5rem"><img src="./images/like_icon.svg" style="height:0.5rem;width:0.5rem;margin-right:2px;border-radius:50%"><span style="font-size:text-align: center;font-family: "Pretendard Variable";font-size: 11px;font-style: normal;font-weight: 500;">Best</span></div>
       <div class="smartPass-box" style="display:none;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
       <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
       </div>
@@ -562,6 +562,8 @@ const BottomSheet = (() => {
       gate[0].classList.remove("hidden");
       const bottomSheetCon = document.getElementById("bottomContainer");
       bottomSheetCon.classList.add("close");
+      const bottomSheet = document.getElementById("bottomSheet");
+      bottomSheet.classList.add("close");
     }
     return open;
   };

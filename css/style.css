@@ -500,14 +500,17 @@ table th:nth-child(3) {
   overflow: hidden;
 }
 #bottomContainer {
-  min-height: 30rem;
+  min-height: 25rem;
   max-width: 430px;
   align-self: center;
   background: white;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
-#bottomContainer.close {
-  min-height: 20rem;
+#bottomContainer.open {
+  min-height: 30rem;
+}
+#bottomSheet.open {
+  bottom: 0;
 }
 #locationContainer {
   display: flex;
