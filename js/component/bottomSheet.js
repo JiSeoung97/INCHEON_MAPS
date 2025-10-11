@@ -112,8 +112,10 @@ const BottomSheet = (() => {
         }">${capacity + language["minute"]}</span>
       </div>`;
     } else {
-      return `<div style="text-align: center;border:${congestionInfo.border}">
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;font-size:11px;height:1rem;width:2.8rem;color:#fff;background-color:#32A1FF;position:fixed;transform:translate(2.7rem,-1.1rem);border-radius:0.5rem"><img src="./images/like_icon.svg" style="height:0.5rem;width:0.5rem;margin-right:2px;border-radius:50%"><span style="font-size:text-align: center;font-family: "Pretendard Variable";font-size: 11px;font-style: normal;font-weight: 500;">Best</span></div>
+      return `<div style="position:relative;text-align: center;border:${
+        congestionInfo.border
+      }">
+      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;font-size:11px;height:1rem;width:2.8rem;color:#fff;background-color:#32A1FF;position:absolute;top:-0.5rem;left:50%;transform:translateX(-50%);border-radius:0.5rem"><img src="./images/like_icon.svg" style="height:0.5rem;width:0.5rem;margin-right:2px;border-radius:50%"><span style="font-size:text-align: center;font-family: "Pretendard Variable";font-size: 11px;font-style: normal;font-weight: 500;">Best</span></div>
       <div class="smartPass-box" style="display:none;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
       <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
       </div>
@@ -560,19 +562,61 @@ const BottomSheet = (() => {
     if (open) {
       const gate = document.getElementsByClassName("gate");
       gate[0].classList.remove("hidden");
-      const bottomSheetCon = document.getElementById("bottomContainer");
-      bottomSheetCon.classList.add("open");
-      const bottomSheet = document.getElementById("bottomSheet");
-      bottomSheet.classList.add("open");
     }
     return open;
   };
+  const bottomSheetHeight = () => {
+    let total;
+    const peeks = getElementsByClassName("peek");
+    const controls = getElementById("controls");
+    if (!peeks) {
+      Logger.log("peek 클래스 요소를 찾을 수 없습니다");
+    } else {
+      Array.from(peekElement).forEach((peek) => {
+        const style = window.getComputedStyle(peek);
+        const marginTop = parseInt(style.marginTop) || 0;
+        const marginBottom = parseInt(style.marginBottom) || 0;
+        const paddingTop = parseInt(style.paddingTop) || 0;
+        const paddingBottom = parseInt(style.paddingBottom) || 0;
 
+        total +=
+          peek.offsetHeight +
+          marginTop +
+          marginBottom +
+          paddingTop +
+          paddingBottom;
+      });
+    }
+    if (!controls) {
+      Logger.log("controls 요소를 찾을 수 없습니다");
+    } else {
+      const style = window.getComputedStyle(controls);
+      const marginTop = parseInt(style.marginTop) || 0;
+      const marginBottom = parseInt(style.marginBottom) || 0;
+      const paddingTop = parseInt(style.paddingTop) || 0;
+      const paddingBottom = parseInt(style.paddingBottom) || 0;
+
+      total +=
+        controls.offsetHeight +
+        marginTop +
+        marginBottom +
+        paddingTop +
+        paddingBottom;
+    }
+    const isSamsung = Utility.detectSamsungBrowser();
+    if (isSamsung) {
+      total += 20;
+    }
+    const bottomSheet = getElementById("bottomSheet");
+    const bottomHeight = bottomSheet.offsetHeight;
+    bottomSheet.style.bottom = bottomHeight - total + "px";
+  };
   return {
     init: async () => {
       recoArray = await RecoService.recoGate();
       map = MapService.getMap();
       locationEvent();
+      bottomSheetHeight();
     },
     languageChan: (lang) => {
       language = lang;
