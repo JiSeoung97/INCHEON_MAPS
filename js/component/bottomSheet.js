@@ -605,8 +605,9 @@ const BottomSheet = (() => {
     }
     const isSamsung = Utility.detectSamsungBrowser();
     if (isSamsung) {
-      total += 20;
+      total -= 20;
     }
+    total -= 20;
     const bottomSheet = getElementById("bottomSheet");
     const bottomHeight = bottomSheet.offsetHeight;
     bottomSheet.style.bottom = bottomHeight - total + "px";
