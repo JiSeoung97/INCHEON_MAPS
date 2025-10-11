@@ -49,6 +49,7 @@ const BottomSheet = (() => {
       }
       // 실제 컨텐츠 표시
       departure1Open();
+      bottomSheetHeight();
     } catch (error) {
       Logger.error("게이트 혼잡도 표시 실패:", error);
     }
@@ -567,12 +568,12 @@ const BottomSheet = (() => {
   };
   const bottomSheetHeight = () => {
     let total;
-    const peeks = getElementsByClassName("peek");
-    const controls = getElementById("controls");
+    const peeks = document.getElementsByClassName("peek");
+    const controls = document.getElementById("controls");
     if (!peeks) {
       Logger.log("peek 클래스 요소를 찾을 수 없습니다");
     } else {
-      Array.from(peekElement).forEach((peek) => {
+      Array.from(peeks).forEach((peek) => {
         const style = window.getComputedStyle(peek);
         const marginTop = parseInt(style.marginTop) || 0;
         const marginBottom = parseInt(style.marginBottom) || 0;
@@ -608,7 +609,7 @@ const BottomSheet = (() => {
       total -= 20;
     }
     total -= 20;
-    const bottomSheet = getElementById("bottomSheet");
+    const bottomSheet = document.getElementById("bottomSheet");
     const bottomHeight = bottomSheet.offsetHeight;
     bottomSheet.style.bottom = bottomHeight - total + "px";
   };
@@ -617,7 +618,6 @@ const BottomSheet = (() => {
       recoArray = await RecoService.recoGate();
       map = MapService.getMap();
       locationEvent();
-      bottomSheetHeight();
     },
     languageChan: (lang) => {
       language = lang;

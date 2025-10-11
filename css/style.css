@@ -488,7 +488,7 @@ table th:nth-child(3) {
 } */
 #bottomSheet {
   position: fixed;
-  bottom: -36px;
+  bottom: 0;
   left: 50%;
   transform: translateX(-50%);
   width: 100vw;
