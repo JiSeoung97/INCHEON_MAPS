@@ -171,6 +171,7 @@ const Utility = (() => {
   const detectSamsungBrowser = () => {
     const ua = navigator.userAgent;
     let isSamsung = /SamsungBrowser/i.test(ua);
+    Logger.log("isSamsung", isSamsung);
     return isSamsung;
   };
   return {
