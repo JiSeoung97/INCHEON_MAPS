@@ -320,12 +320,13 @@ table th:nth-child(3) {
 
 .gatePoint {
   color: #616161;
-  text-align: center;
+  text-align: end;
   font-family: "Pretendard Variable";
   font-size: 13px;
   font-style: normal;
   font-weight: 500;
   line-height: 110%; /* 14.3px */
+  width: auto;
 }
 #menu {
   width: 100%;

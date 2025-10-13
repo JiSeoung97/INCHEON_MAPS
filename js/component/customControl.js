@@ -16,7 +16,6 @@ const CustomControl = (() => {
   let languageText = null;
   let selectedLangArray = [];
   let firstlang;
-  let locaCon;
   let moveGateCon;
   let boardingInfo;
   let selectLangCon;
@@ -24,9 +23,9 @@ const CustomControl = (() => {
   let langchangeCon;
   let map;
   let movePosition = null;
-  let userMarker = [];
   let conSwitch = null;
   let customEventOn = false;
+  let firstLoad = true;
   const positions = [
     naver.maps.Position.TOP_LEFT,
     naver.maps.Position.LEFT_TOP,
@@ -99,13 +98,13 @@ const CustomControl = (() => {
          : ${boardingGateNum}
         </div>`;
       boarding =
-        '<div id="moveBoardingGate" style="display: flex ; box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+        '<div id="moveBoardingGate" style="display: flex ; box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/boardingIcon.png" style="height:20px;width:20px"></div>';
     } else {
       moveGateBtn = `<div id ="boardingInfo-none" style="display:flex;height : 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15);width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">
         ${language["boardingGate"]} 
         </div>`;
       boarding =
-        '<div id="moveBoardingGate" style="display: none ;box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+        '<div id="moveBoardingGate" style="display: none ;box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/boardingIcon.png" style="height:20px;width:20px"></div>';
     }
     const selectLang = `<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;
       background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">
@@ -251,10 +250,13 @@ const CustomControl = (() => {
   };
   const customControlSetMap = () => {
     setTimeout(() => {
-      // locaCon.setMap(map);
       boardingInfo.setMap(map);
       selectLangCon.setMap(map);
       moveGateCon.setMap(map);
+      if (firstLoad) {
+        langchangeCon.setMap(map);
+        firstLoad = false;
+      }
     }, 50);
   };
   const customControlAllDelete = () => {
