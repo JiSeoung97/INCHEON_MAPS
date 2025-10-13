@@ -109,10 +109,10 @@ const BottomSheet = (() => {
       <div class="smartPass" style="display:flex;width:5rem;position:absolute;top:-0.5rem;left:50%;transform:translateX(-50%);font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
       <div style= "display:flex ;width:100% ; padding :14px 12px ;justify-content:center; align-items: center">
         <span class="gatePoint">${direction}</span>
-        <span style="margin-left:4px;text-align:left;width:2rem;font-size: 15px;font-weight: 600;color:${
+        <span style="margin-left:4px;text-align:left;width:2rem;white-space:nowrap;overflow:visible;font-size: 15px;font-weight: 600;color:${
           congestionInfo.textColor
         }">${capacity + language["minute"]}</span>
-      </div>
+        </div>
       </div>`;
     } else {
       return `<div style="position:relative;text-align: center;border:${
@@ -121,7 +121,7 @@ const BottomSheet = (() => {
       <div class="like-icon" style="display:none ;justify-content:center;align-items:center;font-size:11px;height:1rem;width:2.8rem;color:#fff;background-color:#32A1FF;position:absolute;top:-0.5rem;left:50%;transform:translateX(-50%);border-radius:0.5rem"><img src="./images/like_icon.svg" style="height:0.5rem;width:0.5rem;margin-right:2px;border-radius:50%"><span style="font-size:text-align: center;font-family: "Pretendard Variable";font-size: 11px;font-style: normal;font-weight: 500;">Best</span></div>
       <div style= "display:flex ;width:100% ; padding :14px 12px ;justify-content:center; align-items: center">
         <span class="gatePoint">${direction}</span>
-        <span style="margin-left:4px;text-align:left;width:2rem;font-size: 15px;font-weight: 600;color:${
+        <span style="margin-left:4px;text-align:left;width:2rem;white-space:nowrap;overflow:visible;font-size: 15px;font-weight: 600;color:${
           congestionInfo.textColor
         }">${capacity + language["minute"]}</span>
         </div>
@@ -135,7 +135,7 @@ const BottomSheet = (() => {
       const div = document.querySelectorAll(".eastWest div");
       let eastWest = [];
       div.forEach((a, divIndex) => {
-        if (divIndex % 4 == 0) {
+        if (divIndex % 3 == 0) {
           eastWest.push(a);
         }
       });
