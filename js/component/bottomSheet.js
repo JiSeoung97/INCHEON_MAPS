@@ -568,7 +568,7 @@ const BottomSheet = (() => {
     return open;
   };
   const bottomSheetHeight = () => {
-    let total;
+    let total = 0;
     const peeks = document.getElementsByClassName("peek");
     const controls = document.getElementById("controls");
     if (!peeks) {
@@ -597,7 +597,12 @@ const BottomSheet = (() => {
       const marginBottom = parseInt(style.marginBottom) || 0;
       const paddingTop = parseInt(style.paddingTop) || 0;
       const paddingBottom = parseInt(style.paddingBottom) || 0;
-
+      Logger.log("style :" + style);
+      Logger.log("marginTop : " + marginTop);
+      Logger.log("marginbottom : " + marginBottom);
+      Logger.log("paddingTop : ", paddingTop);
+      Logger.log("paddingBottom : ", paddingBottom);
+      Logger.log("controls.offsetHeight", controls.offsetHeight);
       total +=
         controls.offsetHeight +
         marginTop +
@@ -607,11 +612,11 @@ const BottomSheet = (() => {
     }
     const isSamsung = Utility.detectSamsungBrowser();
     if (isSamsung) {
-      total -= 50;
+      total -= 20;
     }
     const bottomSheet = document.getElementById("bottomSheet");
     const bottomHeight = bottomSheet.offsetHeight;
-    bottomSheet.style.bottom = bottomHeight - total + 50 + "px";
+    bottomSheet.style.bottom = bottomHeight - total + "px";
   };
   return {
     init: async () => {
