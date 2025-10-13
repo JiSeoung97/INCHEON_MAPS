@@ -197,6 +197,7 @@ const MapService = (() => {
         Logger.log("boardingGateNum :", boardingGateNum);
         const allAreas = DataService.getAllAreas();
         await MarkerService.allMarkerDelete();
+        MarkerService.createUserMarker();
         markers = [];
         boardingMarkers = [];
         infoWindows = [];
@@ -250,6 +251,9 @@ const MapService = (() => {
     },
     setElementSet: (bool) => {
       elementSettingOn = bool;
+    },
+    getKioskNum: () => {
+      return kiosk;
     },
   };
 })();

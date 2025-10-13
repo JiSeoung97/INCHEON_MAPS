@@ -111,6 +111,10 @@ const DataService = (() => {
     getTotalWaitTime: (item) => {
       return item.waitTime;
     },
+    getKioskLocation: () => {
+      Logger.log(data.kiosk.areas);
+      return data.kiosk.areas;
+    },
     getCompanyLocation: () => {
       if (!data) {
         Logger.log("data", data);

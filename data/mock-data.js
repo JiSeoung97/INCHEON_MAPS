@@ -1040,11 +1040,67 @@ const mockData = {
     ],
   },
 
-  companyLocation: {
-    name: "1번 키오스크",
-    position: { lat: 37.447, lng: 126.4493 },
-    description: "1출국장 5번출구 앞",
-    areas: [],
+  kiosk: {
+    id: "키오스크",
+    description: "키오스크 위치",
+    areas: [
+      {
+        id: "kiosk_1",
+        name: "1번 키오스크",
+        position: { lat: 37.447796, lng: 126.449193 },
+        floorInfo: "3층",
+        description: "체크카운터L 부근",
+      },
+      {
+        id: "kiosk_2",
+        name: "2번 키오스크",
+        position: { lat: 37.449006, lng: 126.450286 },
+        floorInfo: "3층",
+        description: "쉑쉑버거 앞",
+      },
+      {
+        id: "kiosk_3",
+        name: "3번 키오스크",
+        position: { lat: 37.449881, lng: 126.452426 },
+        floorInfo: "3층",
+        description: "체크카운터E 부근",
+      },
+      {
+        id: "kiosk_4",
+        name: "4번 키오스크",
+        position: { lat: 37.450067, lng: 126.453743 },
+        floorInfo: "3층",
+        description: "체크카운터C 부근",
+      },
+      {
+        id: "kiosk_5",
+        name: "5번 키오스크",
+        position: { lat: 37.447908, lng: 126.451765 },
+        floorInfo: "3층",
+        description: "버거킹 부근",
+      },
+      {
+        id: "kiosk_6",
+        name: "6번 키오스크",
+        position: { lat: 37.448095, lng: 126.452328 },
+        floorInfo: "지하 1층",
+        description: "여행안내 부근",
+      },
+      {
+        id: "kiosk_7",
+        name: "7번 키오스크",
+        position: { lat: 37.447446, lng: 126.452082 },
+        floorInfo: "3층",
+        description: "공항철도 앞 엘리베이터 부근",
+      },
+      {
+        id: "kiosk_8",
+        name: "8번 키오스크",
+        position: { lat: 37.44773, lng: 126.452647 },
+        floorInfo: "3층",
+        description: "티켓 부스 부근",
+      },
+    ],
   },
 
   lastUpdated: new Date().toISOString(),

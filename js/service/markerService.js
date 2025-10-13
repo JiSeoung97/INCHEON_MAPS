@@ -22,6 +22,7 @@ const MarkerService = (() => {
   let elementsMarkers = [];
   let elementInfos = [];
   let markerOn = false;
+  let userMarker = [];
   const createMarker = async (areaData, index, boardingGateNum) => {
     try {
       const data = DataService.getAllAreas();
@@ -159,6 +160,41 @@ const MarkerService = (() => {
       elementsMarkers.push(marker);
     });
   };
+
+  const createUserMarker = () => {
+    let kioskNum = MapService.getKioskNum();
+    if (kioskNum != null) {
+      const kioskLocation = DataService.getKioskLocation();
+      let kioskPosition = null;
+      kioskLocation.forEach((kiosk) => {
+        let kioskNumber = kiosk.id.split("_")[1];
+        Logger.log("kioskNumber : ", kioskNumber);
+        if (kioskNumber == kioskNum) {
+          kiosk.position.lat;
+          kioskPosition = { lat: kiosk.position.lat, lng: kiosk.position.lng };
+        }
+      });
+      sessionStorage.setItem("myLocation", JSON.stringify(kioskPosition));
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(kioskPosition.lat, kioskPosition.lng),
+        map: map,
+        title: "내 위치",
+        icon: {
+          content:
+            '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(7, 14),
+        },
+      });
+      if (userMarker[0] != null) {
+        userMarker.forEach((uMarker) => {
+          uMarker.setMap(null);
+        });
+      }
+      userMarker.push(marker);
+    }
+  };
+
   const elementEvent = (e) => {
     const clickElement = $(e.target);
     let category = clickElement.data("category");
@@ -575,6 +611,12 @@ const MarkerService = (() => {
     },
     setMarkerOn: (bool) => {
       markerOn = bool;
+    },
+    createUserMarker: () => {
+      createUserMarker();
+    },
+    getUserMarker: () => {
+      return userMarker;
     },
   };
 })();
