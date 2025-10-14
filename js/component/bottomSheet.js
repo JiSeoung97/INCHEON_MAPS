@@ -516,7 +516,7 @@ const BottomSheet = (() => {
           title: "내 위치",
           icon: {
             content:
-              '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+              '<img src="./images/user_Location.png" style="width:30px;height:30px;position:fixed;z-index:10">',
             size: new naver.maps.Size(27, 35),
             anchor: new naver.maps.Point(7, 14),
           },
