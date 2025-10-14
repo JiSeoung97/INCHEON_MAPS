@@ -614,9 +614,19 @@ const BottomSheet = (() => {
     if (isSamsung) {
       total -= 20;
     }
+    const mapBox = document.getElementById("map");
     const bottomSheet = document.getElementById("bottomSheet");
+    const container = document.getElementsByClassName("container");
+    const containerHeight = container[0].offsetHeight;
+    Logger.log(container);
+    Logger.log(containerHeight);
     const bottomHeight = bottomSheet.offsetHeight;
     bottomSheet.style.bottom = bottomHeight - total + "px";
+    const newMapHeight = containerHeight - total + "px";
+    mapBox[0].style.setProperty("height", newMapHeight, "important");
+    if (map) {
+      naver.maps.Event.trigger(map, "resize");
+    }
   };
   return {
     init: async () => {

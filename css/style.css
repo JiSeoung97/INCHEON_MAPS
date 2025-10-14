@@ -48,7 +48,7 @@ body {
   left: 0;
   width: 100%;
   z-index: 1;
-  min-height: 100%;
+  min-height: 50%;
   outline: none;
   touch-action: pan-x pan-y pinch-zoom;
 }
@@ -178,12 +178,6 @@ body {
   }
 }
 
-.congestion-content {
-  display: table;
-  width: 100%;
-  text-align: left;
-}
-
 /* 모바일 반응형 스타일 */
 @media (max-width: 768px) {
   .controls button {
@@ -192,73 +186,9 @@ body {
   }
 
   #map {
-    height: 100vh;
-    height: 100dvh;
+    height: 70vh;
+    height: 70dvh;
   }
-}
-
-.gauge-container {
-  width: 100%;
-  height: 20px;
-  background-color: #eee;
-  border-radius: 10px;
-  margin: 8px 0;
-  position: relative;
-  overflow: hidden;
-}
-
-.gauge-bar {
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.5s;
-}
-
-.gauge-text {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #000;
-  font-size: 12px;
-  font-weight: bold;
-}
-
-#cMapContainer {
-  display: inline-block;
-  width: 100%;
-  height: auto;
-  overflow: hidden !important;
-  position: relative;
-}
-.congestion-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  text-align: center; /* 텍스트 가운데 정렬 */
-}
-
-.list-item .gate {
-  font-weight: bold;
-}
-.list-item .tags {
-  display: flex;
-  gap: 8px;
-}
-.tag {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 14px;
-}
-
-.gate1Congestion {
-  align-items: center;
 }
 
 table {
@@ -307,15 +237,6 @@ table th:nth-child(3) {
   height: 10px;
   border-radius: 5px;
   background-color: #ff0101;
-}
-
-#mapImg {
-  width: 100%;
-}
-
-#dataInfo {
-  font-size: 10px;
-  text-align: left;
 }
 
 .gatePoint {
@@ -481,12 +402,7 @@ table th:nth-child(3) {
   height: 1.2rem;
   object-fit: cover;
 }
-/* #handle {
-  width: 100%;
-  height: 30px;
-  border-radius: 30px 30px 0 0;
-  text-align: center;
-} */
+
 #bottomSheet {
   position: fixed;
   bottom: 0;
@@ -507,12 +423,7 @@ table th:nth-child(3) {
   background: white;
   box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
 }
-#bottomContainer.open {
-  min-height: 30rem;
-}
-#bottomSheet.open {
-  bottom: 0;
-}
+
 #locationContainer {
   display: flex;
   height: 2.3rem;
@@ -551,92 +462,12 @@ table th:nth-child(3) {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
   overflow: hidden;
 }
-.section {
-  padding: 1.2rem;
-  border-bottom: 1px solid #eee;
-}
-.section:last-child {
-  border-bottom: none;
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #333;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-.reset-btn {
-  font-size: 0.9rem;
-  color: #2196f3;
-  cursor: pointer;
-}
-.input-group {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-}
-.input-box {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 0.8rem;
-  display: flex;
-  flex-direction: column;
-  font-size: 0.95rem;
-}
-.input-box:nth-child(1) {
-  flex: 3;
-}
-.input-box:nth-child(2) {
-  flex: 7;
-}
-.input-label {
-  font-size: 0.8rem;
-  color: #888;
-  margin-bottom: 0.4rem;
-}
-.input-value {
-  font-size: 1.2rem;
-  font-weight: bold;
-  display: flex;
-  align-items: end;
-  justify-content: flex-end;
-  gap: 0.4rem;
-}
-.clock-icon::after {
-  content: "⏰";
-  font-size: 1rem;
-}
-.time-summary {
-  font-size: 0.9rem;
-  color: #888;
-  margin-bottom: 0.5rem;
-}
+
 .total-time {
   font-size: 1rem;
   color: #e53935;
   font-weight: bold;
   margin-bottom: 1rem;
-}
-.timeline-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0;
-  font-size: 0.9rem;
-  border-top: 1px solid #f0f0f0;
-}
-.timeline-item:first-child {
-  border-top: none;
-}
-.badge {
-  background-color: #e3f2fd;
-  color: #1976d2;
-  font-size: 0.75rem;
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  margin-left: 0.5rem;
 }
 .right {
   color: #333;
