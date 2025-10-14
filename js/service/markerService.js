@@ -181,7 +181,7 @@ const MarkerService = (() => {
         title: "내 위치",
         icon: {
           content:
-            '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+            '<img src="./images/user_Location.png" style="width:30px;height:30px;z-index:10;position:fixed">',
           size: new naver.maps.Size(27, 35),
           anchor: new naver.maps.Point(7, 14),
         },
@@ -284,7 +284,7 @@ const MarkerService = (() => {
     let departure = area.name.replace("출국장", "").split(" ");
 
     return (
-      '<div style="display:flex;flex-direction: column;align-items: center;justify-content:center "><div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+      '<div style="display:flex;z-index:1;flex-direction: column;align-items: center;justify-content:center "><div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
       departure[0] +
       '</div><span style="display:flex;flex-direction:row;height:auto;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
       language["departurehall"] +
