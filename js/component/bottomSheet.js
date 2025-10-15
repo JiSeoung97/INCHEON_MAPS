@@ -622,7 +622,7 @@ const BottomSheet = (() => {
     Logger.log(containerHeight);
     const bottomHeight = bottomSheet.offsetHeight;
     bottomSheet.style.bottom = bottomHeight - total + "px";
-    const newMapHeight = containerHeight - total + "px";
+    const newMapHeight = containerHeight - tota + 30 + "px";
     mapBox[0].style.setProperty("height", newMapHeight, "important");
     if (map) {
       naver.maps.Event.trigger(map, "resize");

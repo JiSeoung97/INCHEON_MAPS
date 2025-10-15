@@ -8,7 +8,6 @@ const Utility = (() => {
   let map;
   let markers = [];
   let selectedMarker = null;
-  let infoOn = false;
 
   const getDistance = async (area, boardingGateNum, bottomSheet) => {
     try {
@@ -66,8 +65,8 @@ const Utility = (() => {
     let lng1 = positon1.lng;
     let lng2 = position2.lng;
 
-    let resultLat = Math.round(((lat1 + lat2) / 2) * 1000000) / 1000000;
-    let resultLng = Math.round(((lng1 + lng2) / 2) * 1000000) / 1000000;
+    let resultLat = Math.round(((lat1 + lat2) / 2) * 10000000) / 10000000;
+    let resultLng = Math.round(((lng1 + lng2) / 2) * 10000000) / 10000000;
     return naver.maps.LatLng(resultLat, resultLng);
   };
 
@@ -95,7 +94,7 @@ const Utility = (() => {
     }
     MarkerService.replaceAllMarkerIcon();
     newPosition = naver.maps.LatLng(
-      selectedMarker.position._lat - 0.0003,
+      selectedMarker.position._lat,
       selectedMarker.position._lng
     );
     map.panTo(newPosition, transition);

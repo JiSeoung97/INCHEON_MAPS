@@ -144,8 +144,8 @@ const MarkerService = (() => {
       if (name != "식당가") {
         const infoWindow = InfoWindowService.getElementInfo(element);
         naver.maps.Event.addListener(marker, "click", () => {
-          markerEvent(marker);
           InfoWindowService.infoOpen(marker, infoWindow);
+          markerEvent(marker);
         });
         elementInfos.push(infoWindow);
       } else {
@@ -298,7 +298,7 @@ const MarkerService = (() => {
         idx = index;
       }
     });
-    console.log(selectMarker);
+    Logger.log(selectMarker);
     replaceAllMarkerIcon();
     if (selectedMarker == selectMarker) {
       newIcon = {
@@ -422,16 +422,16 @@ const MarkerService = (() => {
   const markerEvent = (marker, index = null, boardingOn = false) => {
     replaceMarkerIcon(marker);
     if (index == null) {
+      $(".moreInfo")
+        .off("click")
+        .on("click", (e) => {
+          elementEvent(e);
+        });
     } else if (boardingOn) {
       Utility.openWindowInfo();
     } else {
       Utility.openWindowInfo(index);
     }
-    $(".moreInfo")
-      .off("click")
-      .on("click", (e) => {
-        elementEvent(e);
-      });
   };
   const getMarkerIcon = (area, index) => {
     let departure = area.name.replace("출국장", "").split(" ");

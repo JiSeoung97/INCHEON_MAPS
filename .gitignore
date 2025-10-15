@@ -3,6 +3,7 @@ index.local.html
 .env.product
 dist/
 node_modules
+/.claude
 
 # gemini
 .gemini/
