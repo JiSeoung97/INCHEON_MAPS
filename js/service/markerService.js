@@ -93,7 +93,6 @@ const MarkerService = (() => {
       );
       naver.maps.Event.addListener(marker, "click", () => {
         markerEvent(marker, index, boardingOn);
-        // PolylineService.selectPolyline(index);
       });
       if (boardingGateNum == null) {
         markers.push(marker);
