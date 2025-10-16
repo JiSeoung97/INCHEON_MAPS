@@ -181,11 +181,13 @@ $(document).ready(async () => {
     $(".menuBtn").click(async (e) => {
       try {
         btnIdx = Number(e.currentTarget.dataset.idx);
-      } catch (error) {}
-      if (btnIdx === 0) {
-        await handleFirstMenuClick();
-      } else {
-        await handleOtherMenuClick();
+        if (btnIdx === 0) {
+          await handleFirstMenuClick();
+        } else {
+          await handleOtherMenuClick();
+        }
+      } catch (error) {
+        Logger.error("메뉴 버튼 클릭이벤트가 원활하지 않습니다.", error);
       }
     });
 
@@ -208,30 +210,6 @@ $(document).ready(async () => {
       window.open("https://test.drarr0cp4471y.amplifyapp.com/incheon_airport");
     });
   };
-  const setupGateClickEvents = () => {
-    const moveGate = document.getElementsByClassName("eastWest");
-
-    // 기존 이벤트 리스너 제거 (중복 방지)
-    Array.from(moveGate).forEach((gate) => {
-      const newGate = gate.cloneNode(true);
-      gate.parentNode.replaceChild(newGate, gate);
-    });
-
-    // 새로운 이벤트 리스너 추가
-    const updatedGates = document.getElementsByClassName("eastWest");
-    Array.from(updatedGates).forEach((gate, index) => {
-      gate.addEventListener("click", async () => {
-        try {
-          Utility.moveGate(index);
-          Utility.openWindowInfo(index);
-          BottomSheet.changeBorderColor(index);
-          PolylineService.selectPolyline(index);
-        } catch (error) {
-          Logger.error(`게이트 ${index} 클릭 처리 오류:`, error);
-        }
-      });
-    });
-  };
 
   // 백그라운드 위치 로딩 함수
   const startBackgroundLocationLoading = async () => {
@@ -248,7 +226,6 @@ $(document).ready(async () => {
   try {
     Logger.log("애플리케이션 초기화 시작...");
 
-    // await loadConfig();
     // 1. 서비스 초기화
     const initResult = await initializeServices();
 
