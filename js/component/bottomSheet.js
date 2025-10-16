@@ -19,6 +19,7 @@ const BottomSheet = (() => {
   let open = false;
   let polyOn = false;
   let isFirst = true;
+  let isBorder = true;
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();

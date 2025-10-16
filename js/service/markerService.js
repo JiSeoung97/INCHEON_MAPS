@@ -92,7 +92,8 @@ const MarkerService = (() => {
         boardingGateNum
       );
       naver.maps.Event.addListener(marker, "click", () => {
-        markerEvent(marker, index, boardingOn);
+        markerEvent(marker);
+        InfoWindowService.infoOpen(marker, infoWindow);
       });
       if (boardingGateNum == null) {
         markers.push(marker);
@@ -419,18 +420,15 @@ const MarkerService = (() => {
       });
     }
   }
-  const markerEvent = (marker, index = null, boardingOn = false) => {
+  const markerEvent = (marker, index = null) => {
     replaceMarkerIcon(marker);
+
     if (index == null) {
       $(".moreInfo")
         .off("click")
         .on("click", (e) => {
           elementEvent(e);
         });
-    } else if (boardingOn) {
-      Utility.openWindowInfo();
-    } else {
-      Utility.openWindowInfo(index);
     }
   };
   const getMarkerIcon = (area, index) => {

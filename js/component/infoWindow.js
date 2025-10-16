@@ -99,7 +99,7 @@ const InfoWindowService = (() => {
         language["distance"] +
         ": " +
         distance.toLocaleString() +
-        "</p>" +
+        "m</p>" +
         "</div>"
       );
     }
