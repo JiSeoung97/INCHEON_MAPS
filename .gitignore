@@ -5,6 +5,9 @@ dist/
 node_modules
 /.claude
 
+# Log files
+*.log
+
 # gemini
 .gemini/
 .progress_text/
