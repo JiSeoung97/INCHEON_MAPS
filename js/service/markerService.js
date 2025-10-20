@@ -181,7 +181,7 @@ const MarkerService = (() => {
         title: "내 위치",
         icon: {
           content:
-            '<img src="./images/user_Location.png" style="width:30px;height:30px;z-index:10;position:fixed">',
+            '<img src="./images/user_Location.svg" style="width:30px;height:30px;z-index:10;position:fixed">',
           size: new naver.maps.Size(27, 35),
           anchor: new naver.maps.Point(7, 14),
         },
