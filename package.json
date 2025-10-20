@@ -6,7 +6,6 @@
     "build:prod": "NODE_ENV=production node build.js"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.1.13",
     "axios": "^1.11.0",
     "cross-env": "^10.0.0",
     "dotenv": "^17.2.1",
@@ -15,9 +14,10 @@
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.2",
     "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/rollup-darwin-arm64": "^4.52.5",
     "clean-css": "^5.3.3",
-    "fs-extra": "^11.3.1",
-    "rollup": "^4.46.2"
+    "fs-extra": "^11.3.2",
+    "rollup": "^4.52.5"
   },
   "engines": {
     "node": ">=18.0.0",
