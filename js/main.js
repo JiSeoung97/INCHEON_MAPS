@@ -65,16 +65,11 @@ $(document).ready(async () => {
     }
   };
   const initCustomControl = async () => {
-    return new Promise((resolve) => {
-      try {
-        setTimeout(async () => {
-          await CustomControl.customControlInput();
-          resolve();
-        }, 50);
-      } catch (error) {
-        Logger.error("CustomControl init error", error);
-      }
-    });
+    try {
+      await CustomControl.customControlInput();
+    } catch (error) {
+      Logger.error("CustomControl init error", error);
+    }
   };
   const initModalService = async () => {
     await ModalService.init();
