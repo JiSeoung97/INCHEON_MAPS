@@ -372,7 +372,6 @@ const utLocation = (() => {
       } catch (error) {
         Logger.error("위치 획득 실패:", error);
         alert("위치 서비스를 활성화한 후 다시 시도해주세요");
-        // ErrorHandler.handleSpecificError(error);
         throw error;
       }
     },

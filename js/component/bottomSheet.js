@@ -517,7 +517,7 @@ const BottomSheet = (() => {
           title: "내 위치",
           icon: {
             content:
-              '<img src="./images/user_Location.png" style="width:30px;height:30px;position:fixed;z-index:10">',
+              '<img src="./images/user_Location.svg" style="width:30px;height:30px;position:fixed;z-index:10">',
             size: new naver.maps.Size(27, 35),
             anchor: new naver.maps.Point(7, 14),
           },
@@ -623,7 +623,7 @@ const BottomSheet = (() => {
     Logger.log(containerHeight);
     const bottomHeight = bottomSheet.offsetHeight;
     bottomSheet.style.bottom = bottomHeight - total + "px";
-    const newMapHeight = containerHeight - tota + 30 + "px";
+    const newMapHeight = containerHeight - total + 30 + "px";
     mapBox[0].style.setProperty("height", newMapHeight, "important");
     if (map) {
       naver.maps.Event.trigger(map, "resize");

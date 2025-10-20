@@ -68,7 +68,7 @@ $(document).ready(async () => {
     return new Promise((resolve) => {
       try {
         setTimeout(async () => {
-          await CustomControl.init();
+          await CustomControl.customControlInput();
           resolve();
         }, 50);
       } catch (error) {
@@ -130,12 +130,11 @@ $(document).ready(async () => {
         } else {
           Logger.log("유효한 탑승구로 설정");
           sessionStorage.setItem("boardingGate", boardingGate);
-          CustomControl.customControlAllDelete();
           // 서비스 재초기화
           const boardingMarker = await MarkerService.createBoardingMarker(
             boardingGate
           );
-          CustomControl.init();
+          await CustomControl.customControlInput();
           await BottomSheet.changeMenu(1);
           const priority = document.getElementById("reco-priority");
           await BottomSheet.handlePriorityClick(priority);
