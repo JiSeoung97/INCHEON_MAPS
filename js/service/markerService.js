@@ -22,6 +22,7 @@ const MarkerService = (() => {
   let elementsMarkers = [];
   let elementInfos = [];
   let markerOn = false;
+  let userMarker = [];
   const createMarker = async (areaData, index, boardingGateNum) => {
     try {
       const data = DataService.getAllAreas();
@@ -91,8 +92,8 @@ const MarkerService = (() => {
         boardingGateNum
       );
       naver.maps.Event.addListener(marker, "click", () => {
-        markerEvent(marker, index, boardingOn);
-        // PolylineService.selectPolyline(index);
+        markerEvent(marker);
+        InfoWindowService.infoOpen(marker, infoWindow);
       });
       if (boardingGateNum == null) {
         markers.push(marker);
@@ -144,8 +145,8 @@ const MarkerService = (() => {
       if (name != "식당가") {
         const infoWindow = InfoWindowService.getElementInfo(element);
         naver.maps.Event.addListener(marker, "click", () => {
-          markerEvent(marker);
           InfoWindowService.infoOpen(marker, infoWindow);
+          markerEvent(marker);
         });
         elementInfos.push(infoWindow);
       } else {
@@ -159,6 +160,41 @@ const MarkerService = (() => {
       elementsMarkers.push(marker);
     });
   };
+
+  const createUserMarker = () => {
+    let kioskNum = MapService.getKioskNum();
+    if (kioskNum != null) {
+      const kioskLocation = DataService.getKioskLocation();
+      let kioskPosition = null;
+      kioskLocation.forEach((kiosk) => {
+        let kioskNumber = kiosk.id.split("_")[1];
+        Logger.log("kioskNumber : ", kioskNumber);
+        if (kioskNumber == kioskNum) {
+          kiosk.position.lat;
+          kioskPosition = { lat: kiosk.position.lat, lng: kiosk.position.lng };
+        }
+      });
+      sessionStorage.setItem("myLocation", JSON.stringify(kioskPosition));
+      const marker = new naver.maps.Marker({
+        position: new naver.maps.LatLng(kioskPosition.lat, kioskPosition.lng),
+        map: map,
+        title: "내 위치",
+        icon: {
+          content:
+            '<img src="./images/user_Location.svg" style="width:30px;height:30px;z-index:10;position:fixed">',
+          size: new naver.maps.Size(27, 35),
+          anchor: new naver.maps.Point(7, 14),
+        },
+      });
+      if (userMarker[0] != null) {
+        userMarker.forEach((uMarker) => {
+          uMarker.setMap(null);
+        });
+      }
+      userMarker.push(marker);
+    }
+  };
+
   const elementEvent = (e) => {
     const clickElement = $(e.target);
     let category = clickElement.data("category");
@@ -248,7 +284,7 @@ const MarkerService = (() => {
     let departure = area.name.replace("출국장", "").split(" ");
 
     return (
-      '<div style="display:flex;flex-direction: column;align-items: center;justify-content:center "><div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
+      '<div style="display:flex;z-index:1;flex-direction: column;align-items: center;justify-content:center "><div style="display:flex ;background-color:#fff;width: 2.5rem; height: 2.5rem;padding-top:2px;flex-direction: column; border-radius: 1.25rem 1.25rem 1.25rem 1.25rem;font-size:1rem;color:;align-items: center;color:#056CFE; justify-content:center;border:0.848px solid #BDBDBD"><img class ="markerImg" src="./images/flight_blue.svg" style="height:0.875rem;margin-right:1px">' +
       departure[0] +
       '</div><span style="display:flex;flex-direction:row;height:auto;weight:auto;font-size:0.875rem;align-items: center; justify-content:center">' +
       language["departurehall"] +
@@ -263,7 +299,7 @@ const MarkerService = (() => {
         idx = index;
       }
     });
-    console.log(selectMarker);
+    Logger.log(selectMarker);
     replaceAllMarkerIcon();
     if (selectedMarker == selectMarker) {
       newIcon = {
@@ -384,19 +420,16 @@ const MarkerService = (() => {
       });
     }
   }
-  const markerEvent = (marker, index = null, boardingOn = false) => {
+  const markerEvent = (marker, index = null) => {
     replaceMarkerIcon(marker);
+
     if (index == null) {
-    } else if (boardingOn) {
-      Utility.openWindowInfo();
-    } else {
-      Utility.openWindowInfo(index);
+      $(".moreInfo")
+        .off("click")
+        .on("click", (e) => {
+          elementEvent(e);
+        });
     }
-    $(".moreInfo")
-      .off("click")
-      .on("click", (e) => {
-        elementEvent(e);
-      });
   };
   const getMarkerIcon = (area, index) => {
     let departure = area.name.replace("출국장", "").split(" ");
@@ -575,6 +608,12 @@ const MarkerService = (() => {
     },
     setMarkerOn: (bool) => {
       markerOn = bool;
+    },
+    createUserMarker: () => {
+      createUserMarker();
+    },
+    getUserMarker: () => {
+      return userMarker;
     },
   };
 })();

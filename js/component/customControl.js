@@ -4,6 +4,7 @@ import MarkerService from "../service/markerService.js";
 import InfoWindowService from "./infoWindow.js";
 import ModalService from "../service/modalService.js";
 import Utility from "../utility/utility.js";
+import RecoService from "../service/recoService.js";
 
 const CustomControl = (() => {
   let language = [];
@@ -16,17 +17,14 @@ const CustomControl = (() => {
   let languageText = null;
   let selectedLangArray = [];
   let firstlang;
-  let locaCon;
-  let moveGateCon;
   let boardingInfo;
-  let selectLangCon;
   let langArray = ["en", "zh", "ja", "ko"];
-  let langchangeCon;
+  let langchange;
   let map;
   let movePosition = null;
-  let userMarker = [];
-  let conSwitch = null;
+  let selectLang;
   let customEventOn = false;
+  let boardingModalOpen = null;
   const positions = [
     naver.maps.Position.TOP_LEFT,
     naver.maps.Position.LEFT_TOP,
@@ -56,14 +54,13 @@ const CustomControl = (() => {
       InfoWindowService.resetInfo();
       // 재설정
       await MapService.setting();
+      await customControlInput();
+      await mapLangEvent();
       await MarkerService.showMarkers();
       MarkerService.getZoomEvent();
       MarkerService.elementSetting();
       await ModalService.langChange();
-      customControlAllDelete();
-      createCustomControl();
-      customControlEvent();
-      customControlSetMap();
+      RecoService.recoLikeIconView();
       if (map.getZoom() >= 18) {
         MarkerService.allElementShow();
       }
@@ -72,8 +69,10 @@ const CustomControl = (() => {
     }
   };
 
-  const createCustomControl = () => {
+  const customControlInput = () => {
     const selectedLang = sessionStorage.getItem("language");
+    boardingGateNum = sessionStorage.getItem("boardingGate");
+    boardingModalOpen = document.getElementById("boardingModalOpen");
     language = MapService.languageReturn();
     languageText = language[selectedLang];
     if (languageText == null) {
@@ -81,41 +80,26 @@ const CustomControl = (() => {
     } else {
       languageText = language[selectedLang];
     }
-    let marginBottom;
-    if (selectedLang == "ko") {
-      marginBottom = 12.5;
-    } else {
-      marginBottom = 17;
-    }
-
-    let boarding;
-    let moveGateBtn;
-
     if (boardingGateNum != null) {
-      moveGateBtn = `<div id ="boardingInfo" style="display:flex ; height : 2rem;width:auto ; box-shadow: 0 2px 8px rgba(0,0,0,0.15); margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" >
-        <img id="send-black" src="./images/send_black.svg" style="height:20px;width:20px"> 
-        <img id="send-blue" src="./images/send_blue.svg" style="display:none ;height:20px;width:20px"> 
-        ${language["boardingGate"]}
-         : ${boardingGateNum}
-        </div>`;
-      boarding =
-        '<div id="moveBoardingGate" style="display: flex ; box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+      boardingInfo = document.getElementById("boardingInfo");
+      boardingInfo.innerHTML = `<img id="send" src="./images/send_black.svg" style="height:20px;width:20px"> 
+          ${language["boardingGate"]}
+           : ${boardingGateNum}`;
+      boardingModalOpen.style.setProperty("display", "flex");
     } else {
-      moveGateBtn = `<div id ="boardingInfo-none" style="display:flex;height : 2rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15);width:auto; margin-top:15px;background-color:#fff;transform: translateX(3rem); color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center;padding-left:10px;padding-right:10px" ><img src="./images/send_black.svg" style="height:1.1rem;width:1.1rem">
-        ${language["boardingGate"]} 
-        </div>`;
-      boarding =
-        '<div id="moveBoardingGate" style="display: none ;box-shadow: 0 2px 8px rgba(0,0,0,0.15);z-index:900;height:2rem; width:2rem;margin-right:10px;margin-top:15px;background-color:#fff; color:#000; font-size:0.8rem;border-radius:15px 15px 15px 15px; align-items: center;justify-content: center"><img src="./images/pen.svg" style="height:20px;width:20px"></div>';
+      boardingInfo = document.getElementById("boardingInfo");
+      boardingInfo.innerHTML = `<img id="send" src="./images/send_black.svg" style="height:20px;width:20px"> 
+          ${language["boardingGate"]}`;
     }
-    const selectLang = `<div id="selectLang" style="height:2rem; width:8rem; display: flex; justify-content: center; align-items: center;
-      background-color:white; margin-top: 15px; margin-left:10px; font-size:0.8rem; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius: 1rem;">
-      <div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left;
+
+    selectLang = document.getElementById("selectLang");
+    selectLang.innerHTML = `<div style="flex: 8; height:100%; display: flex; align-items: center; justify-content: left;
       overflow: hidden; text-overflow: ellipsis;padding-left:5px; white-space: nowrap;">
       <img src="./images/languageIcon.svg" style="height : 1.75vh;margin-right:5px;margin-left:5px">
       ${languageText} 
       </div>
-      <img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;margin-right:5px">
-      </div>`;
+      <img id="icon" src="./images/dropDown.svg" style="flex: 2; height:70%; display: flex; align-items: center; justify-content: center;margin-right:5px">`;
+
     let languageList = {
       ko: `<div class = "mapLang" style="width : 100% ; height:2rem; display: flex; align-items: center;padding-left:5px">한국어(
         ${language["korean"]}
@@ -133,6 +117,8 @@ const CustomControl = (() => {
 
     // 성능 최적화: 배열 처리 단순화
     firstlang = selectedLang;
+    Logger.log("firstLang", firstlang);
+    Logger.log("selectedLangArray", selectedLangArray);
     selectedLangArray = [
       selectedLang,
       ...langArray.filter((lang) => lang !== selectedLang),
@@ -148,41 +134,43 @@ const CustomControl = (() => {
         (lang) => langImgArray.find((langImg) => langImg[0] === lang)?.[1] || ""
       )
       .join("");
-
-    const languageChange = `<div style = "height: 8rem ;width :10rem; background-color:white; margin-top :1vh;margin-left:10px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); border-radius : 4px;font-size:0.6rem"> 
-      ${langChan}
-      </div>`;
-
-    moveGateCon = new naver.maps.CustomControl(moveGateBtn, {
-      position: naver.maps.Position.TOP_RIGHT,
-    });
-    boardingInfo = new naver.maps.CustomControl(boarding, {
-      position: naver.maps.Position.RIGHT_TOP,
-    });
-    selectLangCon = new naver.maps.CustomControl(selectLang, {
-      position: naver.maps.Position.LEFT_TOP,
-    });
-    langchangeCon = new naver.maps.CustomControl(languageChange, {
-      position: naver.maps.Position.LEFT_TOP,
-    });
+    langchange = document.getElementById("languageChange");
+    langchange.innerHTML = langChan;
   };
-  const customControlEvent = async () => {
+
+  const customControlEvent = () => {
     if (customEventOn) {
       return;
     }
 
     customEventOn = true;
-    let mapLangs;
+    Logger.log(boardingModalOpen);
+    boardingInfo.addEventListener("click", () => {
+      if (boardingGateNum == null) {
+        ModalService.boardingModalOpen();
+      } else {
+        movePosition = Utility.moveGate(0, 1);
+        Utility.openBoardingWindowInfo();
+      }
+    });
 
-    naver.maps.Event.addDOMListener(boardingInfo.getElement(), "click", () => {
+    boardingModalOpen.addEventListener("click", () => {
       ModalService.boardingModalOpen();
     });
+
+    selectLang.addEventListener("click", () => {
+      if (langchange.style.display == "none") {
+        langchange.style.setProperty("display", "flex");
+      } else if (langchange.style.display == "flex") {
+        langchange.style.setProperty("display", "none");
+      }
+    });
+    mapLangEvent();
+
     naver.maps.Event.addListener(map, "center_changed", () => {
       const currentCenter = map.getCenter();
-      const sendBlack = document.getElementById("send-black");
-      const sendBlue = document.getElementById("send-blue");
-      const gpsBlack = document.getElementById("gps-black");
-      const gpsBlue = document.getElementById("gps-blue");
+      const send = document.getElementById("send");
+      const gps = document.getElementById("gps");
       const user_location = JSON.parse(sessionStorage.getItem("myLocation"));
       if (user_location != null) {
         const userLat = Math.round(user_location.lat * 10000000) / 10000000;
@@ -192,96 +180,38 @@ const CustomControl = (() => {
             movePosition._lat == currentCenter._lat &&
             movePosition._lng == currentCenter._lng
           ) {
-            sendBlack.style.display = "none";
-            sendBlue.style.display = "block";
+            send.src = "/images/send_blue.svg";
           } else {
-            sendBlack.style.display = "block";
-            sendBlue.style.display = "none";
+            send.src = "/images/send_black.svg";
           }
         }
         if (currentCenter._lat == userLat && currentCenter._lng == userLng) {
-          gpsBlack.style.display = "none";
-          gpsBlue.style.display = "block";
+          gps.src = "/images/gps_blue.svg";
         } else {
-          gpsBlack.style.display = "block";
-          gpsBlue.style.display = "none";
+          gps.src = "/images/gps_black.svg";
         }
       }
     });
-    naver.maps.Event.addDOMListener(selectLangCon.getElement(), "click", () => {
-      if (conSwitch) {
-        conSwitch = null;
-        langchangeCon.setMap(conSwitch);
-        const icon = selectLangCon.getElement().querySelector("#icon");
-        icon.src = "./images/dropDown.svg";
-      } else {
-        conSwitch = map;
-        langchangeCon.setMap(conSwitch);
-        const icon = selectLangCon.getElement().querySelector("#icon");
-        icon.src = "./images/up.svg";
-      }
-    });
+  };
 
-    mapLangs = Array.from(
-      langchangeCon.getElement().getElementsByClassName("mapLang")
-    );
-    mapLangs.forEach((mapLang, index) => {
-      mapLang.addEventListener("click", async () => {
+  const mapLangEvent = () => {
+    const mapLangs = document.getElementsByClassName("mapLang");
+    for (let i = 0; i < 4; i++) {
+      mapLangs[i].addEventListener("click", async () => {
         InfoWindowService.allInfoClose();
-        await changeLanguage(selectedLangArray[index]);
+        await changeLanguage(selectedLangArray[i]);
+        langchange.style.setProperty("display", "none");
       });
-    });
-    mapLangs.forEach((mapLang) => {
-      mapLang.addEventListener("mouseenter", () => {
-        mapLang.style.backgroundColor = "#F3F4F6";
-      });
-      mapLang.addEventListener("mouseleave", () => {
-        mapLang.style.backgroundColor = "white";
-      });
-    });
 
-    naver.maps.Event.addDOMListener(moveGateCon.getElement(), "click", () => {
-      if (boardingGateNum != null) {
-        movePosition = Utility.moveGate(0, 1);
-        Utility.openBoardingWindowInfo();
-      } else {
-        ModalService.boardingModalOpen("boardingInfo");
-      }
-    });
-  };
-  const customControlSetMap = () => {
-    setTimeout(() => {
-      // locaCon.setMap(map);
-      boardingInfo.setMap(map);
-      selectLangCon.setMap(map);
-      moveGateCon.setMap(map);
-    }, 50);
-  };
-  const customControlAllDelete = () => {
-    try {
-      const logoControl = map.controls[naver.maps.Position.TOP_RIGHT].getAt(0);
-
-      if (moveGateCon) {
-        naver.maps.Event.clearInstanceListeners(moveGateCon);
-      }
-      if (boardingInfo) {
-        naver.maps.Event.clearInstanceListeners(boardingInfo);
-      }
-      if (selectLangCon) {
-        naver.maps.Event.clearInstanceListeners(selectLangCon);
-      }
-      if (langchangeCon) {
-        naver.maps.Event.clearInstanceListeners(langchangeCon);
-      }
-      positions.forEach((position) => {
-        map.controls[position].clear();
+      mapLangs[i].addEventListener("mouseenter", () => {
+        mapLangs[i].style.backgroundColor = "#F3F4F6";
       });
-      customEventOn = false;
-      map.controls[naver.maps.Position.TOP_RIGHT].push(logoControl);
-    } catch (error) {
-      Logger.error(`커스텀 컨트롤 삭제 실패:`, error);
+      mapLangs[i].addEventListener("mouseleave", () => {
+        mapLangs[i].style.backgroundColor = "white";
+      });
     }
   };
+
   const createLanguageArrayWithSelectiveImg = (
     languageList,
     currentLang,
@@ -323,16 +253,20 @@ const CustomControl = (() => {
       Logger.log("language : ", language);
       InfoWindowService.getInfoWindows();
       MarkerService.getMarkers();
-      createCustomControl();
-      customControlSetMap();
-      customControlEvent();
+      await createCustomControl();
+      await customControlSetMap();
+      await customControlEvent();
     },
     customControlAllDelete: () => {
       customControlAllDelete();
     },
     mapLangClose: () => {
-      conSwitch = null;
-      langchangeCon.setMap(conSwitch);
+      langchange.style.setProperty("display", "none");
+    },
+    customControlInput: async () => {
+      map = MapService.getMap();
+      await customControlInput();
+      await customControlEvent();
     },
   };
 })();

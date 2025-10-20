@@ -1,13 +1,13 @@
 import MapService from "../service/mapService.js";
 import Logger from "../utility/logger.js";
 import Utility from "../utility/utility.js";
-import MarkerService from "../service/markerService.js";
 const InfoWindowService = (() => {
   let infoWindows = [];
   let elementInfos = [];
   let boardingInfo = null;
   let language;
   let infoOn = false;
+  let selectedInfo = null;
   const createInfoWindow = async (area, boardingGateNum) => {
     let infoWindow;
     if (boardingGateNum == null) {
@@ -99,7 +99,7 @@ const InfoWindowService = (() => {
         language["distance"] +
         ": " +
         distance.toLocaleString() +
-        "</p>" +
+        "m</p>" +
         "</div>"
       );
     }
@@ -177,11 +177,14 @@ const InfoWindowService = (() => {
     },
     infoOpen: (marker, info) => {
       let map = MapService.getMap();
-      if (!infoOn) {
+
+      if (info != selectedInfo || infoOn) {
         info.open(map, marker);
-        infoOn = true;
+        selectedInfo = info;
+        infoOn = false;
       } else {
         info.close();
+        infoOn = true;
       }
     },
     resetBoardingInfo: () => {

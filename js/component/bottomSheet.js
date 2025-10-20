@@ -8,6 +8,7 @@ import ModalService from "../service/modalService.js";
 import PolylineService from "../service/polylineService.js";
 import MapService from "../service/mapService.js";
 import utLocation from "../utility/location.js";
+import MarkerService from "../service/markerService.js";
 const BottomSheet = (() => {
   let language;
   let departurehall = [];
@@ -18,6 +19,7 @@ const BottomSheet = (() => {
   let open = false;
   let polyOn = false;
   let isFirst = true;
+  let isBorder = true;
   const showGateCongestion = async () => {
     try {
       const allAreadata = DataService.getAllAreas();
@@ -49,6 +51,7 @@ const BottomSheet = (() => {
       }
       // 실제 컨텐츠 표시
       departure1Open();
+      bottomSheetHeight();
     } catch (error) {
       Logger.error("게이트 혼잡도 표시 실패:", error);
     }
@@ -101,26 +104,28 @@ const BottomSheet = (() => {
   const createCongestionHTML = (congestionInfo, isEast, capacity, index) => {
     const direction = isEast ? language["east"] : language["west"];
     if (index <= 1 || index == 3) {
-      return `<div style="text-align: center;border:${congestionInfo.border}">
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
-      <div class="smartPass-box" style="display:flex;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
-      <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
-      </div>
+      return `<div style="text-align: center;position:relative;border:${
+        congestionInfo.border
+      }">
+      <div class="smartPass" style="display:flex;width:5rem;position:absolute;top:-0.5rem;left:50%;transform:translateX(-50%);font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
+      <div style= "display:flex ;width:100% ; padding :14px 12px ;justify-content:center; align-items: center">
         <span class="gatePoint">${direction}</span>
-        <span style="text-align: center;margin-left:4px;width:50px;font-size: 15px;font-weight: 600;color:${
+        <span style="margin-left:4px;text-align:left;width:2rem;white-space:nowrap;overflow:visible;font-size: 15px;font-weight: 600;color:${
           congestionInfo.textColor
         }">${capacity + language["minute"]}</span>
+        </div>
       </div>`;
     } else {
-      return `<div style="text-align: center;border:${congestionInfo.border}">
-      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;height:1rem;width:1rem;background-color:#32A1FF;position:fixed;transform:translate(10px,-13px);border-radius:50%"><img src="./images/like_icon.svg" style="height:0.7rem;width:0.7rem;border-radius:50%"></div>
-      <div class="smartPass-box" style="display:none;justify-content:center;align-items:center; height:0.9rem;width:25%;position:fixed;transform:translate(0.6rem, -1rem)">
-      <div class="smartPass" style=" display:flex;font-size:0.6rem;justify-content:center;align-items:center;background-color:#ff602a;color:#fff;border-radius:4px 4px 0 0;height:0.9rem">Only SmartPass</div>
-      </div>
+      return `<div style="position:relative;text-align: center;border:${
+        congestionInfo.border
+      }">
+      <div class="like-icon" style="display:none ;justify-content:center;align-items:center;font-size:11px;height:1rem;width:2.8rem;color:#fff;background-color:#32A1FF;position:absolute;top:-0.5rem;left:50%;transform:translateX(-50%);border-radius:0.5rem"><img src="./images/like_icon.svg" style="height:0.5rem;width:0.5rem;margin-right:2px;border-radius:50%"><span style="font-size:text-align: center;font-family: "Pretendard Variable";font-size: 11px;font-style: normal;font-weight: 500;">Best</span></div>
+      <div style= "display:flex ;width:100% ; padding :14px 12px ;justify-content:center; align-items: center">
         <span class="gatePoint">${direction}</span>
-        <span style="text-align: center;margin-left:4px;width:50px;font-size: 15px;font-weight: 600;color:${
+        <span style="margin-left:4px;text-align:left;width:2rem;white-space:nowrap;overflow:visible;font-size: 15px;font-weight: 600;color:${
           congestionInfo.textColor
         }">${capacity + language["minute"]}</span>
+        </div>
       </div>`;
     }
   };
@@ -131,7 +136,7 @@ const BottomSheet = (() => {
       const div = document.querySelectorAll(".eastWest div");
       let eastWest = [];
       div.forEach((a, divIndex) => {
-        if (divIndex % 4 == 0) {
+        if (divIndex % 3 == 0) {
           eastWest.push(a);
         }
       });
@@ -502,9 +507,9 @@ const BottomSheet = (() => {
     try {
       const userPos = await utLocation.getCurrentPosition();
       boardingGateNum = sessionStorage.getItem("boardingGate");
+      userMarker = MarkerService.getUserMarker();
       const latLng = new naver.maps.LatLng(userPos["lat"], userPos["lng"]);
       if (userPos) {
-        map.getCenter();
         map.setCenter(latLng);
         const marker = new naver.maps.Marker({
           position: new naver.maps.LatLng(latLng),
@@ -512,7 +517,7 @@ const BottomSheet = (() => {
           title: "내 위치",
           icon: {
             content:
-              '<img src="./images/user_Location.png" style="width:30px;height:30px">',
+              '<img src="./images/user_Location.svg" style="width:30px;height:30px;position:fixed;z-index:10">',
             size: new naver.maps.Size(27, 35),
             anchor: new naver.maps.Point(7, 14),
           },
@@ -563,7 +568,67 @@ const BottomSheet = (() => {
     }
     return open;
   };
+  const bottomSheetHeight = () => {
+    let total = 0;
+    const peeks = document.getElementsByClassName("peek");
+    const controls = document.getElementById("controls");
+    if (!peeks) {
+      Logger.log("peek 클래스 요소를 찾을 수 없습니다");
+    } else {
+      Array.from(peeks).forEach((peek) => {
+        const style = window.getComputedStyle(peek);
+        const marginTop = parseInt(style.marginTop) || 0;
+        const marginBottom = parseInt(style.marginBottom) || 0;
+        const paddingTop = parseInt(style.paddingTop) || 0;
+        const paddingBottom = parseInt(style.paddingBottom) || 0;
 
+        total +=
+          peek.offsetHeight +
+          marginTop +
+          marginBottom +
+          paddingTop +
+          paddingBottom;
+      });
+    }
+    if (!controls) {
+      Logger.log("controls 요소를 찾을 수 없습니다");
+    } else {
+      const style = window.getComputedStyle(controls);
+      const marginTop = parseInt(style.marginTop) || 0;
+      const marginBottom = parseInt(style.marginBottom) || 0;
+      const paddingTop = parseInt(style.paddingTop) || 0;
+      const paddingBottom = parseInt(style.paddingBottom) || 0;
+      Logger.log("style :" + style);
+      Logger.log("marginTop : " + marginTop);
+      Logger.log("marginbottom : " + marginBottom);
+      Logger.log("paddingTop : ", paddingTop);
+      Logger.log("paddingBottom : ", paddingBottom);
+      Logger.log("controls.offsetHeight", controls.offsetHeight);
+      total +=
+        controls.offsetHeight +
+        marginTop +
+        marginBottom +
+        paddingTop +
+        paddingBottom;
+    }
+    const isSamsung = Utility.detectSamsungBrowser();
+    if (isSamsung) {
+      total -= 20;
+    }
+    const mapBox = document.getElementById("map");
+    const bottomSheet = document.getElementById("bottomSheet");
+    const container = document.getElementsByClassName("container");
+    const containerHeight = container[0].offsetHeight;
+    Logger.log(container);
+    Logger.log(containerHeight);
+    const bottomHeight = bottomSheet.offsetHeight;
+    bottomSheet.style.bottom = bottomHeight - total + "px";
+    const newMapHeight = containerHeight - total + 30 + "px";
+    mapBox[0].style.setProperty("height", newMapHeight, "important");
+    if (map) {
+      naver.maps.Event.trigger(map, "resize");
+    }
+  };
   return {
     init: async () => {
       recoArray = await RecoService.recoGate();

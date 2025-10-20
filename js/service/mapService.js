@@ -107,7 +107,7 @@ const MapService = (() => {
 
   const initMap = () => {
     const mapOptions = {
-      center: new naver.maps.LatLng(37.44553, 126.4515),
+      center: new naver.maps.LatLng(37.4484, 126.451593),
       zoom: 16,
       mapTypes: new naver.maps.MapTypeRegistry({
         normal: naver.maps.NaverStyleMapTypeOptions.getVectorMap(),
@@ -197,6 +197,7 @@ const MapService = (() => {
         Logger.log("boardingGateNum :", boardingGateNum);
         const allAreas = DataService.getAllAreas();
         await MarkerService.allMarkerDelete();
+        MarkerService.createUserMarker();
         markers = [];
         boardingMarkers = [];
         infoWindows = [];
@@ -250,6 +251,9 @@ const MapService = (() => {
     },
     setElementSet: (bool) => {
       elementSettingOn = bool;
+    },
+    getKioskNum: () => {
+      return kiosk;
     },
   };
 })();
