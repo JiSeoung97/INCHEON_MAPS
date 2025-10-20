@@ -124,7 +124,7 @@ const MapService = (() => {
       zoomControl: false,
       scrollWheel: true,
       maxZoom: 20,
-      minZoom: 16,
+      minZoom: 15,
     };
 
     map = new naver.maps.Map("map", mapOptions);
