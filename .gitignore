@@ -9,6 +9,7 @@ node_modules
 .gemini/
 .progress_text/
 test.txt
+mcp-server.log
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
