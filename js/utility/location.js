@@ -313,29 +313,6 @@ const utLocation = (() => {
     }
   };
 
-  const limitLocation = (userLocation) => {
-    const maxLat = 37.496831;
-    const minLat = 37.420388;
-    const maxLng = 126.499959;
-    const minLng = 126.388376;
-    const userLat = userLocation.lat;
-    const userLng = userLocation.lng;
-
-    const isWithinBounds =
-      userLat < maxLat &&
-      userLat > minLat &&
-      userLng < maxLng &&
-      userLng > minLng;
-
-    Logger.log("위치 제한 검사:", {
-      userLocation: { lat: userLat, lng: userLng },
-      bounds: { maxLat, minLat, maxLng, minLng },
-      isWithinBounds,
-    });
-
-    return isWithinBounds;
-  };
-
   return {
     init: () => {
       Logger.log("🚀 utLocation 초기화 시작");
@@ -356,14 +333,6 @@ const utLocation = (() => {
 
         // 🆕 가중평균 방식으로 위치 획득
         let location = await getCurrentPosition();
-
-        // 위치 제한 검사
-        // if (!limitLocation(location)) {
-        //   const errorMsg = "인천공항 내부에서만 이용할 수 있습니다.";
-        //   Logger.error(errorMsg);
-        //   throw new LocationError(errorMsg);
-        // }
-
         // 위치 저장
         await savedLocation(location);
         RecoService.recoGate();
