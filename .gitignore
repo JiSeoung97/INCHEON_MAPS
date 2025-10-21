@@ -5,10 +5,14 @@ dist/
 node_modules
 /.claude
 
+# Log files
+*.log
+
 # gemini
 .gemini/
 .progress_text/
 test.txt
+mcp-server.log
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend

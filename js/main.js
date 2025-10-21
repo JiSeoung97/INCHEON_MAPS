@@ -6,8 +6,6 @@ import CustomControl from "./component/customControl.js";
 import ModalService from "./service/modalService.js";
 import MarkerService from "./service/markerService.js";
 import PolylineService from "./service/polylineService.js";
-import ErrorHandler from "./utility/httpError.js";
-import Utility from "./utility/utility.js";
 import DataService from "./service/dataService.js";
 
 $(document).ready(async () => {
@@ -65,16 +63,11 @@ $(document).ready(async () => {
     }
   };
   const initCustomControl = async () => {
-    return new Promise((resolve) => {
-      try {
-        setTimeout(async () => {
-          await CustomControl.customControlInput();
-          resolve();
-        }, 50);
-      } catch (error) {
-        Logger.error("CustomControl init error", error);
-      }
-    });
+    try {
+      await CustomControl.customControlInput();
+    } catch (error) {
+      Logger.error("CustomControl init error", error);
+    }
   };
   const initModalService = async () => {
     await ModalService.init();
@@ -82,9 +75,7 @@ $(document).ready(async () => {
 
   const handleMarkerDisplay = async () => {
     try {
-      setTimeout(async () => {
-        await MarkerService.showMarkers();
-      }, 100);
+      await MarkerService.showMarkers();
       Logger.log("마커 표시 완료");
     } catch (error) {
       Logger.error("마커 표시 실패:", error);
@@ -96,9 +87,6 @@ $(document).ready(async () => {
       try {
         BottomSheet.changeMenu(btnIdx);
         await BottomSheet.showGateCongestion();
-
-        // 게이트 클릭 이벤트 재설정
-        // setupGateClickEvents();
       } catch (error) {
         Logger.error("첫 번째 메뉴 처리 오류:", error);
       }
