@@ -585,12 +585,6 @@ const MarkerService = (() => {
     allElementhide: () => {
       allElementhide();
     },
-    getMarkerOn: () => {
-      return markerOn;
-    },
-    setMarkerOn: (bool) => {
-      markerOn = bool;
-    },
     createUserMarker: () => {
       createUserMarker();
     },
