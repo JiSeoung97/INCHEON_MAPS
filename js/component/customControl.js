@@ -119,10 +119,17 @@ const CustomControl = (() => {
     firstlang = selectedLang;
     Logger.log("firstLang", firstlang);
     Logger.log("selectedLangArray", selectedLangArray);
+    let langage;
+    if (selectedLang == null) {
+      langage = "ko";
+    } else {
+      langage = selectedLang;
+    }
     selectedLangArray = [
-      selectedLang,
-      ...langArray.filter((lang) => lang !== selectedLang),
+      langage,
+      ...langArray.filter((lang) => lang !== langage),
     ];
+
     const langImgArray = createLanguageArrayWithSelectiveImg(
       languageList,
       firstlang
