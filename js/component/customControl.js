@@ -25,13 +25,7 @@ const CustomControl = (() => {
   let selectLang;
   let customEventOn = false;
   let boardingModalOpen = null;
-  const positions = [
-    naver.maps.Position.TOP_LEFT,
-    naver.maps.Position.LEFT_TOP,
-    naver.maps.Position.RIGHT_TOP,
-    naver.maps.Position.TOP_RIGHT,
-    naver.maps.Position.RIGHT_CENTER,
-  ];
+
   const changeLanguage = async (newLang) => {
     try {
       sessionStorage.setItem("language", newLang);
@@ -143,6 +137,7 @@ const CustomControl = (() => {
       .join("");
     langchange = document.getElementById("languageChange");
     langchange.innerHTML = langChan;
+    mapLangEvent();
   };
 
   const customControlEvent = () => {

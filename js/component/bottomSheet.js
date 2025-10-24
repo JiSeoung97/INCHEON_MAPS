@@ -559,7 +559,7 @@ const BottomSheet = (() => {
     const hour = Number(date.getHours());
     const minute = Number(date.getMinutes());
     const nowTime = hour * 60 + minute;
-    if (nowTime >= 390 && nowTime <= 1260) {
+    if (nowTime >= 60 * 6 + 30 && nowTime <= 60 * 9 + 30) {
       open = true;
     }
     if (open) {
