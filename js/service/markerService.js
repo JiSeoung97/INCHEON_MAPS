@@ -223,6 +223,24 @@ const MarkerService = (() => {
     }
     return icon;
   };
+
+  const eggMarker = () => {
+    const marker = new naver.maps.Marker({
+      position: new naver.maps.LatLng(37.490864, 127.031371),
+      map: map,
+      title: "KimSungSu",
+      icon: {
+        content:
+          '<img src="/images/official-BS.jpg" style="width:10px;height:10px;z-index:10;border-radius:50%;position:fixed">',
+        size: new naver.maps.Size(27, 35),
+        anchor: new naver.maps.Point(7, 14),
+      },
+    });
+    naver.maps.Event.addListener(marker, "click", () => {
+      alert("Official BS");
+    });
+  };
+
   const allElementhide = () => {
     elementsMarkers.forEach((element) => {
       element.setMap(null);
@@ -536,6 +554,7 @@ const MarkerService = (() => {
             marker.setMap(map);
           });
         }
+        eggMarker();
         Logger.log("markers : ", markers);
         boardingGateNum = sessionStorage.getItem("boardingGate");
         if (boardingGateNum != null) {
